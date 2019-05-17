@@ -1,0 +1,39 @@
+service: webhint-staging-functions
+
+provider:
+  name: azure
+  location: West US
+  resourceGroup : webhint-staging-functions
+
+plugins:
+  - serverless-azure-functions
+
+package:
+  exclude:
+    - compose/**/*
+    - scripts/**/*
+    - tests/**/*
+    - src/**/*
+    - .serverless/**/*
+    - .dependabot/**/*
+    - .yml
+    - .md
+  include:
+    - ./*-function.json
+    
+functions:
+  sync-service:
+    handler: dist/functions/azure/sync-service.run
+    events:
+      - serviceBus: 
+        x-azure-settings:
+          queueName: webhint-results
+          name: message
+          connection : QueueConnection
+  status-service:
+    handler: dist/functions/azure/status-service.run
+    events:
+      - timer:
+        x-azure-settings:
+          name: timer
+          schedule: 0 */15 * * * *
