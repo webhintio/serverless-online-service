@@ -8,21 +8,21 @@
             "isBackground": true,
             "dependsOn": "npm: build"
         },
-        // {
-        //     "type": "shell",
-        //     "label": "create functions",
-        //     "command": "node ./scripts/createfunctions.js",
-        //     "windows": {
-        //         "command": "node scripts\\createfunctions.js"
-        //     },
-        //     "dependsOn": "serverless package"
-        // },
-        // {
-        //     "type": "shell",
-        //     "label": "serverless package",
-        //     "command": "serverless package",
-        //     "dependsOn": "npm: build"
-        // },
+        {
+            "type": "shell",
+            "label": "create functions",
+            "command": "node ./scripts/createfunctions.js",
+            "windows": {
+                "command": "node scripts\\createfunctions.js"
+            },
+            "dependsOn": "serverless package"
+        },
+        {
+            "type": "shell",
+            "label": "serverless package",
+            "command": "serverless package",
+            "dependsOn": "npm: build"
+        },
         {
             "type": "npm",
             "script": "build",
