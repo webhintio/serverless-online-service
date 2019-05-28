@@ -1,9 +1,9 @@
-service: webhint-staging-functions
+service: webhint-functions
 
 provider:
   name: azure
   location: West US
-  resourceGroup : webhint-staging-functions
+  resourceGroup : webhint-functions
 
 plugins:
   - serverless-azure-functions
@@ -14,6 +14,7 @@ package:
     - scripts/**/*
     - tests/**/*
     - src/**/*
+    - vscode/**/*
     - .serverless/**/*
     - .dependabot/**/*
     - .yml

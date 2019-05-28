@@ -235,6 +235,5 @@ export const run = async (job: IJob): Promise<void> => {
         await database.unlock(lock);
         await database.disconnect();
         logger.log(`Service finished with${error ? '' : 'out'} error(s)`, moduleName);
-
     }
 };
