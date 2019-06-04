@@ -138,7 +138,12 @@ const closeGithubIssues = async (dbJob: IJobModel) => {
 };
 
 export const run = async (job: IJob): Promise<void> => {
-    await database.connect(dbConnectionString);
+    try {
+        await database.connect(dbConnectionString);
+    } catch (e) {
+        logger.error(`Could not connect to databse`, moduleName, e);
+        throw e;
+    }
 
     const id = job.id;
     let lock: any;
@@ -147,17 +152,7 @@ export const run = async (job: IJob): Promise<void> => {
         lock = await database.lock(id);
     } catch (e) {
         logger.error(`It was not possible lock the id ${id}`, moduleName, e);
-        lock = null;
-    }
-
-    if (!lock) {
-        /*
-        * If we are not able to lock the job in the database, keep
-        * the item locked in the queue until the timeout (in the queue)
-        * expire.
-        */
-
-        return;
+        throw e;
     }
 
     let error = false;
@@ -231,6 +226,7 @@ export const run = async (job: IJob): Promise<void> => {
     } catch (err) {
         error = true;
         logger.log(`Error updating database for Job ${id}: ${err.message}`);
+        throw err;
     } finally {
         await database.unlock(lock);
         await database.disconnect();
