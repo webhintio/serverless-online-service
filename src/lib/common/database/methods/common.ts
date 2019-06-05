@@ -59,7 +59,9 @@ export const connect = async (connectionString: string) => {
         db = (await mongoose.connect(connectionString, {
             connectTimeoutMS: 30000,
             keepAlive: 1000,
-            poolSize: 100,
+            poolSize: 10,
+            reconnectInterval: 1000,
+            reconnectTries: 30,
             useNewUrlParser: true
         })).connection;
         debug('Connected to database');
