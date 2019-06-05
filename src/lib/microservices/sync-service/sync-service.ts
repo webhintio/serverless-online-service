@@ -137,7 +137,7 @@ const closeGithubIssues = async (dbJob: IJobModel) => {
     }
 };
 
-export const run = async (job: IJob): Promise<void> => {
+export const run = async (job: IJob): Promise<any> => {
     try {
         await database.connect(dbConnectionString);
     } catch (e) {
@@ -229,7 +229,6 @@ export const run = async (job: IJob): Promise<void> => {
         throw err;
     } finally {
         await database.unlock(lock);
-        await database.disconnect();
         logger.log(`Service finished with${error ? '' : 'out'} error(s)`, moduleName);
     }
 };

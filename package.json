@@ -21,7 +21,7 @@
     "mdn-browser-compat-data": "0.0.82",
     "moment": "^2.24.0",
     "mongodb-lock": "^0.4.0",
-    "mongoose": "^5.5.5",
+    "mongoose": "^5.5.13",
     "multiparty": "^4.2.1",
     "serverless-azure-functions": "^0.7.0",
     "strip-bom": "^4.0.0",

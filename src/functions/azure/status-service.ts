@@ -4,4 +4,5 @@ import * as statusService from '../../lib/microservices/status-service/status-se
 
 export const run: AzureFunction = async (context: Context, timer: any): Promise<void> => {
     await statusService.run();
+    context.done();
 };
