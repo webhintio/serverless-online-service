@@ -10,7 +10,7 @@ import { debug as d } from '../../../utils/debug';
 import * as logger from '../../../utils/logging';
 
 const debug: debug.IDebugger = d(__filename);
-let db: mongoose.Connection;
+let cachedDb: mongoose.Connection;
 const lockName: string = 'index';
 const moduleName: string = 'Database:common';
 
@@ -19,7 +19,7 @@ const moduleName: string = 'Database:common';
  * @param {string} url - URL to lock in the database.
  */
 export const createLock = (url: string) => {
-    const lock = mongoDBLock(db.db, 'locks', url, { removeExpired: true });
+    const lock = mongoDBLock(cachedDb, 'locks', url, { removeExpired: true });
 
     debug(`Creating lock object for url: ${url ? url : 'initial'}`);
     lock.acquireAsync = promisify(lock.acquire);
@@ -30,22 +30,10 @@ export const createLock = (url: string) => {
 };
 
 /**
- * Check if the database is connected.
- */
-export const validateConnection = () => {
-    if (!db) {
-        debug('Database not connected');
-        throw new Error('Database not connected');
-    }
-};
-
-/**
  * Release a lock.
  * @param dbLock - Lock object to release.
  */
 export const unlock = async (dbLock) => {
-    validateConnection();
-
     logger.log(`Release lock for key ${dbLock.name}`, moduleName);
     await dbLock.releaseAsync(dbLock.code);
 };
@@ -55,8 +43,12 @@ export const unlock = async (dbLock) => {
  * @param {string} connectionString Connection string to the database.
  */
 export const connect = async (connectionString: string) => {
+    if (cachedDb && cachedDb.serverConfig.isConnected() && mongoose.connection.readyState === 1) {
+        // Do nothing, connection already exists;
+    }
+
     try {
-        db = (await mongoose.connect(connectionString, {
+        cachedDb = (await mongoose.connect(connectionString, {
             connectTimeoutMS: 30000,
             keepAlive: 1000,
             poolSize: 25,
@@ -64,7 +56,7 @@ export const connect = async (connectionString: string) => {
             reconnectTries: Number.MAX_VALUE,
             socketTimeoutMS: 45000,
             useNewUrlParser: true
-        })).connection;
+        })).connection.db;
         debug('Connected to database');
 
         const indexLock = createLock(lockName);
@@ -82,8 +74,6 @@ export const connect = async (connectionString: string) => {
  * @param {string} url - URL to lock in the database.
  */
 export const lock = async (url: string) => {
-    validateConnection();
-
     const dbLock = createLock(url);
 
     const getLock = async () => {
@@ -112,9 +102,8 @@ export const lock = async (url: string) => {
  * Get the data about the replica set.
  */
 export const replicaSetStatus = async () => {
-    validateConnection();
     try {
-        const status = await db.db.command({ replSetGetStatus: 1 });
+        const status = await cachedDb.command({ replSetGetStatus: 1 });
 
         return status;
     } catch (err) {
@@ -127,25 +116,16 @@ export const replicaSetStatus = async () => {
 };
 
 /**
- * Get an string with the database host with the format host:port.
- */
-export const host = () => {
-    validateConnection();
-
-    return `${db.host}:${db.port}`;
-};
-
-/**
  * Disconnect from the database.
  */
 export const disconnect = async () => {
-    if (db) {
+    if (cachedDb) {
         try {
             await mongoose.disconnect();
         } catch (err) {
             // Do nothing.
         } finally {
-            db = null;
+            cachedDb = null;
         }
     }
 };

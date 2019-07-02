@@ -3,7 +3,6 @@ import { DocumentQuery } from 'mongoose';
 import { debug as d } from '../../../utils/debug';
 import { IUser } from '../../../types';
 import { IUserModel, User } from '../models/user';
-import { validateConnection } from './common';
 
 const debug: debug.IDebugger = d(__filename);
 
@@ -12,8 +11,6 @@ const debug: debug.IDebugger = d(__filename);
  * @param {string} name - User name.
  */
 export const add = async (name: string): Promise<IUser> => {
-    validateConnection();
-
     debug(`Adding user: ${name}`);
 
     const user: IUserModel = new User({ name });
@@ -29,8 +26,6 @@ export const add = async (name: string): Promise<IUser> => {
  * Get all users in the database.
  */
 export const getAll = async (): Promise<Array<IUser>> => {
-    validateConnection();
-
     const query: DocumentQuery<Array<IUserModel>, IUserModel> = User.find({});
     const users: Array<IUser> = await query.exec();
 
@@ -42,7 +37,6 @@ export const getAll = async (): Promise<Array<IUser>> => {
  * @param {string} name - User name.
  */
 export const get = async (name: string): Promise<IUser> => {
-    validateConnection();
     const query: DocumentQuery<IUserModel, IUserModel> = User.findOne({ name });
     const user: IUser = await query.exec();
 
@@ -54,7 +48,6 @@ export const get = async (name: string): Promise<IUser> => {
  * @param {string} name - User name.
  */
 export const remove = async (name: string) => {
-    validateConnection();
     const query: DocumentQuery<IUserModel, IUserModel> = User.findOne({ name });
 
     await query.remove().exec();

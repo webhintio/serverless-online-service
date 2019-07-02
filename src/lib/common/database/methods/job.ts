@@ -9,7 +9,6 @@ import { IJob } from '../../../types';
 import { IJobModel, Job } from '../models/job';
 import { JobStatus } from '../../../enums/status';
 import { Hint, StatOptions, StatQueryParameter } from '../../../types';
-import { validateConnection } from './common';
 import { getTime } from '../../ntp/ntp';
 
 const debug: debug.IDebugger = d(__filename);
@@ -19,8 +18,6 @@ const debug: debug.IDebugger = d(__filename);
  * @param {string} url - Url we want to look for.
  */
 export const getByUrl = async (url: string): Promise<Array<IJob>> => {
-    validateConnection();
-
     debug(`Getting jobs by url: ${url}`);
     const query = Job.find({ url });
 
@@ -36,8 +33,6 @@ export const getByUrl = async (url: string): Promise<Array<IJob>> => {
  * @param {string} id - Id we want to look for.
  */
 export const get = async (id: string): Promise<IJobModel> => {
-    validateConnection();
-
     debug(`Getting job by id: ${id}`);
     const query = Job.findOne({ id });
 
@@ -52,7 +47,6 @@ export const get = async (id: string): Promise<IJobModel> => {
  * Get all unfinished jobs.
  */
 export const getUnfinished = async (): Promise<Array<IJobModel>> => {
-    validateConnection();
     debug(`Getting unfinished jobs`);
     const query = Job.find({ $and: [{ $nor: [{ status: JobStatus.finished }, { status: JobStatus.error }] }, { queued: { $lt: moment().subtract(1, 'day') } }] });
 
@@ -71,8 +65,6 @@ export const getUnfinished = async (): Promise<Array<IJobModel>> => {
  * @param config - Configuration for the job.
  */
 export const add = async (url: string, status: JobStatus, hints: Array<Hint>, config: Array<UserConfig>, jobRunTime: number): Promise<IJob> => {
-    validateConnection();
-
     debug(`Creating new job for url: ${url}`);
 
     let queued = await getTime();
@@ -107,8 +99,6 @@ export const add = async (url: string, status: JobStatus, hints: Array<Hint>, co
  * @param {IJobModel} job Job we want to update.
  */
 export const update = async (job: IJobModel) => {
-    validateConnection();
-
     job.markModified('hints');
 
     await job.save();
@@ -121,8 +111,6 @@ export const update = async (job: IJobModel) => {
  * @param value - New value for the property.
  */
 export const updateProperty = (jobId: string, property: string, value): Promise<IJob> => {
-    validateConnection();
-
     return Job.findOneAndUpdate({ id: jobId }, { $set: { [property]: value } }).exec();
 };
 
@@ -133,8 +121,6 @@ export const updateProperty = (jobId: string, property: string, value): Promise<
  * @param {Date} to - End date.
  */
 export const getByDate = async (field: string, from: Date, to: Date): Promise<Array<IJob>> => {
-    validateConnection();
-
     const x = {
         [field]: {
             $gte: from,
@@ -169,8 +155,6 @@ const count = (queryParameters: StatQueryParameter): Promise<number> => {
  * @param {StatOptions} options - Query options.
  */
 export const getStatusCount = async (status: JobStatus, options?: StatOptions): Promise<number> => {
-    validateConnection();
-
     const queryParameters: StatQueryParameter = { status };
 
     if (options && options.since) {
@@ -189,8 +173,6 @@ export const getStatusCount = async (status: JobStatus, options?: StatOptions): 
  * @param {StatOptions} options - Query options.
  */
 export const getCount = async (options?: StatOptions): Promise<number> => {
-    validateConnection();
-
     const queryParameters: StatQueryParameter = {};
 
     if (options && options.since) {

@@ -9,16 +9,22 @@ import * as _ from 'lodash';
 import { JobStatus } from '../lib/enums/status';
 import { IJob } from '../lib/types';
 import * as logger from '../lib/utils/logging';
-import * as db from '../lib/common/database/database';
+import * as datacontext from '../lib/common/database/database';
 import { Queue } from '../lib/common/queue/queue';
 
 let queue: Queue = null;
 
 const moduleName = 'Jobs Recovery';
-const { database, queue: queueConnectionString } = process.env; // eslint-disable-line no-process-env
+const { dbConnectionString, queue: queueConnectionString } = process.env; // eslint-disable-line no-process-env
 
-const connectDatabase = () => {
-    return db.connect(database);
+const connectDatabase = async () => {
+    try {
+        return await datacontext.connect(dbConnectionString);
+
+    } catch (e) {
+        logger.error(`Could not connect to databse`, moduleName, e);
+        throw e;
+    }
 };
 
 const parseJob = (job: IJob) => {
@@ -65,9 +71,11 @@ const sendMessagesToQueue = async (job: IJob) => {
 };
 
 const run = async () => {
+    let db;
+
     try {
         queue = new Queue('webhint-jobs', queueConnectionString);
-        await connectDatabase();
+        db = await connectDatabase();
     } catch (err) {
         logger.error(err, moduleName);
 
