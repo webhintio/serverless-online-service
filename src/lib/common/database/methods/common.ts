@@ -45,18 +45,11 @@ export const unlock = async (dbLock) => {
 export const connect = async (connectionString: string) => {
     if (cachedDb && cachedDb.serverConfig.isConnected() && mongoose.connection.readyState === 1) {
         // Do nothing, connection already exists;
+        return;
     }
 
     try {
-        cachedDb = (await mongoose.connect(connectionString, {
-            connectTimeoutMS: 30000,
-            keepAlive: 1000,
-            poolSize: 25,
-            reconnectInterval: 500,
-            reconnectTries: Number.MAX_VALUE,
-            socketTimeoutMS: 45000,
-            useNewUrlParser: true
-        })).connection.db;
+        cachedDb = (await mongoose.connect(connectionString, { useNewUrlParser: true })).connection.db;
         debug('Connected to database');
 
         const indexLock = createLock(lockName);
