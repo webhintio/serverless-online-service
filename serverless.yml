@@ -3,7 +3,7 @@ service: webhint-functions
 provider:
   name: azure
   location: West US
-  resourceGroup : webhint-functions
+  resourceGroup : "Enter Resource Group Here"
 
 plugins:
   - serverless-azure-functions
