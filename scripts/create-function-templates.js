@@ -17,8 +17,8 @@ const main = () => {
                     rimraf.sync(name);
                 }
 
-                fs.mkdir(name);
-                fs.writeFile(`${name}/function.json`, JSON.stringify(node.template, null, 4), (err) => {
+                fs.mkdirSync(name);
+                fs.writeFileSync(`${name}/function.json`, JSON.stringify(node.template, null, 4), (err) => {
                     if (err) {
                         throw (err);
                     }

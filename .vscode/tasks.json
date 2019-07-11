@@ -7,13 +7,7 @@
             "problemMatcher": "$func-watch",
             "isBackground": true,
             "dependsOn": "npm: build"
-        },
-        {
-            "type": "shell",
-            "label": "serverless package",
-            "command": "serverless package",
-            "dependsOn": "npm: build"
-        },
+        }
         {
             "type": "npm",
             "script": "build",
