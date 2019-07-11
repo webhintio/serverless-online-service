@@ -10,6 +10,7 @@ az-init.sh
 scripts/deploy/**/parameters.json
 
 # Azure Functions artifacts
+function-*/**/*
 bin
 obj
 appsettings.json
