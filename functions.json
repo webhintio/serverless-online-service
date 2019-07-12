@@ -34,24 +34,6 @@
         }
     },
     {
-        "name": "jobmanager",
-        "template": {
-            "disabled": false,
-            "bindings": [
-                {
-                    "type": "serviceBusTrigger",
-                    "direction": "in",
-                    "name": "message",
-                    "queueName": "webhint-jobs",
-                    "connection": "QueueConnection",
-                    "accessRights": "Manage"
-                }
-            ],
-            "entryPoint": "run",
-            "scriptFile": "../dist/functions/azure/jobmanager.js"
-        }
-    },
-    {
         "name": "api-scannerstatus",
         "template": {
             "disabled": false,

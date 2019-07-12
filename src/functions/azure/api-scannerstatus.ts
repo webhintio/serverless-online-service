@@ -1,18 +1,23 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
+import { getScannerStatus } from '../../lib/microservices/scanner-api/scanner-api';
 
-export const run: AzureFunction = (context: Context, req: HttpRequest): void => {
-    context.log('HTTP trigger function processed a request.');
-    const name = (req.query.name || (req.body && req.body.name));
+export const run: AzureFunction = async (context: Context, req: HttpRequest): Promise<void> => {
+    context.log('Processing Scanner Status request');
 
-    if (name) {
+    try {
+        const scannerStatus = await getScannerStatus();
+
         context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: `Hello  ${(req.query.name || req.body.name)}`
+            body: scannerStatus,
+            status: 200
         };
-    } else {
+    } catch (err) {
         context.res = {
-            body: 'Please pass a name on the query string or in the request body',
-            status: 400
+            body: 'Could not get scanner status',
+            status: 500
         };
+        throw err;
     }
+
+    context.done();
 };
