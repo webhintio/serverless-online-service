@@ -16,7 +16,7 @@ import { Queue } from '../../common/queue/queue';
 const debug: debug.IDebugger = d(__filename);
 const { QueueConnection, DatabaseConnection: dbConnectionString, NODE_ENV: env, port } = process.env; // eslint-disable-line no-process-env
 let queue: Queue = null;
-const moduleName: string = 'Job Manager Server';
+const moduleName: string = 'Scanner API';
 
 /**
  * Parse data sent in the request is valid
@@ -144,7 +144,15 @@ const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime:
         hints = hints.concat(partialHints);
     });
 
-    const databaseJob = await database.job.add(url, JobStatus.pending, hints, configs, jobRunTime);
+    let databaseJob: IJob;
+
+    try {
+        await database.connect(dbConnectionString);
+        databaseJob = await database.job.add(url, JobStatus.pending, hints, configs, jobRunTime);
+    } catch (e) {
+        logger.error(`Could not connect to databse`, moduleName, e);
+        throw e;
+    }
 
     return {
         config: databaseJob.config,
@@ -167,7 +175,16 @@ const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime:
  * Get the current active configuration.
  */
 const getActiveConfig = async (): Promise<IServiceConfig> => {
-    const currentConfig: IServiceConfig = await database.serviceConfig.getActive();
+    let currentConfig: IServiceConfig;
+
+    try {
+        await database.connect(dbConnectionString);
+        currentConfig = await database.serviceConfig.getActive();
+
+    } catch (e) {
+        logger.error(`Could not connect to databse`, moduleName, e);
+        throw e;
+    }
 
     if (!currentConfig) {
         throw new Error('There is no active configuration');
@@ -185,7 +202,7 @@ const getActiveConfig = async (): Promise<IServiceConfig> => {
 };
 
 /** Create a job to scan an url if it doesn't exist. */
-export const createJob = async (requestData: RequestData): Promise<IJob> => {
+export const createJob = async (request: RequestData): Promise<IJob> => {
     /*
         1. Validate input data
         2. Parse input data
@@ -201,9 +218,18 @@ export const createJob = async (requestData: RequestData): Promise<IJob> => {
                 II) Add job to the queue
         5. Unlock database by url
      */
-    const jobData: JobData = await parseRequestData(requestData);
+    // const requestData: RequestData =  await getDataFromRequest(request);
+    const jobData: JobData = await parseRequestData(request);
 
     const serviceConfig: IServiceConfig = await getActiveConfig();
+
+    try {
+        await database.connect(dbConnectionString);
+    } catch (e) {
+        logger.error(`Could not connect to databse`, moduleName, e);
+        throw e;
+    }
+
     const lock = await database.lock(jobData.url);
 
     const config: Array<UserConfig> = getConfig(jobData, serviceConfig);
