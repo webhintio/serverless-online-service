@@ -4,9 +4,8 @@ import { UserConfig, utils } from 'hint';
 
 import * as database from '../../common/database/database';
 import * as statusManager from '../../common/status/status';
-import { Hint, IJob, IServiceConfig, IStatus, JobData, RequestData } from '../../types';
+import { Hint, IJob, IServiceConfig, IStatus, JobData } from '../../types';
 import * as logger from '../../utils/logging';
-import { validateServiceConfig, readFileAsync } from '../../utils/misc';
 import { ConfigSource } from '../../enums/configsource';
 import { JobStatus, HintStatus } from '../../enums/status';
 import { debug as d } from '../../utils/debug';
@@ -17,29 +16,6 @@ const debug: debug.IDebugger = d(__filename);
 const { QueueConnection, DatabaseConnection: dbConnectionString, NODE_ENV: env, port } = process.env; // eslint-disable-line no-process-env
 let queue: Queue = null;
 const moduleName: string = 'Scanner API';
-
-/**
- * Parse data sent in the request is valid
- * @param {RequestData} data - Data received in the request
- */
-const parseRequestData = async (data: RequestData): Promise<JobData> => {
-    if (!data.fields.url || !data.fields.url[0]) {
-        throw new Error('Url is required');
-    }
-
-    const file = data.files['config-file'] ? data.files['config-file'][0] : null;
-
-    try {
-        return {
-            config: file && file.size > 0 ? JSON.parse(await readFileAsync(file.path)) : null,
-            hints: data.fields.hints,
-            source: data.fields.source ? data.fields.source[0] : ConfigSource.default,
-            url: data.fields.url ? data.fields.url[0] : null
-        };
-    } catch (err) {
-        throw new Error('Error parsing request data');
-    }
-};
 
 /**
  * Split the job in as many messages as configurations it has.
@@ -69,17 +45,6 @@ const sendMessagesToQueue = async (job: IJob) => {
     }
 };
 
-
-/**
- * Validate if a webhint configuration or an array of them is valid.
- * @param {UserConfig | Array<UserConfig>} config - Webhint configuration.
- */
-const validateConfigs = (config: UserConfig | Array<UserConfig>) => {
-    const configs = Array.isArray(config) ? config : [config];
-
-    validateServiceConfig(configs);
-};
-
 /**
  * Get the right configuration for the job.
  * @param {RequestData} data - The data the user sent in the request.
@@ -91,7 +56,6 @@ const getConfig = (data: JobData, serviceConfig: IServiceConfig): Array<UserConf
     debug(`Configuration source: ${source}`);
     switch (source) {
         case ConfigSource.file:
-            validateConfigs(data.config);
             config = Array.isArray(data.config) ? data.config : [data.config];
             break;
         // TODO: TBD.
@@ -202,7 +166,7 @@ const getActiveConfig = async (): Promise<IServiceConfig> => {
 };
 
 /** Create a job to scan an url if it doesn't exist. */
-export const createJob = async (request: RequestData): Promise<IJob> => {
+export const createJob = async (url: string): Promise<IJob> => {
     /*
         1. Validate input data
         2. Parse input data
@@ -218,8 +182,20 @@ export const createJob = async (request: RequestData): Promise<IJob> => {
                 II) Add job to the queue
         5. Unlock database by url
      */
-    // const requestData: RequestData =  await getDataFromRequest(request);
-    const jobData: JobData = await parseRequestData(request);
+
+    /* TODO
+    ** We want to strip out the ability to upload configs in the future
+    ** This just plugs in just the URL to the exsiting feature
+    ** This will be refactored in a future PR to completely remove
+    ** config upload feature
+    ** https://github.com/webhintio/online-service/issues/585
+    */
+    const jobData: JobData = {
+        config: null,
+        hints: null,
+        source: ConfigSource.default,
+        url: url ? url : null
+    };
 
     const serviceConfig: IServiceConfig = await getActiveConfig();
 

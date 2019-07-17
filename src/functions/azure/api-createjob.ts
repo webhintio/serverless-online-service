@@ -1,23 +1,18 @@
 import { AzureFunction, Context, HttpRequest } from '@azure/functions';
 import { createJob } from '../../lib/microservices/scanner-api/scanner-api';
-import { RequestData } from '../../lib/types';
 
 export const run: AzureFunction = async (context: Context, req: HttpRequest): Promise<void> => {
     context.log('Processing request to create new job.');
 
     try {
-        // TODO: Talk to David about which scenario
-        // we are sending multipart data with hints
-        // and files
+        const tokens = req.body.split('=');
 
-        // Also, this needs utils.loadHint, which fails
-        // cause we dont have hint dependency here
+        if (!tokens[0] || !tokens[1] || tokens[0] !== 'url') {
+            throw Error('Url is required');
+        }
 
-        const rData: RequestData = {
-            fields: { url: 'http://www.test.com' },
-            files: []
-        };
-        const job = await createJob(rData);
+        const url = tokens[1].replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
+        const job = await createJob(url);
 
         context.res = {
             body: job,
