@@ -28,5 +28,3 @@ export const run: AzureFunction = async (context: Context, req: HttpRequest): Pr
 
     context.done();
 };
-
-

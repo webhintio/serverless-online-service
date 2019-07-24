@@ -13,9 +13,10 @@ import { getTime } from '../../common/ntp/ntp';
 import { Queue } from '../../common/queue/queue';
 
 const debug: debug.IDebugger = d(__filename);
-const { QueueConnection, DatabaseConnection: dbConnectionString, NODE_ENV: env, port } = process.env; // eslint-disable-line no-process-env
+const { QueueConnection, DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
 let queue: Queue = null;
 const moduleName: string = 'Scanner API';
+const categories = require('./categories.json');
 
 /**
  * Split the job in as many messages as configurations it has.
@@ -80,7 +81,6 @@ const getActiveJob = (jobs: Array<IJob>, config: Array<UserConfig>, cacheTime: n
     });
 };
 
-
 /**
  * Create a new Job in the database.
  * @param {string} url - The url that the job will be use.
@@ -96,7 +96,7 @@ const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime:
             }
 
             total.push({
-                category: /* utils.loadHint(key, []).meta.docs.category */ null, // replace with json loader
+                category: categories[key],
                 messages: [],
                 name: key,
                 status: HintStatus.pending
@@ -133,7 +133,6 @@ const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime:
         webhintVersion: null
     };
 };
-
 
 /**
  * Get the current active configuration.
