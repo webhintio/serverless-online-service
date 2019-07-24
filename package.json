@@ -11,6 +11,7 @@
     "@azure/functions": "^1.0.3",
     "@destinationstransfers/ntp": "^1.2.0",
     "@octokit/rest": "^16.23.5",
+    "@typescript-eslint/parser": "^1.13.0",
     "applicationinsights": "^1.3.1",
     "azure-sb": "^0.11.0",
     "azure-storage": "^2.10.3",
@@ -34,6 +35,7 @@
     "@types/lodash": "^4.14.123",
     "@types/multiparty": "^0.0.32",
     "@types/node": "^11.13.8",
+    "@typescript-eslint/parser": "^1.13.0",
     "@hint/utils": "^3.0.0",
     "ava": "^1.4.1",
     "cpx": "^1.5.0",
@@ -48,8 +50,7 @@
     "rimraf": "^2.6.3",
     "shelljs": "^0.8.3",
     "ts-node": "^8.1.0",
-    "typescript": "^3.4.5",
-    "typescript-eslint-parser": "^22.0.0"
+    "typescript": "^3.4.5"
   },
   "greenkeeper": {
     "commitMessages": {
