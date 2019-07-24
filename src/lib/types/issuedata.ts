@@ -1,4 +1,4 @@
-import { UserConfig } from 'hint/dist/src/lib/types';
+import { UserConfig } from '@hint/utils';
 
 export type IssueData = {
     errorMessage?: string;

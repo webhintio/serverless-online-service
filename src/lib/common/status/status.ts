@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { Severity } from 'hint/dist/src/lib/types';
+import { Severity } from '@hint/utils/dist/src/types/problems';
 
 import * as db from '../database/database';
 import { IStatusModel } from '../database/models/status';

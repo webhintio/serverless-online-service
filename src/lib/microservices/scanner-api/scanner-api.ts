@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { UserConfig, utils } from 'hint';
+import { UserConfig } from '@hint/utils';
 
 import * as database from '../../common/database/database';
 import * as statusManager from '../../common/status/status';
@@ -96,7 +96,7 @@ const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime:
             }
 
             total.push({
-                category: utils.loadHint(key, []).meta.docs.category,
+                category: /* utils.loadHint(key, []).meta.docs.category */ null, // replace with json loader
                 messages: [],
                 name: key,
                 status: HintStatus.pending
