@@ -18,16 +18,24 @@ let queue: Queue = null;
 const moduleName: string = 'Scanner API';
 const categories = require('./categories.json');
 
+const connectToQueue = async () => {
+    if (queue) {
+        return;
+    }
+
+    if (QueueConnection) {
+        queue = new Queue('webhint-jobs-dev', QueueConnection);
+    } else {
+        logger.log('Queue connection string not found', moduleName);
+    }
+}
+
 /**
  * Split the job in as many messages as configurations it has.
  * @param {IJob} job - Job to send to the queue.
  */
 const sendMessagesToQueue = async (job: IJob) => {
-    if (QueueConnection && !queue) {
-        queue = new Queue('webhint-jobs', QueueConnection);
-    } else {
-        logger.log('Queue connection string not found', moduleName);
-    }
+    connectToQueue();
 
     let counter = 0;
 
@@ -219,6 +227,8 @@ export const createJob = async (url: string): Promise<IJob> => {
         logger.log(`Created new Job with id ${job.id}`, moduleName);
 
         try {
+            connectToQueue();
+            
             job.messagesInQueue = await queue.getMessagesCount();
             await sendMessagesToQueue(job);
 

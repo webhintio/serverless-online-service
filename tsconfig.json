@@ -4,6 +4,8 @@
         "module": "commonjs",
         "sourceMap": true,
         "target": "esnext",
+        "outDir": "dist\\src",
+        "rootDir": "src",
         "declaration": true,
         "lib": [
             "es2017",

@@ -8,13 +8,13 @@
                     "type": "serviceBusTrigger",
                     "direction": "in",
                     "name": "message",
-                    "queueName": "webhint-results",
+                    "queueName": "webhint-results-dev",
                     "connection": "QueueConnection",
                     "accessRights": "Manage"
                 }
             ],
             "entryPoint": "run",
-            "scriptFile": "../dist/functions/azure/syncservice.js"
+            "scriptFile": "../dist/src/functions/azure/syncservice.js"
         }
     },
     {   
@@ -30,7 +30,7 @@
                 }
             ],
             "entryPoint": "run",
-            "scriptFile": "../dist/functions/azure/statusservice.js"
+            "scriptFile": "../dist/src/functions/azure/statusservice.js"
         }
     },
     {
@@ -55,7 +55,7 @@
                 }
             ],
             "entryPoint": "run",
-            "scriptFile": "../dist/functions/azure/api-scannerstatus.js"
+            "scriptFile": "../dist/src/functions/azure/api-scannerstatus.js"
         }
     },
     {
@@ -80,7 +80,7 @@
                 }
             ],
             "entryPoint": "run",
-            "scriptFile": "../dist/functions/azure/api-jobstatus.js"
+            "scriptFile": "../dist/src/functions/azure/api-jobstatus.js"
         }
     },
     {
@@ -105,7 +105,7 @@
                 }
             ],
             "entryPoint": "run",
-            "scriptFile": "../dist/functions/azure/api-createjob.js"
+            "scriptFile": "../dist/src/functions/azure/api-createjob.js"
         }
     }
 ]
