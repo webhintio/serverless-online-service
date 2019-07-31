@@ -25,7 +25,7 @@ const connectToQueue = () => {
 
     /* istanbul ignore else */
     if (QueueConnection) {
-        queue = new Queue('webhint-jobs-dev', QueueConnection);
+        queue = new Queue('webhint-jobs', QueueConnection);
     } else {
         logger.log('Queue connection string not found', moduleName);
     }

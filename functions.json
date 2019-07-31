@@ -8,7 +8,7 @@
                     "type": "serviceBusTrigger",
                     "direction": "in",
                     "name": "message",
-                    "queueName": "webhint-results-dev",
+                    "queueName": "webhint-results",
                     "connection": "QueueConnection",
                     "accessRights": "Manage"
                 }
@@ -49,7 +49,7 @@
                     ]
                 },
                 {
-                    "name": "$return",
+                    "name": "res",
                     "type": "http",
                     "direction": "out"
                 }
@@ -74,7 +74,7 @@
                     ]
                 },
                 {
-                    "name": "$return",
+                    "name": "res",
                     "type": "http",
                     "direction": "out"
                 }
@@ -99,7 +99,7 @@
                     ]
                 },
                 {
-                    "name": "$return",
+                    "name": "res",
                     "type": "http",
                     "direction": "out"
                 }
