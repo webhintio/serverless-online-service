@@ -1,6 +1,5 @@
 {
   "ava": {
-    "concurrency": 5,
     "failFast": false,
     "files": [
       "dist/tests/**/*.js"
@@ -72,24 +71,6 @@
     ]
   },
   "main": "./dist/src/index.js",
-  "nyc": {
-    "branches": 80,
-    "cache": true,
-    "check-coverage": true,
-    "functions": 80,
-    "include": [
-      "dist/src/**/*.js",
-      "dist/serverless/**/*.js"
-    ],
-    "instrument": true,
-    "lines": 85,
-    "reporter": [
-      "lcov",
-      "text"
-    ],
-    "sourceMap": true,
-    "statements": 85
-  },
   "private": true,
   "scripts": {
     "ava": "ava",

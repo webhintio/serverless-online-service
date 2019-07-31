@@ -18,17 +18,18 @@ let queue: Queue = null;
 const moduleName: string = 'Scanner API';
 const categories = require('./categories.json');
 
-const connectToQueue = async () => {
+const connectToQueue = () => {
     if (queue) {
         return;
     }
 
+    /* istanbul ignore else */
     if (QueueConnection) {
         queue = new Queue('webhint-jobs-dev', QueueConnection);
     } else {
         logger.log('Queue connection string not found', moduleName);
     }
-}
+};
 
 /**
  * Split the job in as many messages as configurations it has.
@@ -64,10 +65,11 @@ const getConfig = (data: JobData, serviceConfig: IServiceConfig): Array<UserConf
 
     debug(`Configuration source: ${source}`);
     switch (source) {
+        /* istanbul ignore next */
         case ConfigSource.file:
             config = Array.isArray(data.config) ? data.config : [data.config];
             break;
-        // TODO: TBD.
+        /* TODO: TBD. */
         // case ConfigSource.manual:
         default:
             config = serviceConfig.webhintConfigs;
@@ -175,28 +177,33 @@ const getActiveConfig = async (): Promise<IServiceConfig> => {
 /** Create a job to scan an url if it doesn't exist. */
 export const createJob = async (url: string): Promise<IJob> => {
     /*
-        1. Validate input data
-        2. Parse input data
-        3. Lock database by url
-        4. Check if the job exists having into account if the configuration is the same
-            a) If the job exists
-                I) The job is obsolete
-                    i) Create a new job
-                    ii) Add job to the queue
-                II) The job isn't obsolte => return existing job
-            b) If the job doesn't exist
-                I) Create a new job
-                II) Add job to the queue
-        5. Unlock database by url
+     *   1. Validate input data
+     *   2. Parse input data
+     *   3. Lock database by url
+     *   4. Check if the job exists having into account if the configuration is the same
+     *       a) If the job exists
+     *           I) The job is obsolete
+     *               i) Create a new job
+     *               ii) Add job to the queue
+     *           II) The job isn't obsolte => return existing job
+     *       b) If the job doesn't exist
+     *           I) Create a new job
+     *           II) Add job to the queue
+     *   5. Unlock database by url
      */
 
-    /* TODO
-    ** We want to strip out the ability to upload configs in the future
-    ** This just plugs in just the URL to the exsiting feature
-    ** This will be refactored in a future PR to completely remove
-    ** config upload feature
-    ** https://github.com/webhintio/online-service/issues/585
-    */
+    if (!url) {
+        throw new Error('Url is required');
+    }
+
+    /*
+     * TODO
+     * We want to strip out the ability to upload configs in the future
+     * This just plugs in just the URL to the exsiting feature
+     * This will be refactored in a future PR to completely remove
+     * config upload feature
+     * https://github.com/webhintio/online-service/issues/585
+     */
     const jobData: JobData = {
         config: null,
         hints: null,
@@ -228,7 +235,7 @@ export const createJob = async (url: string): Promise<IJob> => {
 
         try {
             connectToQueue();
-            
+
             job.messagesInQueue = await queue.getMessagesCount();
             await sendMessagesToQueue(job);
 

@@ -15,9 +15,11 @@ const _readFileAsync = promisify(fs.readFile);
 
 /** Max size for uploaded files. */
 const maxFilesSize = 1024 * 100; // 100KB.
-// This limit avoid people to upload very big files from the scanner. It is expected
-// that users just upload a webhint configuration files so 100KB is more than
-// enough.
+/*
+ * This limit avoid people to upload very big files from the scanner. It is expected
+ * that users just upload a webhint configuration files so 100KB is more than
+ * enough.
+ */
 
 /** Convenience wrapper for asynchronously reading file contents. */
 export const readFileAsync = async (filePath: string): Promise<string> => {

@@ -47,7 +47,7 @@ export class IssueReporter {
     private addIssueComment(issue, issueData: IssueData) {
         return this.octokit.issues.createComment({
             body: this.getErrorMessage(issueData),
-            number: issue.number,
+            number: issue.number || issue.issue_number,
             owner: this.GITHUB_OWNER,
             repo: this.GITHUB_REPO
         });
@@ -131,10 +131,12 @@ ${issueData.log}
             this.getErrorTypeLabel(issueData.errorType)
         ];
 
+        /* istanbul ignore else */
         if (production) {
             labels.push('production');
         }
 
+        /* istanbul ignore if */
         if (environment === 'browser') {
             labels.push('browser');
         }
@@ -213,7 +215,7 @@ ${issueData.log}
     private async updateIssueLabels(issue: IssuesUpdateParams, labels: string[]) {
         await this.editIssue({
             labels,
-            number: issue.issue_number
+            number: issue.issue_number || (issue as any).number
         });
     }
 }

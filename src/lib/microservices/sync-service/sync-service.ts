@@ -172,8 +172,10 @@ export const run = async (job: IJob): Promise<any> => {
         logger.log(generateLog(`Synchronizing Job`, job, { showHint: true }), moduleName);
 
         if (job.status === JobStatus.started) {
-            // When a job is split we receive more than one messages for the status `started`
-            // but we only want to store in the database the first one.
+            /*
+             * When a job is split we receive more than one messages for the status `started`
+             * but we only want to store in the database the first one.
+             */
             if (dbJob.status !== JobStatus.started) {
                 dbJob.webhintVersion = job.webhintVersion;
             }

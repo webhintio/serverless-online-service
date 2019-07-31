@@ -286,10 +286,12 @@ export const updateStatuses = async () => {
 
     try {
         await db.connect(dbConnectionString);
+        /* istanbul ignore else */
         if (!queueJobs) {
             queueJobs = new Queue('webhint-jobs', queueConnectionString);
         }
 
+        /* istanbul ignore else */
         if (!queueResults) {
             queueResults = new Queue('webhint-results', queueConnectionString);
         }
@@ -298,6 +300,7 @@ export const updateStatuses = async () => {
         // Online scanner was published in this date, no results before.
         let since: Date = moment('2017-10-15').toDate();
 
+        /* istanbul ignore else */
         if (lastStatus) {
             since = lastStatus.date;
         }

@@ -1,4 +1,4 @@
-import { Category, } from '@hint/utils/dist/src/types/category';
+import { Category } from '@hint/utils/dist/src/types/category';
 import { Problem } from '@hint/utils/dist/src/types/problems';
 import { UserConfig } from '@hint/utils';
 
