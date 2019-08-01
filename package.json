@@ -78,10 +78,7 @@
     "lint:js": "eslint --ext ts --ignore-pattern dist .",
     "build-function-templates": "node ./scripts/create-function-templates.js",
     "test": "npm run lint && npm run build && nyc ava",
-    "watch:ts": "npm run build:ts -- --watch",
-    "steps": "npm run step1 && npm run step2",
-    "step1": "rimraf node_modules/hint && rimraf gitrepos/ && mkdir gitrepos && cd gitrepos && git clone https://github.com/webhintio/hint.git && cd hint && cd packages && cd hint && npm install && npm install @types/is-ci @types/proxyquire && npm run build",
-    "step2": "shx mv gitrepos/hint/packages/hint node_modules/"
+    "watch:ts": "npm run build:ts -- --watch"
   },
   "version": "0.16.0"
 }
