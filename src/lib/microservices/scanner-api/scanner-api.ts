@@ -13,7 +13,7 @@ import { getTime } from '../../common/ntp/ntp';
 import { Queue } from '../../common/queue/queue';
 
 const debug: debug.IDebugger = d(__filename);
-const { QueueConnection, DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
+const { QueueConnection: queueConnection, DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
 let queue: Queue = null;
 const moduleName: string = 'Scanner API';
 const categories = require('./categories.json');
@@ -24,8 +24,8 @@ const connectToQueue = () => {
     }
 
     /* istanbul ignore else */
-    if (QueueConnection) {
-        queue = new Queue('webhint-jobs', QueueConnection);
+    if (queueConnection) {
+        queue = new Queue('webhint-jobs', queueConnection);
     } else {
         logger.log('Queue connection string not found', moduleName);
     }

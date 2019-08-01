@@ -1,8 +1,7 @@
 import { AzureFunction, Context } from '@azure/functions';
-
-import * as statusService from '../../lib/microservices/status-service/status-service';
+import * as statusManager from '../../lib/common/status/status';
 
 export const run: AzureFunction = async (context: Context, timer: any): Promise<void> => {
-    await statusService.run();
+    await statusManager.updateStatuses();
     context.done();
 };
