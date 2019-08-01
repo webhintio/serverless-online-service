@@ -34,31 +34,6 @@
         }
     },
     {
-        "name": "api-scannerstatus",
-        "template": {
-            "disabled": false,
-            "bindings": [
-                {
-                    "authLevel": "function",
-                    "name": "req",
-                    "type": "httpTrigger",
-                    "direction": "in",
-                    "route": "scannerstatus",
-                    "methods": [
-                        "get"
-                    ]
-                },
-                {
-                    "name": "res",
-                    "type": "http",
-                    "direction": "out"
-                }
-            ],
-            "entryPoint": "run",
-            "scriptFile": "../dist/src/functions/azure/api-scannerstatus.js"
-        }
-    },
-    {
         "name": "api-jobstatus",
         "template": {
             "disabled": false,

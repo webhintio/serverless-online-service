@@ -297,14 +297,3 @@ export const getJobStatus = async (id: string): Promise<IJob> => {
         throw err;
     }
 };
-
-export const getScannerStatus = async (): Promise<IStatus[]> => {
-    const from = moment().subtract(1, 'day');
-
-    try {
-        return await statusManager.getStatus(from.toDate());
-    } catch (err) {
-        logger.error(err, moduleName);
-        throw err;
-    }
-};
