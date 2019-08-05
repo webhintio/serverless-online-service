@@ -141,13 +141,15 @@ ${issueData.log}
             labels.push('browser');
         }
 
+        const env = environment === undefined ? ' ' : ` [${environment}] `;
+
         await this.octokit.issues.create(Object.assign(
             {},
             this.GITHUB_DATA,
             {
                 body: this.getErrorMessage(issueData),
                 labels,
-                title: `[${this.getEmoji(issueData.errorType)}] [${environment}] ${issueData.url}`
+                title: `[${this.getEmoji(issueData.errorType)}]${env}${issueData.url}`
             }
         ));
     }
