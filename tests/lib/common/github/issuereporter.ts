@@ -163,7 +163,7 @@ test(`If there is an error and issue exists, it should create a comment`, async 
 
     t.true(editArgs.labels.includes(`scan:${scan}`));
     t.true(editArgs.labels.includes('error:timeout'));
-    t.is(editArgs.number, 1);
+    t.is(editArgs.number, undefined);
 
     sandbox.restore();
 });

@@ -215,7 +215,7 @@ ${issueData.log}
     private async updateIssueLabels(issue: IssuesUpdateParams, labels: string[]) {
         await this.editIssue({
             labels,
-            number: issue.issue_number || (issue as any).number
+            number: issue.issue_number
         });
     }
 }
