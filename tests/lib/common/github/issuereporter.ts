@@ -157,7 +157,7 @@ test(`If there is an error and issue exists, it should create a comment`, async 
 
     t.true(args.body.includes(errorMessage));
     t.true(args.body.includes('"hint2": "warning"'));
-    t.is(args.number, 1);
+    t.is(args.number, undefined);
 
     const editArgs = octokitIssuesUpdateSpy.args[0][0];
 
