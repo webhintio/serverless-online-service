@@ -8,7 +8,7 @@ import { debug as d } from '../../../utils/debug';
 import { IJob } from '../../../types';
 import { IJobModel, Job } from '../models/job';
 import { JobStatus } from '../../../enums/status';
-import { Hint, StatOptions, StatQueryParameter } from '../../../types';
+import { Hint } from '../../../types';
 import { getTime } from '../../ntp/ntp';
 
 const debug: debug.IDebugger = d(__filename);
@@ -132,54 +132,4 @@ export const getByDate = async (field: string, from: Date, to: Date): Promise<Ar
     const results: Array<IJob> = await query.exec();
 
     return results;
-};
-
-/* ******************************************** */
-/*                  STATISTICS                  */
-/* ******************************************** */
-/**
- * Return the count of a query.
- * @param {StatQueryParameter} queryParameters - Query parameters.
- */
-const count = (queryParameters: StatQueryParameter): Promise<number> => {
-    const query = Job.find(queryParameters);
-
-    return query
-        .count()
-        .exec();
-};
-
-/**
- * Get the number of jobs with a status.
- * @param {JobStatus} status - Job status.
- * @param {StatOptions} options - Query options.
- */
-export const getStatusCount = async (status: JobStatus, options?: StatOptions): Promise<number> => {
-    const queryParameters: StatQueryParameter = { status };
-
-    if (options && options.since) {
-        queryParameters[options.field] = { $gte: options.since };
-    }
-
-    const result: number = await Job.find(queryParameters)
-        .count()
-        .exec();
-
-    return result;
-};
-
-/**
- * Get the number of jobs in the database.
- * @param {StatOptions} options - Query options.
- */
-export const getCount = async (options?: StatOptions): Promise<number> => {
-    const queryParameters: StatQueryParameter = {};
-
-    if (options && options.since) {
-        queryParameters.finished = { $gte: options.since };
-    }
-
-    const total: number = await count(queryParameters);
-
-    return total;
 };

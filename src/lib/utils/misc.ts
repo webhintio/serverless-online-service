@@ -1,49 +1,21 @@
 import * as fs from 'fs';
 import { promisify } from 'util';
 
-import { Request } from 'express';
-import * as multiparty from 'multiparty';
 import stripBom = require('strip-bom');
 import * as stripComments from 'strip-json-comments';
 
 import { debug as d } from './debug';
 import { JobStatus } from '../enums/status';
-import { RequestData, IJob } from '../types';
+import { IJob } from '../types';
 
 const debug: debug.IDebugger = d(__filename);
 const _readFileAsync = promisify(fs.readFile);
-
-/** Max size for uploaded files. */
-const maxFilesSize = 1024 * 100; // 100KB.
-/*
- * This limit avoid people to upload very big files from the scanner. It is expected
- * that users just upload a webhint configuration files so 100KB is more than
- * enough.
- */
 
 /** Convenience wrapper for asynchronously reading file contents. */
 export const readFileAsync = async (filePath: string): Promise<string> => {
     const content: string = await _readFileAsync(filePath, 'utf8');
 
     return stripBom(content);
-};
-
-/** Read multipart data from request. */
-export const getDataFromRequest = (req: Request): Promise<RequestData> => {
-    return new Promise((resolve, reject) => {
-        const form = new multiparty.Form({ maxFilesSize });
-
-        form.parse(req, (err, fields, files) => {
-            if (err) {
-                return reject(err);
-            }
-
-            return resolve({
-                fields,
-                files
-            });
-        });
-    });
 };
 
 /** Convenience wrapper for synchronously reading file contents. */

@@ -11,6 +11,7 @@ import { generateLog } from '../../utils/misc';
 import * as appInsight from '../../utils/appinsights';
 import { IssueData } from '../../types/issuedata';
 
+const slowReturnMessage = `webhint didn't return the result fast enough`;
 const moduleName: string = 'Sync Function';
 const { DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
 const appInsightClient = appInsight.getClient();
@@ -85,10 +86,9 @@ const reportGithubTimeoutIssues = async (job: IJob) => {
          * the same error.
          */
         const hint = job.hints[0];
-        const expectedMessage = `webhint didn't return the result fast enough`;
         const message = hint.messages && hint.messages[0] && hint.messages[0].message;
 
-        if (message && message.includes(expectedMessage)) {
+        if (message && message.includes(slowReturnMessage)) {
             const issueReporter: IssueReporter = new IssueReporter();
             const issueData: IssueData = {
                 configs: job.config,
@@ -111,13 +111,11 @@ const reportGithubTimeoutIssues = async (job: IJob) => {
 
 const closeGithubIssues = async (dbJob: IJobModel) => {
     try {
-        const expectedMessage = `webhint didn't return the result fast enough`;
-
         // Check first if there was any timeout.
         const someTimeout = dbJob.hints.some((hint) => {
             const message = hint.messages && hint.messages[0] && hint.messages[0].message;
 
-            return message && message.includes(expectedMessage);
+            return message && message.includes(slowReturnMessage);
         });
 
         if (!someTimeout) {
@@ -137,7 +135,7 @@ const closeGithubIssues = async (dbJob: IJobModel) => {
     }
 };
 
-export const run = async (job: IJob): Promise<any> => {
+export const run = async (job: IJob): Promise<void> => {
     try {
         await database.connect(dbConnectionString);
     } catch (e) {
