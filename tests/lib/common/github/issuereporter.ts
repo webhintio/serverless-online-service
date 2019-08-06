@@ -77,7 +77,7 @@ test('If no error but issue exists, it should close the issue', async (t) => {
     const args = octokitIssuesUpdateStub.args[0][0];
 
     t.is(args.state, 'closed');
-    t.is(args.number, 1);
+    t.is(args.issue_number, 1);
 
     sandbox.restore();
 });
@@ -121,8 +121,8 @@ test(`If there is an error and issue exists, it should create a comment`, async 
     const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issues'>(Octokit.prototype.search, 'issues').resolves({
         data: {
             items: [{
-                labels: [{ name: 'error:timeout' }],
-                number: 1
+                issue_number: 1, // eslint-disable-line camelcase
+                labels: [{ name: 'error:timeout' }]
             }]
         }
     });
@@ -157,13 +157,13 @@ test(`If there is an error and issue exists, it should create a comment`, async 
 
     t.true(args.body.includes(errorMessage));
     t.true(args.body.includes('"hint2": "warning"'));
-    t.is(args.number, undefined);
+    t.is(args.issue_number, 1);
 
     const editArgs = octokitIssuesUpdateSpy.args[0][0];
 
     t.true(editArgs.labels.includes(`scan:${scan}`));
     t.true(editArgs.labels.includes('error:timeout'));
-    t.is(editArgs.number, undefined);
+    t.is(editArgs.issue_number, 1);
 
     sandbox.restore();
 });
