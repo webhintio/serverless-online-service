@@ -72,7 +72,7 @@
     "build": "npm run clean && npm-run-all build:* && npm run build-function-templates",
     "build:assets": "cpx \"./{src,tests}/**/{!(*.ts),.!(ts)}\" dist",
     "build:ts": "tsc",
-    "prebuild": "node ./scripts/create-hint-categories.js",
+    "prebuild": "node ./scripts/create-hint-categories.js && node ./scripts/create-hint-extends.js",
     "clean": "rimraf dist",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint --ext ts --ignore-pattern dist .",

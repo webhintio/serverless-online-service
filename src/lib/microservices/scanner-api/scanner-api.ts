@@ -3,8 +3,7 @@ import * as moment from 'moment';
 import { UserConfig } from '@hint/utils';
 
 import * as database from '../../common/database/database';
-import * as statusManager from '../../common/status/status';
-import { Hint, IJob, IServiceConfig, IStatus, JobData } from '../../types';
+import { Hint, IJob, IServiceConfig, JobData } from '../../types';
 import * as logger from '../../utils/logging';
 import { ConfigSource } from '../../enums/configsource';
 import { JobStatus, HintStatus } from '../../enums/status';
@@ -17,6 +16,7 @@ const { QueueConnection: queueConnection, DatabaseConnection: dbConnectionString
 let queue: Queue = null;
 const moduleName: string = 'Scanner API';
 const categories = require('./categories.json');
+const hintExtends = require('./hint-extends.json');
 
 const connectToQueue = () => {
     if (queue) {
@@ -91,32 +91,75 @@ const getActiveJob = (jobs: Array<IJob>, config: Array<UserConfig>, cacheTime: n
     });
 };
 
+const getHintsFromExtends = (configsExtended: Array<string> | undefined): Array<Hint> => {
+    if (!configsExtended) {
+        return [];
+    }
+
+    const hints: Array<Hint> = [];
+
+    for (const ext of configsExtended) {
+        const partialHints = hintExtends[ext];
+
+        for (const hintName of partialHints) {
+            const currentHint = hints.find((hint) => {
+                return hint.name === hintName;
+            });
+
+            if (!currentHint) {
+                hints.push({
+                    category: categories[hintName],
+                    messages: [],
+                    name: hintName,
+                    status: HintStatus.pending
+                });
+            }
+        }
+    }
+
+    return hints;
+};
+
+const getHints = (userConfigs: Array<UserConfig>) => {
+    let hints: Array<Hint> = [];
+
+    userConfigs.forEach((userConfig) => {
+        let partialHints = getHintsFromExtends(userConfig.extends);
+
+        partialHints = Object.entries(userConfig.hints).reduce((total: Array<Hint>, [hintName, severity]) => {
+            if (severity === HintStatus.off) {
+                return total;
+            }
+
+            const hintExists = total.some((hint) => {
+                return hint.name === hintName;
+            });
+
+            if (!hintExists) {
+                total.push({
+                    category: categories[hintName],
+                    messages: [],
+                    name: hintName,
+                    status: HintStatus.pending
+                });
+            }
+
+            return total;
+        }, partialHints);
+
+        hints = hints.concat(partialHints);
+    });
+
+    return hints;
+};
+
 /**
  * Create a new Job in the database.
  * @param {string} url - The url that the job will be use.
  * @param {UserConfig} config - The configuration for the job.
  */
 const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime: number): Promise<IJob> => {
-    let hints: Array<Hint> = [];
-
-    configs.forEach((config) => {
-        const partialHints: Array<Hint> = Object.entries(config.hints).reduce((total, [key, value]) => {
-            if (value === HintStatus.off) {
-                return total;
-            }
-
-            total.push({
-                category: categories[key],
-                messages: [],
-                name: key,
-                status: HintStatus.pending
-            });
-
-            return total;
-        }, []);
-
-        hints = hints.concat(partialHints);
-    });
+    const hints: Array<Hint> = getHints(configs);
 
     let databaseJob: IJob;
 
