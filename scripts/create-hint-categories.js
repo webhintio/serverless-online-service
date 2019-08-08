@@ -8,7 +8,7 @@ const writeFileAsync = utils.promisify(fs.writeFile);
 const filename = path.join(process.cwd(), 'src', 'lib', 'microservices', 'scanner-api', 'categories.json');
 
 const create = async () => {
-    const metas = await globby(['./node_modules/@hint/hint-*/dist/src/meta.js'], { absolute: true, cwd: process.cwd() });
+    const metas = await globby(['./node_modules/{@hint}/{hint-*,configuration-*/node_modules/@hint/hint-*}/dist/src/meta.js'], { absolute: true, cwd: process.cwd() });
 
     const results = {};
 
