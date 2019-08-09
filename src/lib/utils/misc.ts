@@ -4,6 +4,9 @@ import { promisify } from 'util';
 import stripBom = require('strip-bom');
 import * as stripComments from 'strip-json-comments';
 
+import { validateConfig } from 'hint/dist/src/lib/config/config-validator';
+import { UserConfig, normalizeHints } from '@hint/utils';
+
 import { debug as d } from './debug';
 import { JobStatus } from '../enums/status';
 import { IJob } from '../types';
@@ -58,4 +61,29 @@ export const generateLog = (header: string, job: IJob, options: { showHint: bool
     }
 
     return log;
+};
+
+/**
+ * Check if an array of webhint configurations is valid.
+ * @param {Array<UserConfig>} configs - Array of webhint configurations.
+ */
+export const validateServiceConfig = (configs: Array<UserConfig>) => {
+    const hints: Set<string> = new Set();
+
+    for (const config of configs) {
+        if (!validateConfig(config)) {
+            throw new Error(`Invalid Configuration
+${JSON.stringify(config)}`);
+        }
+
+        const normalizedHints = normalizeHints(config.hints);
+
+        for (const [key] of Object.entries(normalizedHints)) {
+            if (hints.has(key)) {
+                throw new Error(`Hint ${key} repeated`);
+            }
+
+            hints.add(key);
+        }
+    }
 };
