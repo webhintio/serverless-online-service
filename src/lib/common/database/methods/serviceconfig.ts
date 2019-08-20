@@ -4,6 +4,7 @@ import { DocumentQuery } from 'mongoose';
 import { debug as d } from '../../../utils/debug';
 import { IServiceConfig } from '../../../types';
 import { IServiceConfigModel, ServiceConfig } from '../models/serviceconfig';
+import { connect } from './common';
 
 const debug: debug.IDebugger = d(__filename);
 
@@ -16,6 +17,7 @@ const debug: debug.IDebugger = d(__filename);
  */
 export const add = async (name: string, jobCacheTime: number, jobRunTime: number, options: Array<UserConfig>): Promise<IServiceConfig> => {
     debug(`Creating config with name: ${name}`);
+    await connect();
 
     const config: IServiceConfigModel = new ServiceConfig({
         active: false,
@@ -38,6 +40,7 @@ export const add = async (name: string, jobCacheTime: number, jobRunTime: number
  */
 export const activate = async (name: string): Promise<IServiceConfig> => {
     debug(`Getting config by name: ${name}`);
+    await connect();
     const query: DocumentQuery<Array<IServiceConfigModel>, IServiceConfigModel> = ServiceConfig.find({});
     const configs: Array<IServiceConfigModel> = await query.exec();
 
@@ -73,6 +76,7 @@ export const activate = async (name: string): Promise<IServiceConfig> => {
  * Get all the configurations stored in the database.
  */
 export const getAll = async (): Promise<Array<IServiceConfig>> => {
+    await connect();
     const query: DocumentQuery<Array<IServiceConfigModel>, IServiceConfigModel> = ServiceConfig.find({});
     const configs: Array<IServiceConfig> = await query.exec();
 
@@ -84,6 +88,7 @@ export const getAll = async (): Promise<Array<IServiceConfig>> => {
  * @param {string} name - Configuration name.
  */
 export const get = async (name: string): Promise<IServiceConfig> => {
+    await connect();
     const query: DocumentQuery<IServiceConfigModel, IServiceConfigModel> = ServiceConfig.findOne({ name });
     const config: IServiceConfig = await query.exec();
 
@@ -95,6 +100,7 @@ export const get = async (name: string): Promise<IServiceConfig> => {
  * @param {string} name - Configuration name.
  */
 export const remove = async (name: string) => {
+    await connect();
     const query: DocumentQuery<IServiceConfigModel, IServiceConfigModel> = ServiceConfig.findOne({ name });
 
     await query.remove().exec();
@@ -104,6 +110,7 @@ export const remove = async (name: string) => {
  * Get the current active configuration.
  */
 export const getActive = async (): Promise<IServiceConfig> => {
+    await connect();
     const query: DocumentQuery<IServiceConfigModel, IServiceConfigModel> = ServiceConfig.findOne({ active: true });
     const config: IServiceConfig = await query.exec();
 
@@ -119,6 +126,7 @@ export const getActive = async (): Promise<IServiceConfig> => {
  * @param {UserConfig} options - Configuration data.
  */
 export const edit = async (oldName: string, newName: string, jobCacheTime: number, jobRunTime: number, configs?: Array<UserConfig>): Promise<IServiceConfig> => {
+    await connect();
     const query: DocumentQuery<IServiceConfigModel, IServiceConfigModel> = ServiceConfig.findOne({ name: oldName });
     const config: IServiceConfigModel = await query.exec();
 

@@ -285,7 +285,6 @@ export const updateStatuses = async () => {
     let error = false;
 
     try {
-        await db.connect(dbConnectionString);
         /* istanbul ignore else */
         if (!queueJobs) {
             queueJobs = new Queue('webhint-jobs', queueConnectionString);

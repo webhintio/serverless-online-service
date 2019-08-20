@@ -134,15 +134,7 @@ const getHints = (userConfigs: Array<UserConfig>) => {
 const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime: number): Promise<IJob> => {
     const hints: Array<Hint> = getHints(configs);
 
-    let databaseJob: IJob;
-
-    try {
-        await database.connect(dbConnectionString);
-        databaseJob = await database.job.add(url, JobStatus.pending, hints, configs, jobRunTime);
-    } catch (e) {
-        logger.error(`Could not connect to databse`, moduleName, e);
-        throw e;
-    }
+    const databaseJob = await database.job.add(url, JobStatus.pending, hints, configs, jobRunTime);
 
     return {
         config: databaseJob.config,
@@ -164,16 +156,7 @@ const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime:
  * Get the current active configuration.
  */
 const getActiveConfig = async (): Promise<IServiceConfig> => {
-    let currentConfig: IServiceConfig;
-
-    try {
-        await database.connect(dbConnectionString);
-        currentConfig = await database.serviceConfig.getActive();
-
-    } catch (e) {
-        logger.error(`Could not connect to databse`, moduleName, e);
-        throw e;
-    }
+    const currentConfig = await database.serviceConfig.getActive();
 
     if (!currentConfig) {
         throw new Error('There is no active configuration');
@@ -213,16 +196,7 @@ export const createJob = async (url: string): Promise<IJob> => {
     }
 
     const serviceConfig: IServiceConfig = await getActiveConfig();
-
-    try {
-        await database.connect(dbConnectionString);
-    } catch (e) {
-        logger.error(`Could not connect to databse`, moduleName, e);
-        throw e;
-    }
-
     const lock = await database.lock(url);
-
     const config = serviceConfig.webhintConfigs;
     const jobs: Array<IJob> = await database.job.getByUrl(url);
     let job = getActiveJob(jobs, config, serviceConfig.jobCacheTime);
@@ -284,13 +258,6 @@ export const createJob = async (url: string): Promise<IJob> => {
 
 /** Get the status of a job. */
 export const getJobStatus = async (id: string): Promise<IJob> => {
-    try {
-        await database.connect(dbConnectionString);
-    } catch (e) {
-        logger.error(`Could not connect to databse`, moduleName, e);
-        throw e;
-    }
-
     try {
         return await database.job.get(id);
     } catch (err) {

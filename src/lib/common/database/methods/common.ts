@@ -13,6 +13,7 @@ const debug: debug.IDebugger = d(__filename);
 let cachedDb: mongoose.Connection;
 const lockName: string = 'index';
 const moduleName: string = 'Database:common';
+const { DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
 
 /**
  * Create a lock object.
@@ -30,26 +31,17 @@ export const createLock = (url: string) => {
 };
 
 /**
- * Release a lock.
- * @param dbLock - Lock object to release.
- */
-export const unlock = async (dbLock) => {
-    logger.log(`Release lock for key ${dbLock.name}`, moduleName);
-    await dbLock.releaseAsync(dbLock.code);
-};
-
-/**
  * Create a connection to the database.
  * @param {string} connectionString Connection string to the database.
  */
-export const connect = async (connectionString: string) => {
+export const connect = async () => {
     if (cachedDb && cachedDb.serverConfig.isConnected() && mongoose.connection.readyState === 1) {
         // Do nothing, connection already exists;
         return;
     }
 
     try {
-        cachedDb = (await mongoose.connect(connectionString, { useNewUrlParser: true })).connection.db;
+        cachedDb = (await mongoose.connect(dbConnectionString, { useNewUrlParser: true })).connection.db;
         debug('Connected to database');
 
         const indexLock = createLock(lockName);
@@ -63,6 +55,16 @@ export const connect = async (connectionString: string) => {
 };
 
 /**
+ * Release a lock.
+ * @param dbLock - Lock object to release.
+ */
+export const unlock = async (dbLock) => {
+    await connect();
+    logger.log(`Release lock for key ${dbLock.name}`, moduleName);
+    await dbLock.releaseAsync(dbLock.code);
+};
+
+/**
  * Create a lock for an url.
  * @param {string} url - URL to lock in the database.
  */
@@ -70,6 +72,7 @@ export const lock = async (url: string) => {
     const dbLock = createLock(url);
 
     const getLock = async () => {
+        await connect();
         const code = await dbLock.acquireAsync();
 
         if (!code) {

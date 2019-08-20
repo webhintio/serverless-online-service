@@ -28,7 +28,12 @@ type NTP = {
     getTime: () => Promise<NTPObject>;
 }
 
+type Common = {
+    connect: () => Promise<void>;
+}
+
 type DBJobTestContext = {
+    common: Common;
     jobFindStub: sinon.SinonStub;
     jobFindOneStub: sinon.SinonStub;
     jobModels: JobModels;
@@ -47,7 +52,8 @@ const test = anyTest as TestInterface<DBJobTestContext>;
 const loadScript = (context: DBJobTestContext) => {
     return proxyquire('../../../../src/lib/common/database/methods/job', {
         '../../ntp/ntp': context.ntp,
-        '../models/job': context.jobModels
+        '../models/job': context.jobModels,
+        './common': context.common
     });
 };
 
@@ -100,6 +106,11 @@ test.beforeEach((t) => {
         url: 'url',
         webhintVersion: null
     }];
+    t.context.common = {
+        connect() {
+            return null;
+        }
+    };
 
     t.context.sandbox = sandbox;
 });
@@ -111,32 +122,63 @@ test.afterEach.always((t) => {
 test('job.getByUrl should return a job', async (t) => {
     const sandbox = t.context.sandbox;
     const queryExecStub = sandbox.stub(t.context.query, 'exec').resolves(t.context.jobResult);
+
+    sandbox.stub(t.context.common, 'connect').resolves();
     const job = loadScript(t.context);
     const result = await job.getByUrl('url');
 
     t.true(queryExecStub.calledOnce);
     t.true(t.context.jobFindStub.calledOnce);
     t.is(result, t.context.jobResult);
+});
 
-    queryExecStub.restore();
+test(`job.getByUrl should throw an exception if it can't connect to the database`, async (t) => {
+    const sandbox = t.context.sandbox;
+
+    const queryExecSpy = sandbox.spy(t.context.query, 'exec');
+
+    sandbox.stub(t.context.common, 'connect').rejects();
+    const job = loadScript(t.context);
+
+    await t.throwsAsync(async () => {
+        await job.getByUrl('url');
+    });
+
+    t.false(queryExecSpy.called);
 });
 
 test('job.get should return a job', async (t) => {
     const sandbox = t.context.sandbox;
     const queryExecStub = sandbox.stub(t.context.query, 'exec').resolves(t.context.jobResult[0]);
+
+    sandbox.stub(t.context.common, 'connect').resolves();
     const job = loadScript(t.context);
     const result = await job.get('url');
 
     t.true(queryExecStub.calledOnce);
     t.true(t.context.jobFindOneStub.calledOnce);
     t.is(result, t.context.jobResult[0]);
+});
 
-    queryExecStub.restore();
+test(`job.get should throw an exception if it can't connect to the database`, async (t) => {
+    const sandbox = t.context.sandbox;
+    const queryExecSpy = sandbox.spy(t.context.query, 'exec');
+
+    sandbox.stub(t.context.common, 'connect').rejects();
+    const job = loadScript(t.context);
+
+    await t.throwsAsync(async () => {
+        await job.get('url');
+    });
+
+    t.false(queryExecSpy.called);
 });
 
 test('job.add should save a new job in database', async (t) => {
     const sandbox = t.context.sandbox;
     const modelObjectSaveStub = sandbox.stub(t.context.modelObject, 'save').resolves();
+
+    sandbox.stub(t.context.common, 'connect').resolves();
     const job = loadScript(t.context);
 
     await job.add('url', JobStatus.pending, null, null, 180);
@@ -147,6 +189,8 @@ test('job.add should save a new job in database', async (t) => {
 test('job.getByDate should return the jobs between both dates', async (t) => {
     const sandbox = t.context.sandbox;
     const queryExecStub = sandbox.stub(t.context.query, 'exec').resolves(t.context.jobResult);
+
+    sandbox.stub(t.context.common, 'connect').resolves();
 
     const field = 'started';
     const from = moment();
@@ -162,6 +206,22 @@ test('job.getByDate should return the jobs between both dates', async (t) => {
     t.true(from.isSame(moment(args[field].$gte)));
     t.true(to.isSame(moment(args[field].$lt)));
     t.is(result, t.context.jobResult);
+});
 
-    queryExecStub.restore();
+test(`job.getByDate should throw an exception if it can't connect to the database`, async (t) => {
+    const sandbox = t.context.sandbox;
+    const queryExecSpy = sandbox.spy(t.context.query, 'exec');
+
+    sandbox.stub(t.context.common, 'connect').rejects();
+
+    const field = 'started';
+    const from = moment();
+    const to = moment().add(3, 'hour');
+    const job = loadScript(t.context);
+
+    await t.throwsAsync(async () => {
+        await job.getByDate(field, from.toDate(), to.toDate());
+    });
+
+    t.false(queryExecSpy.called);
 });

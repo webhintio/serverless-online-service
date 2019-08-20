@@ -16,7 +16,6 @@ import { CLIOptions, IServiceConfig } from '../../types';
 import * as logger from '../../utils/logging';
 
 const moduleName: string = 'Configuration Manager';
-const { DatabaseConnection: databaseCS } = process.env; // eslint-disable-line no-process-env
 
 const addConfig = async (cliOptions: CLIOptions) => {
     try {
@@ -113,7 +112,7 @@ const methods = {
  * @param {CLIOptions} cliOptions Options from the CLI.
  */
 const run = async (cliOptions: CLIOptions) => {
-    await database.connect(databaseCS);
+    await database.connect();
 
     const properties = Object.keys(methods);
 

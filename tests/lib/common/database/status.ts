@@ -17,7 +17,12 @@ type StatusModels = {
     Status: () => ModelObject;
 }
 
+type Common = {
+    connect: () => Promise<void>;
+}
+
 type DBStatusTestContext = {
+    common: Common;
     modelObject: ModelObject;
     query: Query;
     querySortStub: sinon.SinonStub;
@@ -29,7 +34,10 @@ type DBStatusTestContext = {
 const test = anyTest as TestInterface<DBStatusTestContext>;
 
 const loadScript = (context: DBStatusTestContext) => {
-    return proxyquire('../../../../src/lib/common/database/methods/status', { '../models/status': context.statusModels });
+    return proxyquire('../../../../src/lib/common/database/methods/status', {
+        '../models/status': context.statusModels,
+        './common': context.common
+    });
 };
 
 test.beforeEach((t) => {
@@ -53,6 +61,13 @@ test.beforeEach((t) => {
             return t.context.query;
         }
     };
+
+    t.context.common = {
+        connect() {
+            return null;
+        }
+    };
+
     t.context.statusFindOneStub = sandbox.stub(Status, 'findOne').returns(t.context.query);
     t.context.querySortStub = sandbox.stub(t.context.query, 'sort').returns(t.context.query);
 
@@ -73,6 +88,20 @@ test('status.add should create a new status in database', async (t) => {
     t.true(modelObjectSaveStub.calledOnce);
 });
 
+test(`status.add should throw an exception if it can't connect to the database`, async (t) => {
+    const sandbox = t.context.sandbox;
+
+    sandbox.stub(t.context.common, 'connect').rejects();
+    const modelObjectSaveSpy = sandbox.spy(t.context.modelObject, 'save');
+    const status = loadScript(t.context);
+
+    await t.throwsAsync(async () => {
+        await status.add({ date: new Date() } as IStatus);
+    });
+
+    t.false(modelObjectSaveSpy.called);
+});
+
 test('status.getMostRecent should return the newest item in the database', async (t) => {
     const sandbox = t.context.sandbox;
     const queryExecStub = sandbox.stub(t.context.query, 'exec').resolves();
@@ -85,4 +114,18 @@ test('status.getMostRecent should return the newest item in the database', async
     t.true(queryExecStub.calledOnce);
     t.true(t.context.statusFindOneStub.calledOnce);
     t.is(t.context.statusFindOneStub.args[0][0], void 0);
+});
+
+test(`status.getMostRecent should throw an exception if it can't connect to the database`, async (t) => {
+    const sandbox = t.context.sandbox;
+    const queryExecSpy = sandbox.stub(t.context.query, 'exec');
+
+    sandbox.stub(t.context.common, 'connect').rejects();
+    const status = loadScript(t.context);
+
+    await t.throwsAsync(async () => {
+        await status.getMostRecent();
+    });
+
+    t.false(queryExecSpy.called);
 });

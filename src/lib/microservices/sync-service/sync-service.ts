@@ -136,13 +136,6 @@ const closeGithubIssues = async (dbJob: IJobModel) => {
 };
 
 export const run = async (job: IJob): Promise<void> => {
-    try {
-        await database.connect(dbConnectionString);
-    } catch (e) {
-        logger.error(`Could not connect to databse`, moduleName, e);
-        throw e;
-    }
-
     const id = job.id;
     let lock: any;
 

@@ -1,6 +1,7 @@
 import { debug as d } from '../../../utils/debug';
 import { Status, IStatusModel } from '../models/status';
 import { IStatus } from '../../../types';
+import { connect } from './common';
 
 const debug: debug.IDebugger = d(__filename);
 
@@ -9,6 +10,7 @@ const debug: debug.IDebugger = d(__filename);
  * @param {IStatus} status - Status to save in database.
  */
 export const add = async (status: IStatus): Promise<IStatusModel> => {
+    await connect();
     const newStatus = new Status(status);
 
     await newStatus.save();
@@ -22,6 +24,7 @@ export const add = async (status: IStatus): Promise<IStatusModel> => {
  * Update an status in the database.
  */
 export const update = async (status: IStatusModel, field) => {
+    await connect();
     status.markModified(field);
 
     await status.save();
@@ -31,6 +34,7 @@ export const update = async (status: IStatusModel, field) => {
  * Get the last status in the database.
  */
 export const getMostRecent = async (): Promise<IStatus> => {
+    await connect();
     const result: IStatus = await Status.findOne()
         .sort({ date: -1 })
         .exec();
@@ -44,6 +48,7 @@ export const getMostRecent = async (): Promise<IStatus> => {
  * @param {Date} to - End date.
  */
 export const getByDate = async (from: Date, to: Date): Promise<Array<IStatus>> => {
+    await connect();
     const result: Array<IStatus> = await Status.find({
         date: {
             $gte: from,

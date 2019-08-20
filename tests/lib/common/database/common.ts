@@ -124,6 +124,10 @@ test('disconnect should do nothing if database is not connected', async (t) => {
 
 test('unlock should call to releaseAsync', async (t) => {
     const sandbox = t.context.sandbox;
+
+    sandbox.stub(t.context.mongoose, 'connect').resolves(t.context.database);
+    sandbox.stub(t.context.dbLock, 'ensureIndexes').callsArg(0);
+
     const lock = {
         releaseAsync(): Promise<any> {
             return null;
@@ -207,6 +211,9 @@ test('if ensureIndexes fail, it should throw an error', async (t) => {
 test('lock should lock the database', async (t) => {
     const sandbox = t.context.sandbox;
 
+    sandbox.stub(t.context.mongoose, 'connect').resolves(t.context.database);
+    sandbox.stub(t.context.dbLock, 'ensureIndexes').callsArg(0);
+
     const dbLockAcquireStub = sandbox.stub(t.context.dbLock, 'acquire').callsFake((callback) => {
         callback(null, 'code');
     });
@@ -220,6 +227,8 @@ test('lock should lock the database', async (t) => {
 test('if database is locked, it should retry to lock the database', async (t) => {
     const sandbox = t.context.sandbox;
 
+    sandbox.stub(t.context.mongoose, 'connect').resolves(t.context.database);
+    sandbox.stub(t.context.dbLock, 'ensureIndexes').callsArg(0);
     const dbLockAcquireStub = sandbox.stub(t.context.dbLock, 'acquire')
         .onFirstCall()
         .callsFake((callback) => {
@@ -239,6 +248,8 @@ test('if database is locked, it should retry to lock the database', async (t) =>
 test('if database is locked for a long time, it should throw an error', async (t) => {
     const sandbox = t.context.sandbox;
 
+    sandbox.stub(t.context.mongoose, 'connect').resolves(t.context.database);
+    sandbox.stub(t.context.dbLock, 'ensureIndexes').callsArg(0);
     const dbLockAcquireStub = sandbox.stub(t.context.dbLock, 'acquire')
         .callsFake((callback) => {
             callback(null, null);
