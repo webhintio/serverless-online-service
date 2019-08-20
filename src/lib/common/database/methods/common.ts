@@ -92,23 +92,6 @@ export const lock = async (url: string) => {
 };
 
 /**
- * Get the data about the replica set.
- */
-export const replicaSetStatus = async () => {
-    try {
-        const status = await cachedDb.command({ replSetGetStatus: 1 });
-
-        return status;
-    } catch (err) {
-        if (err.message.toLowerCase() === 'not running with --replset') {
-            return null;
-        }
-
-        throw err;
-    }
-};
-
-/**
  * Disconnect from the database.
  */
 export const disconnect = async () => {

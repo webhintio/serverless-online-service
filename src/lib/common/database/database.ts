@@ -3,7 +3,7 @@ import * as job from './methods/job';
 import * as serviceConfig from './methods/serviceconfig';
 import * as status from './methods/status';
 
-const { connect, disconnect, lock, unlock, replicaSetStatus } = datacontext;
+const { connect, disconnect, lock, unlock } = datacontext;
 
 export {
     connect,
@@ -12,6 +12,5 @@ export {
     unlock,
     job,
     serviceConfig,
-    status,
-    replicaSetStatus
+    status
 };

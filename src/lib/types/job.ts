@@ -2,7 +2,6 @@ import { Category } from '@hint/utils/dist/src/types/category';
 import { Problem } from '@hint/utils/dist/src/types/problems';
 import { UserConfig } from '@hint/utils';
 
-import { ConfigSource } from '../enums/configsource';
 import { JobStatus, HintStatus } from '../enums/status';
 
 export type Hint = {
@@ -16,13 +15,6 @@ export type JobResult = {
     error: string;
     ok: boolean;
     messages: Array<Problem>;
-};
-
-export type JobData = {
-    config;
-    hints: Array<string>;
-    source: ConfigSource;
-    url: string;
 };
 
 export type PartInfo = {

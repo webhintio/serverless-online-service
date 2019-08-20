@@ -253,61 +253,6 @@ test('if database is locked for a long time, it should throw an error', async (t
     }
 });
 
-test('replicaSetStatus should run the right command', async (t) => {
-    const sandbox = t.context.sandbox;
-
-    t.context.mongooseConnectStub = sandbox.stub(t.context.mongoose, 'connect').resolves(t.context.database);
-    t.context.dbLockEnsureIndexes = sandbox.stub(t.context.dbLock, 'ensureIndexes').callsArg(0);
-
-    const dbConnectionDbCommandStub = sandbox.stub(t.context.database.connection.db, 'command').resolves({});
-    const dbCommon = loadScript(t.context);
-
-    await dbCommon.connect('conectionString');
-    await dbCommon.replicaSetStatus();
-
-    t.true(dbConnectionDbCommandStub.called);
-
-    const arg = dbConnectionDbCommandStub.args[0][0];
-
-    t.is(arg.replSetGetStatus, 1);
-});
-
-test('replicaSetStatus should return null if the database is not running --replset', async (t) => {
-    const sandbox = t.context.sandbox;
-
-    t.context.mongooseConnectStub = sandbox.stub(t.context.mongoose, 'connect').resolves(t.context.database);
-    t.context.dbLockEnsureIndexes = sandbox.stub(t.context.dbLock, 'ensureIndexes').callsArg(0);
-
-    const dbConnectionDbCommandStub = sandbox.stub(t.context.database.connection.db, 'command').rejects(new Error('not running with --replset'));
-    const dbCommon = loadScript(t.context);
-
-    await dbCommon.connect('conectionString');
-    const status = await dbCommon.replicaSetStatus();
-
-    t.true(dbConnectionDbCommandStub.called);
-
-    t.is(status, null);
-});
-
-test('replicaSetStatus should fail if there is an error runing the command', async (t) => {
-    const sandbox = t.context.sandbox;
-
-    t.context.mongooseConnectStub = sandbox.stub(t.context.mongoose, 'connect').resolves(t.context.database);
-    t.context.dbLockEnsureIndexes = sandbox.stub(t.context.dbLock, 'ensureIndexes').callsArg(0);
-    sandbox.stub(t.context.database.connection.db, 'command').rejects(new Error('error'));
-
-    t.plan(1);
-
-    const dbCommon = loadScript(t.context);
-
-    try {
-        await dbCommon.connect('conectionString');
-        await dbCommon.replicaSetStatus();
-    } catch (err) {
-        t.is(err.message, 'error');
-    }
-});
-
 test('disconnect should call to mongoose.disconnect', async (t) => {
     const sandbox = t.context.sandbox;
 

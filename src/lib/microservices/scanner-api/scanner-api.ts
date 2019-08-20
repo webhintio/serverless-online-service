@@ -3,15 +3,12 @@ import * as moment from 'moment';
 import { UserConfig } from '@hint/utils';
 
 import * as database from '../../common/database/database';
-import { Hint, IJob, IServiceConfig, JobData } from '../../types';
+import { Hint, IJob, IServiceConfig } from '../../types';
 import * as logger from '../../utils/logging';
-import { ConfigSource } from '../../enums/configsource';
 import { JobStatus, HintStatus } from '../../enums/status';
-import { debug as d } from '../../utils/debug';
 import { getTime } from '../../common/ntp/ntp';
 import { Queue } from '../../common/queue/queue';
 
-const debug: debug.IDebugger = d(__filename);
 const { QueueConnection: queueConnection, DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
 let queue: Queue = null;
 const moduleName: string = 'Scanner API';
@@ -53,30 +50,6 @@ const sendMessagesToQueue = async (job: IJob) => {
         await queue.sendMessage(jobCopy);
         logger.log(`Part ${jobCopy.partInfo.part} of ${jobCopy.partInfo.totalParts} sent to the Service Bus`, moduleName);
     }
-};
-
-/**
- * Get the right configuration for the job.
- * @param {RequestData} data - The data the user sent in the request.
- */
-const getConfig = (data: JobData, serviceConfig: IServiceConfig): Array<UserConfig> => {
-    const source: ConfigSource = data.source;
-    let config: Array<UserConfig>;
-
-    debug(`Configuration source: ${source}`);
-    switch (source) {
-        /* istanbul ignore next */
-        case ConfigSource.file:
-            config = Array.isArray(data.config) ? data.config : [data.config];
-            break;
-        /* TODO: TBD. */
-        // case ConfigSource.manual:
-        default:
-            config = serviceConfig.webhintConfigs;
-            break;
-    }
-
-    return config;
 };
 
 /**
@@ -221,7 +194,7 @@ const getActiveConfig = async (): Promise<IServiceConfig> => {
 export const createJob = async (url: string): Promise<IJob> => {
     /*
      *   1. Validate input data
-     *   2. Parse input data
+     *   2. Get current configuration
      *   3. Lock database by url
      *   4. Check if the job exists having into account if the configuration is the same
      *       a) If the job exists
@@ -239,21 +212,6 @@ export const createJob = async (url: string): Promise<IJob> => {
         throw new Error('Url is required');
     }
 
-    /*
-     * TODO
-     * We want to strip out the ability to upload configs in the future
-     * This just plugs in just the URL to the exsiting feature
-     * This will be refactored in a future PR to completely remove
-     * config upload feature
-     * https://github.com/webhintio/online-service/issues/585
-     */
-    const jobData: JobData = {
-        config: null,
-        hints: null,
-        source: ConfigSource.default,
-        url: url ? url : null
-    };
-
     const serviceConfig: IServiceConfig = await getActiveConfig();
 
     try {
@@ -263,16 +221,16 @@ export const createJob = async (url: string): Promise<IJob> => {
         throw e;
     }
 
-    const lock = await database.lock(jobData.url);
+    const lock = await database.lock(url);
 
-    const config: Array<UserConfig> = getConfig(jobData, serviceConfig);
-    const jobs: Array<IJob> = await database.job.getByUrl(jobData.url);
+    const config = serviceConfig.webhintConfigs;
+    const jobs: Array<IJob> = await database.job.getByUrl(url);
     let job = getActiveJob(jobs, config, serviceConfig.jobCacheTime);
 
     if (jobs.length === 0 || !job) {
         logger.log('Active job not found, creating a new job', moduleName);
 
-        job = await createNewJob(jobData.url, config, serviceConfig.jobRunTime);
+        job = await createNewJob(url, config, serviceConfig.jobRunTime);
 
         logger.log(`Created new Job with id ${job.id}`, moduleName);
 
