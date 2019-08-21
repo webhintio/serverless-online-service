@@ -9,6 +9,7 @@ type DatabaseServerConfig = {
 type DatabaseConnectionDB = {
     command: ({ replSetGetStatus: number }) => Promise<any>;
     serverConfig: DatabaseServerConfig;
+    collection: () => any;
 }
 
 type DatabaseConnection = {
@@ -85,6 +86,7 @@ test.beforeEach((t) => {
     t.context.database = {
         connection: {
             db: {
+                collection: () => { },
                 command({ replSetGetStatus: number }): Promise<any> {
                     return null;
                 },

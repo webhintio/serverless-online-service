@@ -186,6 +186,25 @@ test('job.add should save a new job in database', async (t) => {
     t.true(modelObjectSaveStub.calledOnce);
 });
 
+test('job.update should update the job in database', async (t) => {
+    const sandbox = t.context.sandbox;
+    const jobModel = {
+        markModified(field) { },
+        save() { }
+    };
+
+    sandbox.stub(t.context.common, 'connect').resolves();
+    const jobModelMarkSpy = sandbox.spy(jobModel, 'markModified');
+    const jobModelSaveSpy = sandbox.spy(jobModel, 'save');
+    const job = loadScript(t.context);
+
+    await job.update(jobModel);
+
+    t.true(jobModelMarkSpy.calledOnce);
+    t.true(jobModelSaveSpy.calledOnce);
+    t.is(jobModelMarkSpy.args[0][0], 'hints');
+});
+
 test('job.getByDate should return the jobs between both dates', async (t) => {
     const sandbox = t.context.sandbox;
     const queryExecStub = sandbox.stub(t.context.query, 'exec').resolves(t.context.jobResult);

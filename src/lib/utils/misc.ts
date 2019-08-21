@@ -14,6 +14,7 @@ import { IJob } from '../types';
 const debug: debug.IDebugger = d(__filename);
 const _readFileAsync = promisify(fs.readFile);
 
+/* istanbul ignore next */
 /** Convenience wrapper for asynchronously reading file contents. */
 export const readFileAsync = async (filePath: string): Promise<string> => {
     const content: string = await _readFileAsync(filePath, 'utf8');
@@ -21,11 +22,13 @@ export const readFileAsync = async (filePath: string): Promise<string> => {
     return stripBom(content);
 };
 
+/* istanbul ignore next */
 /** Convenience wrapper for synchronously reading file contents. */
 export const readFile = (filePath: string): string => {
     return stripBom(fs.readFileSync(filePath, 'utf8')); // eslint-disable-line no-sync
 };
 
+/* istanbul ignore next */
 /** Loads a JSON a file. */
 export const loadJSONFile = (filePath: string) => {
     debug(`Loading JSON file: ${filePath}`);
@@ -33,6 +36,7 @@ export const loadJSONFile = (filePath: string) => {
     return JSON.parse(stripComments(readFile(filePath)));
 };
 
+/* istanbul ignore next */
 /** Convenience wrapper to add a delay using promises. */
 export const delay = (millisecs: number): Promise<object> => {
     return new Promise((resolve) => {
@@ -40,6 +44,7 @@ export const delay = (millisecs: number): Promise<object> => {
     });
 };
 
+/* istanbul ignore next */
 /**
  * Generate a log message for a job.
  * @param {string} header - Log header.

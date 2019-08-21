@@ -20,7 +20,8 @@ const { DatabaseConnection: dbConnectionString } = process.env; // eslint-disabl
  * @param {string} url - URL to lock in the database.
  */
 export const createLock = (url: string) => {
-    const lock = mongoDBLock(cachedDb, 'locks', url, { removeExpired: true });
+    const collection = cachedDb.collection('locks');
+    const lock = mongoDBLock(collection, url, { removeExpired: true });
 
     debug(`Creating lock object for url: ${url ? url : 'initial'}`);
     lock.acquireAsync = promisify(lock.acquire);
@@ -69,10 +70,10 @@ export const unlock = async (dbLock) => {
  * @param {string} url - URL to lock in the database.
  */
 export const lock = async (url: string) => {
+    await connect();
     const dbLock = createLock(url);
 
     const getLock = async () => {
-        await connect();
         const code = await dbLock.acquireAsync();
 
         if (!code) {

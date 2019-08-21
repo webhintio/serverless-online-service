@@ -2,7 +2,6 @@ import * as uuid from 'uuid/v4';
 
 import { UserConfig } from '@hint/utils';
 import { DocumentQuery } from 'mongoose';
-import * as moment from 'moment';
 
 import { debug as d } from '../../../utils/debug';
 import { IJob } from '../../../types';
@@ -41,6 +40,7 @@ export const get = async (id: string): Promise<IJobModel> => {
 
     const job: IJobModel = await query.exec();
 
+    /* istanbul ignore next */
     debug(`job with id ${id} ${job ? 'found' : 'not found'}`);
 
     return job;
@@ -63,6 +63,7 @@ export const add = async (url: string, status: JobStatus, hints: Array<Hint>, co
      * If ntp service has some problem, use the current
      * date in the machine.
      */
+    /* istanbul ignore if */
     if (!queued) {
         queued = new Date();
     }

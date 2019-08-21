@@ -8,14 +8,11 @@
   },
   "dependencies": {
     "@azure/functions": "^1.0.3",
-    "@destinationstransfers/ntp": "^1.2.0",
+    "@destinationstransfers/ntp": "^2.0.0",
     "@octokit/rest": "^16.28.7",
     "applicationinsights": "^1.4.1",
     "azure-sb": "^0.11.1",
-    "azure-storage": "^2.10.3",
-    "express": "^4.17.1",
     "lodash": "^4.17.15",
-    "mdn-browser-compat-data": "^0.0.90",
     "moment": "^2.24.0",
     "mongodb-lock": "^1.0.1",
     "mongoose": "^5.6.9",
@@ -29,7 +26,6 @@
     "@hint/utils": "^4.0.0",
     "@types/azure": "^0.9.20",
     "@types/debug": "^4.1.5",
-    "@types/express": "^4.17.1",
     "@types/lodash": "^4.14.137",
     "@types/node": "^12.6.8",
     "@types/sinon": "^7.0.13",
@@ -54,16 +50,6 @@
     "text-table": "^0.2.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
-  },
-  "greenkeeper": {
-    "commitMessages": {
-      "dependencyUpdate": "Chore: Update `${dependency}` to `v${version}`",
-      "devDependencyUpdate": "Chore: Update `${dependency}` to `v${version}`",
-      "lockfileUpdate": "Chore: Update lockfile ${lockfilePath}"
-    },
-    "ignore": [
-      "@types/node"
-    ]
   },
   "main": "./dist/src/index.js",
   "private": true,
