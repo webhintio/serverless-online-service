@@ -25,6 +25,7 @@ steps:
     npm test
   displayName: 'Test'
 - task: ArchiveFiles@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)'
     includeRootFolder: false
@@ -34,6 +35,7 @@ steps:
     verbose: true
   displayName: Create deployment zip file
 - task: AzureFunctionApp@1
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     azureSubscription: 'webhint-staging'
     appType: 'functionAppLinux'
