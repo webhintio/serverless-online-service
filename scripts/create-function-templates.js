@@ -17,7 +17,7 @@ const rimraf = require('rimraf');
 ** structure, this script will split the definitions array
 ** into individual definitions and place them into
 ** appropriate folders. Those folders don't get checked into
-** source control, and get re-created every time on npm run build.
+** source control, and get re-created every time when building.
 */
 
 const functionsFile = 'functions.json';
