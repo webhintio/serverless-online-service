@@ -24,8 +24,19 @@ steps:
 - script: |
     npm test
   displayName: 'Test'
-- task: CmdLine@2
+- task: ArchiveFiles@2
   inputs:
-    script: |
-      az login --service-principal -u $AZURE_SERVICE_PRINCIPAL -p $AZURE_SERVICE_PRINCIPAL_PASSWORD --tenant $AZURE_TENANT
-      func azure functionapp publish webhint-staging-functions
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+    verbose: true
+- task: AzureFunctionApp@1
+  inputs:
+    azureSubscription: 'webhint-staging'
+    appType: 'functionAppLinux'
+    appName: 'webhint-staging-functions'
+    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    runtimeStack: 'DOCKER|microsoft/azure-functions-node8:2.0'
+    appSettings: '-APPINSIGHTS_INSTRUMENTATIONKEY "$APPINSIGHTS_INSTRUMENTATIONKEY" -AzureWebJobsStorage "$AzureWebJobsStorage" -DatabaseConnection "$DatabaseConnection" -FUNCTIONS_EXTENSION_VERSION "$FUNCTIONS_EXTENSION_VERSION" -FUNCTIONS_WORKER_RUNTIME "$FUNCTIONS_WORKER_RUNTIME" -QueueConnection "$QueueConnection" -WEBSITE_ENABLE_SYNC_UPDATE_SITE "$WEBSITE_ENABLE_SYNC_UPDATE_SITE" -WEBSITE_NODE_DEFAULT_VERSION "$WEBSITE_NODE_DEFAULT_VERSION" -WEBSITES_ENABLE_APP_SERVICE_STORAGE "$WEBSITES_ENABLE_APP_SERVICE_STORAGE"'
