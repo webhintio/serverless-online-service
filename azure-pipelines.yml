@@ -24,18 +24,8 @@ steps:
 - script: |
     npm test
   displayName: 'Test'
-- task: ArchiveFiles@2
+- task: CmdLine@2
   inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-    verbose: true
-- task: AzureFunctionApp@1
-  inputs:
-    azureSubscription: 'webhint-staging'
-    appType: 'functionAppLinux'
-    appName: 'webhint-staging-functions'
-    package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    runtimeStack: 'DOCKER|microsoft/azure-functions-node8:2.0'
+    script: |
+      az login --service-principal -u $AZURE_SERVICE_PRINCIPAL -p $AZURE_SERVICE_PRINCIPAL_PASSWORD --tenant $AZURE_TENANT
+      func azure functionapp publish webhint-staging-functions
