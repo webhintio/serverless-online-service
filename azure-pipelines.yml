@@ -24,3 +24,10 @@ steps:
 - script: |
     npm test
   displayName: 'Test'
+- task: AzureFunctionApp@1
+  inputs:
+    azureSubscription: 'webhint-staging'
+    appType: 'functionAppLinux'
+    appName: 'webhint-staging-functions'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    runtimeStack: 'DOCKER|microsoft/azure-functions-node8:2.0'
