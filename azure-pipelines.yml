@@ -55,6 +55,5 @@ steps:
     appName: 'webhint-staging-functions'
     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     runtimeStack: 'DOCKER|microsoft/azure-functions-node8:2.0'
-    startUpCommand: 'func extensions install'
     appSettings: '-APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -DatabaseConnection $(DatabaseConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -QueueConnection $(QueueConnection) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)'
   displayName: Deploy functions
