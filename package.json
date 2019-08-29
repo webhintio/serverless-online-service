@@ -32,6 +32,7 @@
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "ava": "^2.3.0",
+    "azure-functions-core-tools": "^2.7.1585",
     "cpx": "^1.5.0",
     "debug": "^4.1.1",
     "eslint": "^6.2.1",
@@ -55,7 +56,7 @@
   "private": true,
   "scripts": {
     "ava": "ava",
-    "build": "npm run clean && npm-run-all build:* && npm run build-function-templates",
+    "build": "npm run clean && npm-run-all build:* && npm run build-function-templates && npm run install-extensions",
     "build:assets": "cpx \"./{src,tests}/**/{!(*.ts),.!(ts)}\" dist",
     "build:ts": "tsc",
     "prebuild": "node ./scripts/create-hint-categories.js && node ./scripts/create-hint-extends.js",
@@ -63,6 +64,7 @@
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint --ext ts --ignore-pattern dist .",
     "build-function-templates": "node ./scripts/create-function-templates.js",
+    "install-extensions": "func extensions install",
     "test": "npm run lint && npm run build && nyc ava",
     "watch:ts": "npm run build:ts -- --watch"
   },
