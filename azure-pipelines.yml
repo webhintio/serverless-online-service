@@ -26,12 +26,8 @@ steps:
 - script: |
     npm install azure-functions-core-tools
   displayName: 'Install Azure functions core tools'
-- task: CmdLine@2
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    script: 'func extensions install'
-    workingDirectory: '$(Build.SourcesDirectory)'
-    failOnStderr: true
+- script: |
+    func extensions install
   displayName: 'Install function extensions'
 - task: ArchiveFiles@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
