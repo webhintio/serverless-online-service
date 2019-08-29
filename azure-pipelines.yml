@@ -34,6 +34,7 @@ steps:
       func extensions install
     workingDirectory: '$(Build.SourcesDirectory)'
     failOnStderr: true
+  displayName: 'Install function extensions'
 - task: ArchiveFiles@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
