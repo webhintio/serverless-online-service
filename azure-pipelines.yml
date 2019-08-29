@@ -23,12 +23,8 @@ steps:
 - script: |
     npm test
   displayName: 'Test'
-- task: Npm@1
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    command: 'custom'
-    workingDir: '$(Build.SourcesDirectory)'
-    customCommand: 'npm install azure-functions-core-tools'
+- script: |
+    npm install azure-functions-core-tools
   displayName: 'Install Azure functions core tools'
 - task: CmdLine@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
