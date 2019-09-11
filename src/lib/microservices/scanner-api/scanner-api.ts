@@ -9,7 +9,7 @@ import { JobStatus, HintStatus } from '../../enums/status';
 import { getTime } from '../../common/ntp/ntp';
 import { Queue } from '../../common/queue/queue';
 
-const { QueueConnection: queueConnection, DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
+const { QueueConnection: queueConnection } = process.env; // eslint-disable-line no-process-env
 let queue: Queue = null;
 const moduleName: string = 'Scanner API';
 const categories = require('./categories.json');

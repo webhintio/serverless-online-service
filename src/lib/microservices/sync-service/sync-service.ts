@@ -13,7 +13,6 @@ import { IssueData } from '../../types/issuedata';
 
 const slowReturnMessage = `webhint didn't return the result fast enough`;
 const moduleName: string = 'Sync Function';
-const { DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
 const appInsightClient = appInsight.getClient();
 
 /**

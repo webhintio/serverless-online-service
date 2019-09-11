@@ -7,7 +7,7 @@
             "problemMatcher": "$func-watch",
             "isBackground": true,
             "dependsOn": "npm: build"
-        }
+        },
         {
             "type": "npm",
             "script": "build",

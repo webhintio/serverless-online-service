@@ -1,5 +1,23 @@
 [
     {
+        "name": "workerservice",
+        "template": {
+            "disabled": false,
+            "bindings": [
+                {
+                    "type": "serviceBusTrigger",
+                    "direction": "in",
+                    "name": "message",
+                    "queueName": "webhint-jobs",
+                    "connection": "QueueConnection",
+                    "accessRights": "listen"
+                }
+            ],
+            "entryPoint": "run",
+            "scriptFile": "../dist/src/functions/azure/workerservice.js"
+        }
+    },
+    {
         "name": "syncservice",
         "template": {
             "disabled": false,
@@ -17,7 +35,7 @@
             "scriptFile": "../dist/src/functions/azure/syncservice.js"
         }
     },
-    {   
+    {
         "name": "statusservice",
         "template": {
             "disabled": false,
