@@ -1,7 +1,8 @@
+import * as path from 'path';
+
 import anyTest, { TestInterface } from 'ava';
 import * as sinon from 'sinon';
 import * as proxyquire from 'proxyquire';
-import * as path from 'path';
 
 import { appinsights, generateLog, HintStatus, IJob, JobStatus, readFile, readFileAsync } from '@online-service/utils';
 

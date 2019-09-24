@@ -31,8 +31,7 @@ const createErrorResult = (err: Error): JobResult => {
 const closeAnalyzer = async () => {
     if (analyzer) {
         try {
-            // TODO: Remove "as any" when analyzer is updated
-            await (analyzer as any).close();
+            await analyzer.close();
         } catch (e) {
             // Ignore error.
         }
@@ -103,8 +102,7 @@ const run = async (j: IJob) => {
         result = createErrorResult(e);
     } finally {
         if (analyzer) {
-            // TODO: Remove as any when analyzer is updated
-            await (analyzer as any).close();
+            await analyzer.close();
         }
 
         logger.log(`Sending result for job ${job.id} - Part ${partInfo.part} of ${partInfo.totalParts}`, moduleName);

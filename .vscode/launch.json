@@ -6,7 +6,15 @@
             "type": "node",
             "request": "attach",
             "port": 9229,
-            "preLaunchTask": "func: host start"
+            /*
+                Previous to run this, we need to run the functions manually
+                using azure-functions-core-tools (npm install -g azure-functions-core-tools).
+
+                Go to packages/services or packages/worker and run:
+
+                func start --port 9229
+            */
+            "processId": "${command:PickProcess}"
         },
         {
             "type": "node",

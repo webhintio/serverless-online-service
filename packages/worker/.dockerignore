@@ -6,13 +6,7 @@ coverage/
 .editorconfig
 .eslintrc.json
 .gitignore
-.travis.yml
 Dockerfile.*
 .gitattributes
 package-lock.json
-function-*/
-scripts/
-src/functions/azure/
-!src/function/azure/workerservice.ts
-src/lib/microservices/
-!src/lib/microservices/worker-service/
+yarn.lock

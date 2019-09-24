@@ -6,8 +6,7 @@
             "direction": "in",
             "name": "message",
             "queueName": "webhint-results",
-            "connection": "QueueConnection",
-            "accessRights": "Manage"
+            "connection": "QueueConnection"
         }
     ],
     "entryPoint": "run",

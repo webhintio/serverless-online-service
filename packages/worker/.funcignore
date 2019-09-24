@@ -1,4 +1,7 @@
 .git*
-.vscode
+.vscode/
 local.settings.json
-tests
+tests/
+scripts/
+.nyc_output/
+coverage/
