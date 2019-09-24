@@ -7,6 +7,20 @@
             "request": "attach",
             "port": 9229,
             "preLaunchTask": "func: host start"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Config Manager",
+            "program": "${workspaceFolder}/packages/services/dist/src/config/config-manager-cli.js",
+            "env": {
+                "DatabaseConnection": ""
+            },
+            "args":[],
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
+            "console": "integratedTerminal",
         }
     ]
 }

@@ -1,0 +1,22 @@
+{
+    "disabled": false,
+    "bindings": [
+        {
+            "authLevel": "function",
+            "name": "req",
+            "type": "httpTrigger",
+            "direction": "in",
+            "route": "createjob",
+            "methods": [
+                "post"
+            ]
+        },
+        {
+            "name": "res",
+            "type": "http",
+            "direction": "out"
+        }
+    ],
+    "entryPoint": "run",
+    "scriptFile": "../dist/src/functions/azure/api-createjob.js"
+}

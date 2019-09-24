@@ -1,24 +1,39 @@
 {
     "compilerOptions": {
         "alwaysStrict": true,
-        "module": "commonjs",
-        "sourceMap": true,
-        "target": "esnext",
-        "outDir": "dist",
+        "composite": true,
         "declaration": true,
+        "declarationMap": true,
+        "inlineSourceMap": true,
         "lib": [
+            "dom",
+            "dom.iterable",
             "es2017",
             "esnext",
-            "esnext.asynciterable",
-            "dom",
-            "dom.iterable"
-        ]
+            "esnext.asynciterable"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "newLine": "lf",
+        "noUnusedLocals": true,
+        "outDir": "dist",
+        "removeComments": false,
+        "target": "es2017",
+        "strict": true
     },
     "exclude": [
-        "node_modules"
+        "dist",
+        "node_modules",
+        "packages"
     ],
     "include": [
-        "src/**/*.ts",
-        "tests/**/*.ts",
+        "@types/**/*.ts",
+        "release/**/*.ts",
+        "scripts/**/*.ts"
+    ],
+    "references": [
+        { "path": "packages/services" },
+        { "path": "packages/utils" },
+        { "path": "packages/worker" }
     ]
 }

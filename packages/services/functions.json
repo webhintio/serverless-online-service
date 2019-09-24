@@ -1,0 +1,86 @@
+[
+    {
+        "name": "syncservice",
+        "template": {
+            "disabled": false,
+            "bindings": [
+                {
+                    "type": "serviceBusTrigger",
+                    "direction": "in",
+                    "name": "message",
+                    "queueName": "webhint-results",
+                    "connection": "QueueConnection",
+                    "accessRights": "Manage"
+                }
+            ],
+            "entryPoint": "run",
+            "scriptFile": "../dist/src/functions/azure/syncservice.js"
+        }
+    },
+    {
+        "name": "statusservice",
+        "template": {
+            "disabled": false,
+            "bindings": [
+                {
+                    "type": "timerTrigger",
+                    "direction": "in",
+                    "name": "timer",
+                    "schedule": "0 */15 * * * *"
+                }
+            ],
+            "entryPoint": "run",
+            "scriptFile": "../dist/src/functions/azure/statusservice.js"
+        }
+    },
+    {
+        "name": "api-jobstatus",
+        "template": {
+            "disabled": false,
+            "bindings": [
+                {
+                    "authLevel": "function",
+                    "name": "req",
+                    "type": "httpTrigger",
+                    "direction": "in",
+                    "route": "jobstatus",
+                    "methods": [
+                        "get"
+                    ]
+                },
+                {
+                    "name": "res",
+                    "type": "http",
+                    "direction": "out"
+                }
+            ],
+            "entryPoint": "run",
+            "scriptFile": "../dist/src/functions/azure/api-jobstatus.js"
+        }
+    },
+    {
+        "name": "api-createjob",
+        "template": {
+            "disabled": false,
+            "bindings": [
+                {
+                    "authLevel": "function",
+                    "name": "req",
+                    "type": "httpTrigger",
+                    "direction": "in",
+                    "route": "createjob",
+                    "methods": [
+                        "post"
+                    ]
+                },
+                {
+                    "name": "res",
+                    "type": "http",
+                    "direction": "out"
+                }
+            ],
+            "entryPoint": "run",
+            "scriptFile": "../dist/src/functions/azure/api-createjob.js"
+        }
+    }
+]

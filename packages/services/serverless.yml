@@ -1,0 +1,40 @@
+service: webhint-functions
+
+provider:
+  name: azure
+  location: West US
+  resourceGroup : "Enter Resource Group Here"
+
+plugins:
+  - serverless-azure-functions
+
+package:
+  exclude:
+    - compose/**/*
+    - scripts/**/*
+    - tests/**/*
+    - src/**/*
+    - vscode/**/*
+    - .serverless/**/*
+    - .dependabot/**/*
+    - .yml
+    - .md
+  include:
+    - ./*-function.json
+
+functions:
+  sync-service:
+    handler: dist/functions/azure/sync-service.run
+    events:
+      - serviceBus:
+        x-azure-settings:
+          queueName: webhint-results
+          name: message
+          connection : QueueConnection
+  status-service:
+    handler: dist/functions/azure/status-service.run
+    events:
+      - timer:
+        x-azure-settings:
+          name: timer
+          schedule: 0 */15 * * * *
