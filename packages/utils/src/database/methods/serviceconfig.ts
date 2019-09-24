@@ -1,12 +1,11 @@
 import { UserConfig } from '@hint/utils';
-import { DocumentQuery } from 'mongoose';
 
 import { debug as d } from '../../debug';
 import { IServiceConfig } from '../../types';
 import { IServiceConfigModel, ServiceConfig } from '../models/serviceconfig';
 import { connect } from './common';
 
-const debug: debug.IDebugger = d(__filename);
+const debug = d(__filename);
 
 /**
  * Create a new configuration in the database.
@@ -15,7 +14,7 @@ const debug: debug.IDebugger = d(__filename);
  * @param {number} jobRunTime - Time before throw a timeout for jobs.
  * @param {UserConfig} options - Configuration data.
  */
-export const add = async (name: string, jobCacheTime: number, jobRunTime: number, options: Array<UserConfig>): Promise<IServiceConfig> => {
+export const add = async (name: string, jobCacheTime: number, jobRunTime: number, options: UserConfig[]): Promise<IServiceConfig> => {
     debug(`Creating config with name: ${name}`);
     await connect();
 
@@ -41,8 +40,8 @@ export const add = async (name: string, jobCacheTime: number, jobRunTime: number
 export const activate = async (name: string): Promise<IServiceConfig> => {
     debug(`Getting config by name: ${name}`);
     await connect();
-    const query: DocumentQuery<Array<IServiceConfigModel>, IServiceConfigModel> = ServiceConfig.find({});
-    const configs: Array<IServiceConfigModel> = await query.exec();
+    const query = ServiceConfig.find({});
+    const configs = await query.exec();
 
     // First we will check if the config exists or not.
     const configuration = configs.find((config) => {
@@ -75,10 +74,10 @@ export const activate = async (name: string): Promise<IServiceConfig> => {
 /**
  * Get all the configurations stored in the database.
  */
-export const getAll = async (): Promise<Array<IServiceConfig>> => {
+export const getAll = async (): Promise<IServiceConfig[]> => {
     await connect();
-    const query: DocumentQuery<Array<IServiceConfigModel>, IServiceConfigModel> = ServiceConfig.find({});
-    const configs: Array<IServiceConfig> = await query.exec();
+    const query = ServiceConfig.find({});
+    const configs = await query.exec();
 
     return configs;
 };
@@ -89,9 +88,9 @@ export const getAll = async (): Promise<Array<IServiceConfig>> => {
  */
 export const get = async (name: string): Promise<IServiceConfig | null> => {
     await connect();
-    const query: DocumentQuery<IServiceConfigModel | null, IServiceConfigModel> = ServiceConfig.findOne({ name });
+    const query = ServiceConfig.findOne({ name });
 
-    const config: IServiceConfig | null = await query.exec();
+    const config = await query.exec();
 
     return config;
 };
@@ -100,9 +99,9 @@ export const get = async (name: string): Promise<IServiceConfig | null> => {
  * Remove configuration from database by name.
  * @param {string} name - Configuration name.
  */
-export const remove = async (name: string) => {
+export const remove = async (name: string): Promise<void> => {
     await connect();
-    const query: DocumentQuery<IServiceConfigModel | null, IServiceConfigModel> = ServiceConfig.findOne({ name });
+    const query = ServiceConfig.findOne({ name });
 
     await query.remove().exec();
 };
@@ -112,8 +111,8 @@ export const remove = async (name: string) => {
  */
 export const getActive = async (): Promise<IServiceConfig | null> => {
     await connect();
-    const query: DocumentQuery<IServiceConfigModel | null, IServiceConfigModel> = ServiceConfig.findOne({ active: true });
-    const config: IServiceConfig | null = await query.exec();
+    const query = ServiceConfig.findOne({ active: true });
+    const config = await query.exec();
 
     return config;
 };
@@ -126,10 +125,10 @@ export const getActive = async (): Promise<IServiceConfig | null> => {
  * @param {number} jobRunTime - Time before throw a timeout for jobs.
  * @param {UserConfig} options - Configuration data.
  */
-export const edit = async (oldName: string, newName: string, jobCacheTime: number, jobRunTime: number, configs: Array<UserConfig> | null): Promise<IServiceConfig | null> => {
+export const edit = async (oldName: string, newName: string, jobCacheTime: number, jobRunTime: number, configs: UserConfig[] | null): Promise<IServiceConfig | null> => {
     await connect();
-    const query: DocumentQuery<IServiceConfigModel | null, IServiceConfigModel> = ServiceConfig.findOne({ name: oldName });
-    const config: IServiceConfigModel | null = await query.exec();
+    const query = ServiceConfig.findOne({ name: oldName });
+    const config = await query.exec();
 
     if (!config) {
         return config;

@@ -8,16 +8,16 @@ if (debug) {
 }
 
 import * as table from 'text-table';
-import { CLIOptions, database, IServiceConfig, logger } from '@online-service/utils';
+import { CLIOptions, database, logger } from '@online-service/utils';
 
 import { options } from './options';
 import * as configManager from './config-manager';
 
-const moduleName: string = 'Configuration Manager';
+const moduleName = 'Configuration Manager';
 
 const addConfig = async (cliOptions: CLIOptions) => {
     try {
-        const newConfig: IServiceConfig = await configManager.add({
+        const newConfig = await configManager.add({
             filePath: cliOptions.file,
             jobCacheTime: cliOptions.cache,
             jobRunTime: cliOptions.run,
@@ -40,7 +40,7 @@ const addConfig = async (cliOptions: CLIOptions) => {
 
 const activateConfiguration = async (cliOptions: CLIOptions) => {
     try {
-        const config: IServiceConfig = await configManager.activate(cliOptions.name);
+        const config = await configManager.activate(cliOptions.name);
 
         logger.log(`Configuration '${config.name}' activated.`);
 
@@ -53,7 +53,7 @@ const activateConfiguration = async (cliOptions: CLIOptions) => {
 };
 
 const listConfigurations = async () => {
-    const configurations: Array<IServiceConfig> = await configManager.list();
+    const configurations = await configManager.list();
 
     if (configurations.length === 0) {
         logger.log('There is no configuration stored in database');

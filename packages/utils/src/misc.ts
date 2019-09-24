@@ -70,10 +70,10 @@ export const generateLog = (header: string, job: IJob, options: { showHint: bool
 
 /**
  * Check if an array of webhint configurations is valid.
- * @param {Array<UserConfig>} configs - Array of webhint configurations.
+ * @param {UserConfig[]} configs - Array of webhint configurations.
  */
-export const validateServiceConfig = (configs: Array<UserConfig>) => {
-    const hints: Set<string> = new Set();
+export const validateServiceConfig = (configs: UserConfig[]) => {
+    const hints = new Set<string>();
 
     for (const config of configs) {
         if (!validateConfig(config)) {

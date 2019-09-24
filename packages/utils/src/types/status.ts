@@ -46,7 +46,7 @@ export interface IStatusHintDetail {
     /** # of urls with at least one warning in the hint. */
     warnings: number;
     /** list of urls. */
-    urls: Array<IStatusUrl>;
+    urls: IStatusUrl[];
 }
 
 export type StatusHintDetailList = {

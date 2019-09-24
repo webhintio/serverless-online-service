@@ -138,7 +138,7 @@ export class Queue {
         }, 'getting messages count in');
     }
 
-    private async getMessages(): Promise<Array<any>> {
+    private async getMessages(): Promise<any[]> {
         let count = this.messagesToGet;
         const messages = [];
 
@@ -200,7 +200,7 @@ export class Queue {
         }
     }
 
-    public async listen(handler: (messages: Array<ServiceBusMessage>) => any, options?: ServiceBusListenerOptions): Promise<void> {
+    public async listen(handler: (messages: ServiceBusMessage[]) => any, options?: ServiceBusListenerOptions): Promise<void> {
         if (!handler) {
             throw new Error('Listen needs a handler to work');
         }

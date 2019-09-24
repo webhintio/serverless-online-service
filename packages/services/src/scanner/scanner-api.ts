@@ -18,7 +18,7 @@ const { getTime } = ntp;
 const { QueueConnection: queueConnection } = process.env; // eslint-disable-line no-process-env
 
 let queue: Queue | null = null;
-const moduleName: string = 'Scanner API';
+const moduleName = 'Scanner API';
 const categories = require('./categories.json');
 const hintExtends = require('./hint-extends.json');
 
@@ -65,22 +65,22 @@ const sendMessagesToQueue = async (job: IJob) => {
 
 /**
  * Get a Job that it is still valid.
- * @param {Array<IJob>} jobs - All the jobs for that url in the database.
+ * @param {IJob[]} jobs - All the jobs for that url in the database.
  * @param config - Job configuration.
  */
-const getActiveJob = (jobs: Array<IJob>, config: Array<UserConfig>, cacheTime: number) => {
+const getActiveJob = (jobs: IJob[], config: UserConfig[], cacheTime: number) => {
     return jobs.find((job) => {
         // job.config in cosmosdb is undefined if the config saved was an empty object.
         return _.isEqual(job.config || [{}], config) && job.status !== JobStatus.error && (job.status !== JobStatus.finished || moment(job.finished).isAfter(moment().subtract(cacheTime, 'seconds')));
     });
 };
 
-const getHintsFromExtends = (configsExtended: Array<string> | undefined): Array<Hint> => {
+const getHintsFromExtends = (configsExtended: string[] | undefined): Hint[] => {
     if (!configsExtended) {
         return [];
     }
 
-    const hints: Array<Hint> = [];
+    const hints: Hint[] = [];
 
     for (const ext of configsExtended) {
         const partialHints = hintExtends[ext];
@@ -105,13 +105,13 @@ const getHintsFromExtends = (configsExtended: Array<string> | undefined): Array<
     return hints;
 };
 
-const getHints = (userConfigs: Array<UserConfig>) => {
-    let hints: Array<Hint> = [];
+const getHints = (userConfigs: UserConfig[]) => {
+    let hints: Hint[] = [];
 
     userConfigs.forEach((userConfig) => {
         let partialHints = getHintsFromExtends(userConfig.extends);
 
-        partialHints = Object.entries(userConfig.hints!).reduce((total: Array<Hint>, [hintName, severity]) => {
+        partialHints = Object.entries(userConfig.hints!).reduce((total: Hint[], [hintName, severity]) => {
             if (severity === HintStatus.off) {
                 return total;
             }
@@ -144,8 +144,8 @@ const getHints = (userConfigs: Array<UserConfig>) => {
  * @param {string} url - The url that the job will be use.
  * @param {UserConfig} config - The configuration for the job.
  */
-const createNewJob = async (url: string, configs: Array<UserConfig>, jobRunTime: number): Promise<IJob> => {
-    const hints: Array<Hint> = getHints(configs);
+const createNewJob = async (url: string, configs: UserConfig[], jobRunTime: number): Promise<IJob> => {
+    const hints = getHints(configs);
 
     const databaseJob = await database.job.add(url, JobStatus.pending, hints, configs, jobRunTime);
 
@@ -209,10 +209,10 @@ export const createJob = async (url: string): Promise<IJob> => {
         throw new Error('Url is required');
     }
 
-    const serviceConfig: IServiceConfig = await getActiveConfig();
+    const serviceConfig = await getActiveConfig();
     const lock = await database.lock(url);
     const config = serviceConfig.webhintConfigs;
-    const jobs: Array<IJob> = await database.job.getByUrl(url);
+    const jobs = await database.job.getByUrl(url);
     let job = getActiveJob(jobs, config, serviceConfig.jobCacheTime);
 
     if (jobs.length === 0 || !job) {

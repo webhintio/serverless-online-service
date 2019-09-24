@@ -130,7 +130,7 @@ ${issueData.log}
     }
 
     private async openIssue(issueData: IssueData) {
-        const labels: Array<string> = [
+        const labels = [
             this.getScanLabel(issueData.scan),
             this.getErrorTypeLabel(issueData.errorType!)
         ];

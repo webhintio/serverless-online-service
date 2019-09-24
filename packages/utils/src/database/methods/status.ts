@@ -3,7 +3,7 @@ import { Status, IStatusModel } from '../models/status';
 import { IStatus } from '../../types';
 import { connect } from './common';
 
-const debug: debug.IDebugger = d(__filename);
+const debug = d(__filename);
 
 /**
  * Add a new status in the database.
@@ -35,7 +35,7 @@ export const update = async (status: IStatusModel, field: string) => {
  */
 export const getMostRecent = async (): Promise<IStatus | null> => {
     await connect();
-    const result: IStatus | null = await Status.findOne()
+    const result = await Status.findOne()
         .sort({ date: -1 })
         .exec();
 
@@ -47,9 +47,9 @@ export const getMostRecent = async (): Promise<IStatus | null> => {
  * @param {Date} from - Initial date.
  * @param {Date} to - End date.
  */
-export const getByDate = async (from: Date, to: Date): Promise<Array<IStatus>> => {
+export const getByDate = async (from: Date, to: Date): Promise<IStatus[]> => {
     await connect();
-    const result: Array<IStatus> = await Status.find({
+    const result = await Status.find({
         date: {
             $gte: from,
             $lte: to

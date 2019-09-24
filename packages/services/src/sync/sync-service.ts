@@ -15,15 +15,15 @@ import {
 } from '@online-service/utils';
 
 const slowReturnMessage = `webhint didn't return the result fast enough`;
-const moduleName: string = 'Sync Function';
+const moduleName = 'Sync Function';
 const appInsightClient = appinsights.getClient();
 
 /**
  * Get a hint from hints given a hint name.
  * @param {string} name Name of the hint to get.
- * @param {Array<Hint>} hints Hints where to find the hint name.
+ * @param {Hint[]} hints Hints where to find the hint name.
  */
-const getHint = (name: string, hints: Array<Hint>) => {
+const getHint = (name: string, hints: Hint[]) => {
     return hints.find((hint) => {
         return hint.name === name;
     });
@@ -91,7 +91,7 @@ const reportGithubTimeoutIssues = async (job: IJob) => {
         const message = hint.messages && hint.messages[0] && hint.messages[0].message;
 
         if (message && message.includes(slowReturnMessage)) {
-            const issueReporter: IssueReporter = new IssueReporter();
+            const issueReporter = new IssueReporter();
             const issueData: IssueData = {
                 configs: job.config,
                 errorMessage: message,
@@ -121,7 +121,7 @@ const closeGithubIssues = async (dbJob: IJobModel) => {
         });
 
         if (!someTimeout) {
-            const issueReporter: IssueReporter = new IssueReporter();
+            const issueReporter = new IssueReporter();
             const issueData: IssueData = {
                 scan: moment().format('YYYY-MM-DD'),
                 url: dbJob.url

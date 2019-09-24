@@ -4,8 +4,8 @@ const tri = require('tri');
 
 const options = { server: 'time-a-g.nist.gov' };
 
-export const getTime = async (): Promise<Date> => {
-    let time;
+export const getTime = async (): Promise<Date | null> => {
+    let time: Date | null = null;
 
     try {
         time = await tri(() => {

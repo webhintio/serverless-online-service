@@ -87,7 +87,7 @@ test('serviceConfig.add should save a new configuration in database', async (t) 
     const modelObjectSaveStub = sandbox.stub(t.context.modelObject, 'save').resolves();
     const serviceConfig = loadScript(t.context);
 
-    await serviceConfig.add('configName', 120, 180, [{}] as Array<UserConfig>);
+    await serviceConfig.add('configName', 120, 180, [{}] as UserConfig[]);
 
     t.true(modelObjectSaveStub.calledOnce);
 });
@@ -100,7 +100,7 @@ test(`serviceConfig.add should throw an exception if it can't connect to the dat
     const serviceConfig = loadScript(t.context);
 
     await t.throwsAsync(async () => {
-        await serviceConfig.add('configName', 120, 180, [{}] as Array<UserConfig>);
+        await serviceConfig.add('configName', 120, 180, [{}] as UserConfig[]);
     });
 
     t.false(modelObjectSaveSpy.called);
@@ -373,7 +373,7 @@ test(`serviceConfig.edit should modify the webhintConfigs property if config isn
         save() { },
         webhintConfigs: {}
     };
-    const webhintConfigs: Array<UserConfig> = [{
+    const webhintConfigs: UserConfig[] = [{
         connector: {
             name: 'jsdom',
             options: {}

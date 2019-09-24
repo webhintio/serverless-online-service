@@ -9,10 +9,10 @@ import * as logger from '../../logging';
 
 const mongoDBLock = require('mongodb-lock');
 const tri = require('tri');
-const debug: debug.IDebugger = d(__filename);
+const debug = d(__filename);
 let cachedDb: mongoose.Connection | null = null;
-const lockName: string = 'index';
-const moduleName: string = 'Database:common';
+const lockName = 'index';
+const moduleName = 'Database:common';
 const { DatabaseConnection: dbConnectionString } = process.env; // eslint-disable-line no-process-env
 
 /**

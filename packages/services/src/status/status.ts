@@ -22,7 +22,7 @@ import {
 } from '@online-service/utils';
 
 
-const moduleName: string = 'Status service';
+const moduleName = 'Status service';
 const { QueueConnection: queueConnectionString } = process.env; // eslint-disable-line no-process-env
 let queueJobs: Queue;
 let queueResults: Queue;
@@ -75,7 +75,7 @@ class StatusHintDetail implements IStatusHintDetail {
     public errors: number;
     public passes: number;
     public warnings: number;
-    public urls: Array<IStatusUrl>;
+    public urls: IStatusUrl[];
 
     public constructor() {
         this.errors = 0;
@@ -87,11 +87,11 @@ class StatusHintDetail implements IStatusHintDetail {
 
 /**
  * Calculate the average time in an array of jobs.
- * @param {Array<IJob>} jobs - Jobs to calculate the average.
+ * @param {IJob[]} jobs - Jobs to calculate the average.
  * @param {string} fieldEnd - First field to calculate the average.
  * @param {string} fieldStart - Second field to calculate the average.
  */
-const avg = (jobs: Array<IJob>, fieldEnd: keyof IJob, fieldStart: keyof IJob): number => {
+const avg = (jobs: IJob[], fieldEnd: keyof IJob, fieldStart: keyof IJob): number => {
     if (jobs.length === 0) {
         return 0;
     }
@@ -147,9 +147,9 @@ const avg = (jobs: Array<IJob>, fieldEnd: keyof IJob, fieldStart: keyof IJob): n
 
 /**
  * Split finished jobs in `error` or `success`.
- * @param {Array<IJob>} jobs - Array of jobs.
+ * @param {IJob[]} jobs - Array of jobs.
  */
-const getFinishedByStatus = (jobs: Array<IJob>): StatusFinished => {
+const getFinishedByStatus = (jobs: IJob[]): StatusFinished => {
     return jobs.reduce((total: StatusFinished, job: IJob) => {
         if (job.status === JobStatus.error) {
             total.error++;
@@ -181,16 +181,16 @@ const setUrlCounts = (url: StatusUrl, hint: Hint) => {
 
 /**
  * Get the status of the hints in a collection of IJobs.
- * @param {Array<IJob>} jobs -Jobs to get the Status of the hints.
+ * @param {IJob[]} jobs -Jobs to get the Status of the hints.
  */
-const getHintsStatus = (jobs: Array<IJob>) => {
+const getHintsStatus = (jobs: IJob[]) => {
     const result: IStatusHints = new StatusHints();
 
     jobs.reduce((total, job) => {
-        const hints: Array<Hint> = job.hints;
+        const hints = job.hints;
 
         hints.forEach((hint) => {
-            let detail: IStatusHintDetail = total.hints[hint.name];
+            let detail = total.hints[hint.name];
 
             if (!detail) {
                 detail = new StatusHintDetail();
@@ -245,7 +245,7 @@ const updateStatusesSince = async (since: Date) => {
         const fromDate = from.toDate();
         const toDate = to.toDate();
 
-        const [jobsCreated, jobsStarted, jobsFinished]: [Array<IJob>, Array<IJob>, Array<IJob>] = await Promise.all([
+        const [jobsCreated, jobsStarted, jobsFinished]: [IJob[], IJob[], IJob[]] = await Promise.all([
             db.job.getByDate('queued', fromDate, toDate),
             db.job.getByDate('started', fromDate, toDate),
             db.job.getByDate('finished', fromDate, toDate)
@@ -276,7 +276,7 @@ const updateStatusesSince = async (since: Date) => {
     }
 
     if (last) {
-        const [messagesJobs, messagesResults]: [number, number] = await Promise.all([
+        const [messagesJobs, messagesResults] = await Promise.all([
             queueJobs.getMessagesCount(),
             queueResults.getMessagesCount()
         ]);
@@ -333,8 +333,8 @@ export const updateStatuses = async () => {
  * @param {Date} date - Date to calculate the closest quarter of an hour.
  */
 const getCloserQuarter = (date: Date): moment.Moment => {
-    const d: moment.Moment = moment(date);
-    const currentMinute: number = d.minutes();
+    const d = moment(date);
+    const currentMinute = d.minutes();
 
     return d.minutes(Math.floor(currentMinute / 15) * 15).startOf('minute');
 };
@@ -344,10 +344,10 @@ const getCloserQuarter = (date: Date): moment.Moment => {
  * @param {Date} from - Time since we want to get results.
  * @param {Date} to - Time until we want to get results.
  */
-export const getStatus = async (from: Date = new Date(), to: Date = new Date()): Promise<Array<IStatus>> => {
-    const fromQuarter: Date = getCloserQuarter(from).toDate();
-    const toQuarter: Date = getCloserQuarter(to).toDate();
-    const result: Array<IStatus> = await db.status.getByDate(fromQuarter, toQuarter);
+export const getStatus = async (from: Date = new Date(), to: Date = new Date()): Promise<IStatus[]> => {
+    const fromQuarter = getCloserQuarter(from).toDate();
+    const toQuarter = getCloserQuarter(to).toDate();
+    const result = await db.status.getByDate(fromQuarter, toQuarter);
 
     return result.map((status) => {
         return new Status(status);

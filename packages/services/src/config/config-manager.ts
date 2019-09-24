@@ -11,9 +11,9 @@ type ConfigDataOptions = {
  * Get the configuration from a path.
  * @param {string} filePath - Configuration file path.
  */
-const getConfigsFromFile = (filePath: string): Array<UserConfig> => {
+const getConfigsFromFile = (filePath: string): UserConfig[] => {
     const resolvedPath = path.resolve(process.cwd(), filePath);
-    const configs: Array<UserConfig> = loadJSONFile(resolvedPath);
+    const configs: UserConfig[] = loadJSONFile(resolvedPath);
 
     if (!Array.isArray(configs)) {
         throw new Error('Configuration file has to contain an array of webhint configurations');
@@ -56,7 +56,7 @@ const validateConfigData = (configData: ConfigData, options?: ConfigDataOptions)
  */
 export const add = (configData: ConfigData): Promise<IServiceConfig> => {
     validateConfigData(configData);
-    const newConfigs: Array<UserConfig> = getConfigsFromFile(configData.filePath);
+    const newConfigs = getConfigsFromFile(configData.filePath);
 
     return database.serviceConfig.add(configData.name, configData.jobCacheTime, configData.jobRunTime, newConfigs);
 };
@@ -72,7 +72,7 @@ export const activate = (name: string): Promise<IServiceConfig> => {
 /**
  * Get a list of all the configurations in the database.
  */
-export const list = (): Promise<Array<IServiceConfig>> => {
+export const list = (): Promise<IServiceConfig[]> => {
     return database.serviceConfig.getAll();
 };
 

@@ -21,8 +21,8 @@ import {
 const { QueueConnection: queueConnectionString } = process.env; // eslint-disable-line no-process-env
 const { getTime } = ntp;
 const appInsightClient = appinsights.getClient();
-const debug: debug.IDebugger = d(__filename);
-const moduleName: string = 'Worker Service';
+const debug = d(__filename);
+const moduleName = 'Worker Service';
 const MAX_MESSAGE_SIZE = 220 * 1024; // size in kB
 
 /**
@@ -30,16 +30,16 @@ const MAX_MESSAGE_SIZE = 220 * 1024; // size in kB
  * @param {IJob} job - Job to write the result.
  * @param normalizedHints - Normalized job hints.
  */
-const parseResult = (job: IJob, result: Array<Problem>, normalizedHints: HintsConfigObject) => {
-    const hints: Array<Hint> = job.hints;
-    const groupedData: _.Dictionary<Array<Problem>> = _.groupBy(result, 'hintId');
+const parseResult = (job: IJob, result: Problem[], normalizedHints: HintsConfigObject) => {
+    const hints = job.hints;
+    const groupedData = _.groupBy(result, 'hintId');
 
     hints.forEach((hint: Hint) => {
         // Skip hint if it is not in the configuration file.
         if (!normalizedHints[hint.name]) {
             return;
         }
-        const messages: Array<Problem> = groupedData[hint.name];
+        const messages: Problem[] = groupedData[hint.name];
 
         if (!messages || messages.length === 0) {
             hint.status = HintStatus.pass;
@@ -70,8 +70,8 @@ const hintOff = (hintConfiguration: HintConfig | HintConfig[]) => {
  * @param normalizedHints - Normalized job hints.
  */
 const setHintsToError = (job: IJob, normalizedHints: HintsConfigObject, error: Error) => {
-    const hints: Array<Hint> = job.hints;
-    const isTimeOutError: boolean = error.message === 'TIMEOUT';
+    const hints = job.hints;
+    const isTimeOutError = error.message === 'TIMEOUT';
     const messageOptions = {
         general: 'Error in webhint analyzing this hint',
         timeout: `webhint didn't return the result fast enough. Please try later and if the problem continues, contact us.`
@@ -278,7 +278,7 @@ const sendStartedMessage = async (queue: Queue, job: IJob) => {
  * @param {IJob} job - Job to send to the queue
  */
 const sendErrorMessage = async (error: Error, queue: Queue, job: IJob) => {
-    const isTimeOutError: boolean = error.message === 'TIMEOUT';
+    const isTimeOutError = error.message === 'TIMEOUT';
 
     /* istanbul ignore else */
     if (error instanceof Error) {
@@ -330,14 +330,14 @@ const getLastLogLines = (log: string, numberOfLines = 5): string => {
  * Create a child process to run webhint.
  * @param {IJob} job - Job to run in webhint.
  */
-const runWebhint = (job: IJob): Promise<Array<Problem>> => {
+const runWebhint = (job: IJob): Promise<Problem[]> => {
     return new Promise((resolve, reject) => {
         /*
          * if we don't set execArgv to [], when the process is created, the execArgv
          * has the same parameters as his father so if we are debugging, the child
          * process try to debug in the same port, and that throws an error.
          */
-        const runner: ChildProcess = fork(path.join(__dirname, 'webhint-runner.js'), ['--debug'], { execArgv: [], stdio: ['pipe', 'pipe', 'pipe', 'ipc'] });
+        const runner = fork(path.join(__dirname, 'webhint-runner.js'), ['--debug'], { execArgv: [], stdio: ['pipe', 'pipe', 'pipe', 'ipc'] });
         let timeoutId: NodeJS.Timer | null;
 
         let log = '';
@@ -396,8 +396,8 @@ const runWebhint = (job: IJob): Promise<Array<Problem>> => {
 };
 
 export const run = async (job: IJob) => {
-    const queueResults: Queue = new Queue('webhint-results', queueConnectionString!);
-    const webhintVersion: string = getWebhintVersion();
+    const queueResults = new Queue('webhint-results', queueConnectionString!);
+    const webhintVersion = getWebhintVersion();
 
     const start = Date.now();
 
@@ -409,7 +409,7 @@ export const run = async (job: IJob) => {
 
         await sendStartedMessage(queueResults, job);
         const webhintStart = Date.now();
-        const result: Array<Problem> = await runWebhint(job);
+        const result = await runWebhint(job);
 
         appInsightClient.trackMetric({
             name: 'run-webhint',

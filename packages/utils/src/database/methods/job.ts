@@ -1,7 +1,6 @@
 import * as uuid from 'uuid/v4';
 
 import { UserConfig } from '@hint/utils';
-import { DocumentQuery } from 'mongoose';
 
 import { debug as d } from '../../debug';
 import { IJob } from '../../types';
@@ -11,13 +10,13 @@ import { Hint } from '../../types';
 import { getTime } from '../../ntp/ntp';
 import { connect } from './common';
 
-const debug: debug.IDebugger = d(__filename);
+const debug = d(__filename);
 
 /**
  * Get all the jobs from the database for a given url.
  * @param {string} url - Url we want to look for.
  */
-export const getByUrl = async (url: string): Promise<Array<IJob>> => {
+export const getByUrl = async (url: string): Promise<IJob[]> => {
     await connect();
     debug(`Getting jobs by url: ${url}`);
     const query = Job.find({ url });
@@ -38,7 +37,7 @@ export const get = async (id: string): Promise<IJobModel | null> => {
     await connect();
     const query = Job.findOne({ id });
 
-    const job: IJobModel | null = await query.exec();
+    const job = await query.exec();
 
     /* istanbul ignore next */
     debug(`job with id ${id} ${job ? 'found' : 'not found'}`);
@@ -50,10 +49,10 @@ export const get = async (id: string): Promise<IJobModel | null> => {
  * Create a new Job into the database.
  * @param {string} url - Url for the job.
  * @param {JobStatus} status - Current status for the job.
- * @param {Array<Hint>} hints - Hints the job will check.
+ * @param {Hint[]} hints - Hints the job will check.
  * @param config - Configuration for the job.
  */
-export const add = async (url: string, status: JobStatus, hints: Array<Hint>, config: Array<UserConfig>, jobRunTime: number): Promise<IJob> => {
+export const add = async (url: string, status: JobStatus, hints: Hint[], config: UserConfig[], jobRunTime: number): Promise<IJob> => {
     debug(`Creating new job for url: ${url}`);
     await connect();
 
@@ -102,7 +101,7 @@ export const update = async (job: IJobModel) => {
  * @param {Date} from - Initial date.
  * @param {Date} to - End date.
  */
-export const getByDate = async (field: string, from: Date, to: Date): Promise<Array<IJob>> => {
+export const getByDate = async (field: string, from: Date, to: Date): Promise<IJob[]> => {
     await connect();
     const x = {
         [field]: {
@@ -110,9 +109,9 @@ export const getByDate = async (field: string, from: Date, to: Date): Promise<Ar
             $lt: to
         }
     };
-    const query: DocumentQuery<Array<IJobModel>, IJobModel> = Job.find(x);
+    const query = Job.find(x);
 
-    const results: Array<IJob> = await query.exec();
+    const results = await query.exec();
 
     return results;
 };

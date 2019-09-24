@@ -37,7 +37,7 @@ type DBJobTestContext = {
     jobFindStub: sinon.SinonStub;
     jobFindOneStub: sinon.SinonStub;
     jobModels: JobModels;
-    jobResult: Array<IJob>;
+    jobResult: IJob[];
     modelObject: ModelObject;
     ntp: NTP;
     query: Query;

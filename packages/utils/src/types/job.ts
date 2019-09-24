@@ -8,13 +8,13 @@ export type Hint = {
     category: Category;
     name: string;
     status: HintStatus;
-    messages: Array<Problem>;
+    messages: Problem[];
 };
 
 export type JobResult = {
     error: string | null;
     ok: boolean;
-    messages: Array<Problem> | null;
+    messages: Problem[] | null;
 };
 
 export type PartInfo = {
@@ -32,11 +32,11 @@ export interface IJob {
     /** Job Status. */
     status: JobStatus;
     /** Configuration to run webhint. */
-    config: Array<UserConfig>;
+    config: UserConfig[];
     /** Time in seconds the job has to complete the execution in webhint. */
     maxRunTime: number;
     /** List of hints to run. */
-    hints: Array<Hint>;
+    hints: Hint[];
     /** Webhint version. */
     webhintVersion: string;
     /** Timestamp when it was queued. */

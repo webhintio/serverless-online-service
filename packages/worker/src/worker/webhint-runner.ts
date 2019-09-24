@@ -4,7 +4,7 @@ import { createAnalyzer, Analyzer } from 'hint';
 
 import { IJob, JobResult, logger } from '@online-service/utils';
 
-const moduleName: string = 'Webhint Runner';
+const moduleName = 'Webhint Runner';
 let analyzer: Analyzer;
 let job: IJob;
 

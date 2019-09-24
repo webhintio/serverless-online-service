@@ -2,7 +2,7 @@ import { UserConfig } from '@hint/utils';
 
 export interface IServiceConfig {
     /** List of webhint configurations to split the job in messages. */
-    webhintConfigs: Array<UserConfig>;
+    webhintConfigs: UserConfig[];
     /** Time in seconds to keep a job in the cache. */
     jobCacheTime: number;
     /** Time in seconds a job has to complete the execution in webhint. */
