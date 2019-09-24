@@ -123,7 +123,7 @@ const run = async (cliOptions: CLIOptions) => {
         }
     }
 
-    if (typeof exitCode === undefined) {
+    if (exitCode === undefined) {
         logger.log(options.generateHelp());
         exitCode = 0;
     }

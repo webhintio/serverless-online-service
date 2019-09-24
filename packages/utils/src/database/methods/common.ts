@@ -42,7 +42,7 @@ export const connect = async () => {
     }
 
     try {
-        cachedDb = (await mongoose.connect(dbConnectionString!, { useNewUrlParser: true })).connection.db as any;
+        cachedDb = (await mongoose.connect(dbConnectionString!, { useNewUrlParser: true, useUnifiedTopology: true })).connection.db as any;
 
         debug('Connected to database');
 
