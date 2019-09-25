@@ -1,0 +1,15 @@
+**/.git/
+**/node_modules/
+**/.vscode/
+**/.nyc_output/
+**/coverage/
+**/.editorconfig
+**/.eslintrc.json
+**/.gitignore
+**/Dockerfile
+**/Dockerfile.*
+**/.gitattributes
+**/package-lock.json
+**/local.settings.json
+**/yarn.lock
+**/tests

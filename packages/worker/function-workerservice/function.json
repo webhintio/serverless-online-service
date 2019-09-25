@@ -5,7 +5,7 @@
             "type": "serviceBusTrigger",
             "direction": "in",
             "name": "message",
-            "queueName": "webhint-results",
+            "queueName": "webhint-jobs",
             "connection": "QueueConnection"
         }
     ],

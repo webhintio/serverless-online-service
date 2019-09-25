@@ -10,3 +10,4 @@ Dockerfile.*
 .gitattributes
 package-lock.json
 yarn.lock
+local.settings.json
