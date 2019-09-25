@@ -11,40 +11,89 @@ pr:
 pool:
   vmImage: 'Ubuntu-16.04'
 
+variables:
+  dockerImage: workertest
+
 steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '11.x'
   displayName: 'Install Node.js'
 - script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+    echo "##vso[task.setvariable variable=dockerTag]$(date '+%Y%m%d%H%M%S')"
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: 'Calculating docker image tag'
+- script: |
+    echo Docker tag calculated $(dockerTag)
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: 'Docker tag check'
+- script: |
+    yarn --ignore-engines
+    yarn build
+  displayName: 'yarn and yarn build'
 - script: |
     npm test
   displayName: 'Test'
 - script: |
     npm install -g azure-functions-core-tools
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Install Azure functions core tools'
 - task: CmdLine@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     script: |
-      cd $(Build.SourcesDirectory)
-      func extensions install
+      cd $(Build.SourcesDirectory)/packages/services
+      func extensions install --javascript
+      cd $(Build.SourcesDirectory)/packages/worker
+      func extensions install --javascript
     workingDirectory: '$(Build.SourcesDirectory)'
     failOnStderr: true
-  displayName: 'Install function extensions'
+  displayName: 'Install Azure Function extensions'
+- task: CmdLine@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  inputs:
+    script: |
+      cd $(Build.SourcesDirectory)/packages/utils
+      rm -rf node_modules/
+      npm install
+      cd ../services
+      rm -rf node_modules/
+      npm install
+    workingDirectory: '$(Build.SourcesDirectory)'
+  displayName: 'Install dependecies for utils and services functions'
 - task: ArchiveFiles@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    rootFolderOrFile: '$(Build.SourcesDirectory)/packages/services'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
     verbose: true
-  displayName: Create deployment zip file
+  displayName: Create deployment zip file for service functions
+- task: Docker@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Login to ACR
+  inputs:
+    command: login
+    containerRegistry: DockerACRConnection
+- task: Docker@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Build worker image
+  inputs:
+    command: build
+    repository: $(dockerImage)
+    tags: $(dockerTag)
+    Dockerfile: $(Build.SourcesDirectory)/packages/worker/Dockerfile
+    buildContext: $(Build.SourcesDirectory)
+- task: Docker@2
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Push worker image
+  inputs:
+    command: push
+    containerRegistry: DockerACRConnection
+    repository: $(dockerImage)
+    tags: $(dockerTag)
 - task: AzureFunctionApp@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
@@ -52,6 +101,13 @@ steps:
     appType: 'functionAppLinux'
     appName: 'webhint-staging-functions'
     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    runtimeStack: 'DOCKER|microsoft/azure-functions-node8:2.0'
+    runtimeStack: 'DoCKER|microsoft/azure-functions-node8:2.0'
     appSettings: '-APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -DatabaseConnection $(DatabaseConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -QueueConnection $(QueueConnection) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)'
-  displayName: Deploy functions
+  displayName: Deploy service functions
+- task: AzureFunctionAppContainer@1
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Deploy worker function
+  inputs:
+    azureSubscription: 'webhint-staging'
+    appName: workerstagingchrome
+    imageName: $(DOCKER_REPOSITORY)/$(dockerImage):$(dockerTag)
