@@ -6,5 +6,6 @@
         "github.vscode-pull-request-github",
         "EditorConfig.EditorConfig",
         "ms-vsliveshare.vsliveshare",
+        "mauve.terraform"
     ]
 }
