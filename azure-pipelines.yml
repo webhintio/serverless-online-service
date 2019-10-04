@@ -12,7 +12,7 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 variables:
-  dockerImage: workertest
+  dockerImage: workerimage
 
 steps:
 - task: NodeTool@0
@@ -32,7 +32,7 @@ steps:
     yarn build
   displayName: 'yarn and yarn build'
 - script: |
-    npm test
+    yarn test
   displayName: 'Test'
 - script: |
     npm install -g azure-functions-core-tools
@@ -55,10 +55,10 @@ steps:
     script: |
       cd $(Build.SourcesDirectory)/packages/utils
       rm -rf node_modules/
-      npm install
+      npm install --only=prod
       cd ../services
       rm -rf node_modules/
-      npm install
+      npm install --only=prod
     workingDirectory: '$(Build.SourcesDirectory)'
   displayName: 'Install dependecies for utils and services functions'
 - task: ArchiveFiles@2
@@ -99,15 +99,15 @@ steps:
   inputs:
     azureSubscription: 'webhint-staging'
     appType: 'functionAppLinux'
-    appName: 'webhint-staging-functions'
+    appName: 'service-functions-staging'
     package: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    runtimeStack: 'DoCKER|microsoft/azure-functions-node8:2.0'
-    appSettings: '-APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -DatabaseConnection $(DatabaseConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -QueueConnection $(QueueConnection) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)'
+    runtimeStack: 'DOCKER|microsoft/azure-functions-node8:2.0'
+    appSettings: '-APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -DatabaseConnection $(DatabaseConnection) -QueueConnection $(QueueConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)'
   displayName: Deploy service functions
 - task: AzureFunctionAppContainer@1
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy worker function
   inputs:
     azureSubscription: 'webhint-staging'
-    appName: workerstagingchrome
+    appName: worker-functions-staging
     imageName: $(DOCKER_REPOSITORY)/$(dockerImage):$(dockerTag)

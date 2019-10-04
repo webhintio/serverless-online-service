@@ -1,7 +1,9 @@
 import * as path from 'path';
 
 import { UserConfig } from '@hint/utils';
-import { ConfigData, database, IServiceConfig, loadJSONFile, validateServiceConfig } from '@online-service/utils';
+import { ConfigData, database, IServiceConfig, loadJSONFile } from '@online-service/utils';
+
+import { validateServiceConfig } from './utils';
 
 type ConfigDataOptions = {
     ignoreFilePath: boolean;

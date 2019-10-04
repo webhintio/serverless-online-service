@@ -19,7 +19,7 @@ type MiscContext = {
 const test = anyTest as TestInterface<MiscContext>;
 
 const loadScript = (context: MiscContext) => {
-    return proxyquire('../src/misc', {
+    return proxyquire('../../src/config/utils', {
         '@hint/utils': context.utils,
         'hint/dist/src/lib/config/config-validator': context.configValidator
     });

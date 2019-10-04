@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { Severity } from '@hint/utils/dist/src/types/problems';
+const { Severity } = require('./severity');
+
 import {
     database as db,
     Hint,

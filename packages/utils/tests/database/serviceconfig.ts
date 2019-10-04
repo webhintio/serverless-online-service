@@ -1,7 +1,7 @@
 import anyTest, { TestInterface } from 'ava';
 import * as sinon from 'sinon';
 import * as proxyquire from 'proxyquire';
-import { UserConfig } from 'hint/dist/src/lib/types';
+import { UserConfig } from '@hint/utils';
 
 type Query = {
     exec: () => Promise<any>;

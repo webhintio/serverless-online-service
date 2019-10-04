@@ -50,7 +50,7 @@
     "build": "npm run clean && npm-run-all build:*",
     "build:assets": "cpx \"./{src,tests}/**/{!(*.ts),.!(ts)}\" dist",
     "build:ts": "tsc",
-    "prebuild": "node ./scripts/create-hint-categories.js && node ./scripts/create-hint-extends.js",
+    "prebuild": "node ./scripts/create-hint-categories.js && node ./scripts/create-hint-extends.js && node ./scripts/copy-severity",
     "clean": "rimraf dist",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint --ext ts --ignore-pattern dist .",
