@@ -75,7 +75,7 @@ const listConfigurations = async () => {
     return 0;
 };
 
-const configurationDetails = async (cliOptions: CLIOptions): Promise<0 | 1> => {
+const configurationDetails = async (cliOptions: CLIOptions) => {
     const configuration = await configManager.get(cliOptions.name);
 
     if (!configuration) {

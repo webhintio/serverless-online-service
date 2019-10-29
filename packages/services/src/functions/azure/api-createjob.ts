@@ -6,14 +6,13 @@ export const run: AzureFunction = async (context: Context, req: HttpRequest): Pr
     context.log('Processing request to create new job.');
 
     try {
-        const tokens = req.body.split('=');
+        const tokens = JSON.parse(req.body);
 
-        if (!tokens[0] || !tokens[1] || tokens[0] !== 'url') {
-            throw Error('Url is required');
+        if (!tokens.url) {
+            throw Error('url is required');
         }
 
-        const url = tokens[1].replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
-        const job = await createJob(url);
+        const job = await createJob(tokens.url);
 
         context.res = {
             body: job,

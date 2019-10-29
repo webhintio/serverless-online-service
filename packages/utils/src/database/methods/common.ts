@@ -7,7 +7,8 @@ import * as mongoose from 'mongoose';
 import { debug as d } from '../../debug';
 import * as logger from '../../logging';
 
-const mongoDBLock = require('mongodb-lock');
+import mongoDBLock = require('mongodb-lock');
+
 const tri = require('tri');
 const debug = d(__filename);
 let cachedDb: mongoose.Connection | null = null;
@@ -67,23 +68,23 @@ export const unlock = async (dbLock: any) => {
 };
 
 /**
- * Create a lock for an url.
- * @param {string} url - URL to lock in the database.
+ * Create a lock for a key.
+ * @param {string} key - Key to lock in the database.
  */
-export const lock = async (url: string) => {
+export const lock = async (key: string) => {
     await connect();
-    const dbLock = createLock(url);
+    const dbLock = createLock(key);
 
     const getLock = async () => {
         const code = await dbLock.acquireAsync();
 
         if (!code) {
-            logger.error(`Lock not acquired for key ${url}`, moduleName);
+            logger.error(`Lock not acquired for key ${key}`, moduleName);
 
             throw new Error('Lock not acquired');
         }
 
-        logger.log(`Lock acquired for key ${url}`, moduleName);
+        logger.log(`Lock acquired for key ${key}`, moduleName);
 
         return code;
     };

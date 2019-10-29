@@ -10,6 +10,7 @@ type Query = {
     exec: () => Promise<any>;
     remove: () => Query;
     sort: () => Query;
+    limit: () => Query;
 };
 
 type ModelObject = {
@@ -77,6 +78,9 @@ test.beforeEach((t) => {
         exec(): Promise<any> {
             return null as any;
         },
+        limit() {
+            return t.context.query;
+        },
         remove() {
             return t.context.query;
         },
@@ -119,20 +123,20 @@ test.afterEach.always((t) => {
     t.context.sandbox.restore();
 });
 
-test('job.getByUrl should return a job', async (t) => {
+test('job.getLatestByUrl should return a job', async (t) => {
     const sandbox = t.context.sandbox;
     const queryExecStub = sandbox.stub(t.context.query, 'exec').resolves(t.context.jobResult);
 
     sandbox.stub(t.context.common, 'connect').resolves();
     const job = loadScript(t.context);
-    const result = await job.getByUrl('url');
+    const result = await job.getLatestByUrl('url');
 
     t.true(queryExecStub.calledOnce);
     t.true(t.context.jobFindStub.calledOnce);
     t.is(result, t.context.jobResult);
 });
 
-test(`job.getByUrl should throw an exception if it can't connect to the database`, async (t) => {
+test(`job.getLatestByUrl should throw an exception if it can't connect to the database`, async (t) => {
     const sandbox = t.context.sandbox;
 
     const queryExecSpy = sandbox.spy(t.context.query, 'exec');
@@ -141,7 +145,7 @@ test(`job.getByUrl should throw an exception if it can't connect to the database
     const job = loadScript(t.context);
 
     await t.throwsAsync(async () => {
-        await job.getByUrl('url');
+        await job.getLatestByUrl('url');
     });
 
     t.false(queryExecSpy.called);

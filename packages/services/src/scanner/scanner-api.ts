@@ -212,7 +212,17 @@ export const createJob = async (url: string): Promise<IJob> => {
     const serviceConfig = await getActiveConfig();
     const lock = await database.lock(url);
     const config = serviceConfig.webhintConfigs;
-    const jobs = await database.job.getByUrl(url);
+    const jobs = await database.job.getLatestByUrl(url);
+
+    /*
+     * An active job is a job that was added to the database
+     * with the same url and same configuration in the last
+     * 15 minutes (current cache time).
+     * If there is an active job, then we just return what we
+     * have in the database.
+     * If the job status is error, the job will not be active even
+     * if it was added before 15 minutes.
+     */
     let job = getActiveJob(jobs, config, serviceConfig.jobCacheTime);
 
     if (jobs.length === 0 || !job) {

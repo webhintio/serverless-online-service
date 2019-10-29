@@ -13,7 +13,7 @@ process.env.QueueConnection = 'connectionString'; // eslint-disable-line no-proc
 type DatabaseJob = {
     add: () => Promise<any>;
     get: () => Promise<any>;
-    getByUrl: () => Promise<any>;
+    getLatestByUrl: () => Promise<any>;
     update: () => Promise<void>;
 }
 
@@ -218,7 +218,7 @@ test.beforeEach(async (t) => {
             get(): Promise<any> {
                 return Promise.resolve(null);
             },
-            getByUrl(): Promise<IJob[]> {
+            getLatestByUrl(): Promise<IJob[]> {
                 return Promise.resolve([]);
             },
             update() {
@@ -287,7 +287,7 @@ test(`if the job doesn't exist, it should create a new job and add it to the que
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(activeConfig);
     t.context.queueMethodsSendMessageStub = sandbox.spy(t.context.queueMethods, 'sendMessage');
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves([]);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves([]);
 
     const jobResult = {
         config: activeConfig.webhintConfigs,
@@ -316,7 +316,7 @@ test(`if the job doesn't exist, it should create a new job and add it to the que
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(extendsConfig);
     t.context.queueMethodsSendMessageStub = sandbox.spy(t.context.queueMethods, 'sendMessage');
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves([]);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves([]);
 
     const jobResult = {
         config: activeConfig.webhintConfigs,
@@ -345,7 +345,7 @@ test(`if the job doesn't exist, but there is an error in Service Bus, it should 
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(activeConfig);
     t.context.queueMethodsSendMessageStub = sandbox.stub(t.context.queueMethods, 'sendMessage').rejects();
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves([]);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves([]);
 
     const jobResult = {
         config: activeConfig.webhintConfigs,
@@ -370,7 +370,7 @@ test(`if the job exists, but it is expired, it should create a new job and add i
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(activeConfig);
     t.context.queueMethodsSendMessageStub = sandbox.spy(t.context.queueMethods, 'sendMessage');
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves(jobs);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves(jobs);
 
     const jobResult = {
         config: activeConfig.webhintConfigs,
@@ -407,7 +407,7 @@ test(`if the job exists, but config is different, it should create a new job and
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(activeConfig);
     t.context.queueMethodsSendMessageStub = sandbox.spy(t.context.queueMethods, 'sendMessage');
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves(jobs);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves(jobs);
 
     const jobResult = {
         config: activeConfig.webhintConfigs,
@@ -439,7 +439,7 @@ test(`if the job exists and it isn't expired, it shouldn't create a new job`, as
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(activeConfig);
     t.context.queueMethodsSendMessageStub = sandbox.spy(t.context.queueMethods, 'sendMessage');
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves(jobs);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves(jobs);
     t.context.databaseJobAddStub = sandbox.spy(t.context.database.job, 'add');
 
     const scannerApi = loadScript(t.context);
@@ -460,7 +460,7 @@ test(`if the job exists, the status is neither finish or error, but finished is 
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(activeConfig);
     t.context.queueMethodsSendMessageStub = sandbox.spy(t.context.queueMethods, 'sendMessage');
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves(jobs);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves(jobs);
     t.context.databaseJobAddStub = sandbox.spy(t.context.database.job, 'add');
 
     const scannerApi = loadScript(t.context);
@@ -479,7 +479,7 @@ test(`if the job is still running, it shouldn't create a new job`, async (t) => 
 
     sandbox.stub(t.context.database.serviceConfig, 'getActive').resolves(activeConfig);
     t.context.queueMethodsSendMessageStub = sandbox.spy(t.context.queueMethods, 'sendMessage');
-    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getByUrl').resolves(jobs);
+    t.context.databaseJobGetByUrlStub = sandbox.stub(t.context.database.job, 'getLatestByUrl').resolves(jobs);
     t.context.databaseJobAddStub = sandbox.spy(t.context.database.job, 'add');
 
     const scannerApi = loadScript(t.context);

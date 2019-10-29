@@ -7,7 +7,7 @@ RUN apt-get update
 RUN apt-get upgrade -y
 
 # Install dependencies.
-RUN apt-get install -y curl apt-transport-https gnupg vim
+RUN apt-get install -y curl apt-transport-https gnupg
 
 # Install chrome
 # Webhint use puppeteer-core so we need to install a browser.
@@ -17,7 +17,7 @@ RUN apt-get update
 RUN apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst
 
 # Install nodejs.
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs build-essential
 
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
@@ -33,7 +33,7 @@ COPY packages/utils/package.json /home/site/utils
 
 WORKDIR /home/site/utils
 
-RUN npm install --ignore-engines
+RUN npm install --ignore-engines --only=prod
 
 COPY packages/utils /home/site/utils
 
@@ -44,7 +44,7 @@ WORKDIR /home/site/wwwroot
 
 COPY packages/worker/package.json /home/site/wwwroot
 
-RUN npm install --ignore-engines
+RUN npm install --ignore-engines --only=prod
 
 # Double check you have the binaries for the Azure Service Bus extension
 # before create the image.

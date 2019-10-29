@@ -131,7 +131,7 @@ export const edit = async (oldName: string, newName: string, jobCacheTime: numbe
     const config = await query.exec();
 
     if (!config) {
-        return config;
+        return null;
     }
 
     config.name = newName;

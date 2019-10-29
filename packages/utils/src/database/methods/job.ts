@@ -16,10 +16,12 @@ const debug = d(__filename);
  * Get all the jobs from the database for a given url.
  * @param {string} url - Url we want to look for.
  */
-export const getByUrl = async (url: string): Promise<IJob[]> => {
+export const getLatestByUrl = async (url: string): Promise<IJob[]> => {
     await connect();
     debug(`Getting jobs by url: ${url}`);
-    const query = Job.find({ url });
+    const query = Job.find({ url })
+        .sort({ queued: -1 })
+        .limit(1);
 
     const jobs = await query.exec();
 

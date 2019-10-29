@@ -16,9 +16,9 @@ type GithubData = {
 export class IssueReporter {
 
     /* eslint-disable no-process-env */
-    private GITHUB_API_TOKEN = process.env.GITHUB_API_TOKEN;
-    private GITHUB_OWNER = process.env.GITHUB_OWNER;
-    private GITHUB_REPO = process.env.GITHUB_REPO;
+    private GITHUB_API_TOKEN = process.env.GITHUB_API_TOKEN || '';
+    private GITHUB_OWNER = process.env.GITHUB_OWNER || '';
+    private GITHUB_REPO = process.env.GITHUB_REPO || '';
     private GITHUB_DATA: GithubData;
     /* eslint-enable no-process-env */
 
@@ -28,8 +28,8 @@ export class IssueReporter {
 
     public constructor() {
         this.GITHUB_DATA = {
-            owner: this.GITHUB_OWNER!,
-            repo: this.GITHUB_REPO!
+            owner: this.GITHUB_OWNER,
+            repo: this.GITHUB_REPO
         };
         this.octokit = new Octokit({
             baseUrl: 'https://api.github.com',
@@ -52,8 +52,8 @@ export class IssueReporter {
         return this.octokit.issues.createComment({
             body: this.getErrorMessage(issueData),
             issue_number: issue.number, // eslint-disable-line camelcase
-            owner: this.GITHUB_OWNER!,
-            repo: this.GITHUB_REPO!
+            owner: this.GITHUB_OWNER,
+            repo: this.GITHUB_REPO
         });
 
     }
@@ -103,7 +103,11 @@ ${issueData.log}
         return errorMessage;
     }
 
-    private getErrorTypeLabel(errorType: string): string {
+    private getErrorTypeLabel(errorType: string | undefined): string {
+        if (!errorType) {
+            return 'error:unknow';
+        }
+
         return `error:${errorType}`;
     }
 
@@ -111,7 +115,7 @@ ${issueData.log}
         return `scan:${scanNumber}`;
     }
 
-    private getEmoji(errorType: 'crash' | 'stderr' | 'timeout') {
+    private getEmoji(errorType: 'crash' | 'stderr' | 'timeout' | undefined) {
         let result;
 
         switch (errorType) {
@@ -132,7 +136,7 @@ ${issueData.log}
     private async openIssue(issueData: IssueData) {
         const labels = [
             this.getScanLabel(issueData.scan),
-            this.getErrorTypeLabel(issueData.errorType!)
+            this.getErrorTypeLabel(issueData.errorType)
         ];
 
         /* istanbul ignore else */
@@ -153,7 +157,7 @@ ${issueData.log}
             {
                 body: this.getErrorMessage(issueData),
                 labels,
-                title: `[${this.getEmoji(issueData.errorType!)}]${env}${issueData.url}`
+                title: `[${this.getEmoji(issueData.errorType)}]${env}${issueData.url}`
             }
         ));
     }
