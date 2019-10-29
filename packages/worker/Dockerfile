@@ -23,6 +23,18 @@ RUN apt-get install -y nodejs build-essential
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
+# This project is a monorepo, and because of that
+# we need to do some preprocessing before build the project.
+#
+# First, we need to copy the tsconfig.json in the root
+# of the project, so when we build the project, tsc can find
+# the extended configuration.
+#
+# Second, we need to copy the utils packages keeping the
+# "directory structure", that is why we copy it to /home/site/utils
+#
+# After these two steps, we are ready to build the worker.
+
 # Copy the main tsconfig.json
 COPY tsconfig.json /home
 
