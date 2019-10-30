@@ -41,10 +41,10 @@
     "build:ts": "tsc",
     "clean": "rimraf dist",
     "clean:root": "rimraf dist",
-    "lint": "npm-run-all lint:*",
+    "lint": "npm-run-all --parallel lint:*",
     "lint:dependencies": "node scripts/lint-dependencies.js",
     "lint:scripts": "eslint scripts --cache --ext js --ext ts --report-unused-disable-directives",
-    "test": "yarn clean && node scripts/test-all.js",
+    "test": "yarn clean && npm run lint && node scripts/test-all.js",
     "update:references": "npm run build:scripts && node dist/scripts/update-tsconfig-references.js",
     "watch:ts": "npm run build:ts -- --watch"
   },

@@ -21,6 +21,7 @@ const ignoredDependencies = new Set([
     '@hint/configuration-all',
     '@types/azure',
     '@types/node',
+    '@types/request',
     '@typescript-eslint/eslint-plugin',
     '@typescript-eslint/parser',
     'ava',

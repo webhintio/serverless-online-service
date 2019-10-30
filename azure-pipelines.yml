@@ -35,28 +35,13 @@ steps:
     npm install -g azure-functions-core-tools
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Install Azure functions core tools'
-- task: CmdLine@2
+- script: |
+    ./scripts/ci/install-extensions.sh
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    script: |
-      cd $(Build.SourcesDirectory)/packages/services
-      func extensions install --javascript
-      cd $(Build.SourcesDirectory)/packages/worker
-      func extensions install --javascript
-    workingDirectory: '$(Build.SourcesDirectory)'
-    failOnStderr: true
   displayName: 'Install Azure Function extensions'
-- task: CmdLine@2
+- script: |
+    ./scripts/ci/build-services-functions.sh
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-  inputs:
-    script: |
-      cd $(Build.SourcesDirectory)/packages/utils
-      rm -rf node_modules/
-      npm install --only=prod
-      cd ../services
-      rm -rf node_modules/
-      npm install --only=prod
-    workingDirectory: '$(Build.SourcesDirectory)'
   displayName: 'Install dependecies for utils and services functions'
 - task: ArchiveFiles@2
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
