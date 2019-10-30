@@ -3,7 +3,6 @@ export * from './debug';
 export * from './misc';
 export * from './types';
 export * from './enums/status';
-export * from './database/models/status';
 export * from './database/models/job';
 export * from './database/models/serviceconfig';
 export * from './queue/queue';

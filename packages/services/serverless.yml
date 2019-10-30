@@ -31,10 +31,3 @@ functions:
           queueName: webhint-results
           name: message
           connection : QueueConnection
-  status-service:
-    handler: dist/functions/azure/status-service.run
-    events:
-      - timer:
-        x-azure-settings:
-          name: timer
-          schedule: 0 */15 * * * *

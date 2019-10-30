@@ -1,7 +1,6 @@
 import * as datacontext from './methods/common';
 import * as job from './methods/job';
 import * as serviceConfig from './methods/serviceconfig';
-import * as status from './methods/status';
 
 const { connect, disconnect, lock, unlock } = datacontext;
 
@@ -11,6 +10,5 @@ export {
     lock,
     unlock,
     job,
-    serviceConfig,
-    status
+    serviceConfig
 };
