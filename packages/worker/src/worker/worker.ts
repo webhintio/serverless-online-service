@@ -338,9 +338,13 @@ const getLastLogLines = (log: string, numberOfLines = 5): string => {
 const runWebhint = (job: IJob): Promise<Problem[]> => {
     return new Promise((resolve, reject) => {
         /*
-         * if we don't set execArgv to [], when the process is created, the execArgv
+         * If we don't set execArgv to [], when the process is created, the execArgv
          * has the same parameters as his father so if we are debugging, the child
          * process try to debug in the same port, and that throws an error.
+         *
+         * We need to run webhint in another process because we need to be able to capture
+         * `uncaughtException` and `unhandledRejection` to close the browser. If we don't
+         * do that, we can have memory and cpu leaks.
          */
         const runner = fork(path.join(__dirname, 'webhint-runner.js'), ['--debug'], { execArgv: [], stdio: ['pipe', 'pipe', 'pipe', 'ipc'] });
         let timeoutId: NodeJS.Timer | null;
