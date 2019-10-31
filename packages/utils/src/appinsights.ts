@@ -17,8 +17,8 @@ if (process.env.APP_INSIGHTS_KEY) { // eslint-disable-line no-process-env
     appInsightsClient = appInsights.defaultClient;
 } else {
     appInsightsClient = {
-        trackException() { },
-        trackMetric() { }
+        trackEvent() { },
+        trackException() { }
     } as any;
 }
 

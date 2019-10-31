@@ -265,6 +265,11 @@ const sendStartedMessage = async (queue: Queue, job: IJob) => {
     job.started = await getConsistentTime(job.queued);
     job.status = JobStatus.started;
 
+    appInsightClient.trackEvent({
+        measurements: { 'online-start-duration': job.started.getTime() - job.queued.getTime() },
+        name: 'online-start'
+    });
+
     debug(`Changing job status to ${job.status}`);
     await queue.sendMessage(job);
 
@@ -395,9 +400,31 @@ const runWebhint = (job: IJob): Promise<Problem[]> => {
     });
 };
 
+const determineHintStatus = (job: IJob, problems: Problem[]): { [key: string]: HintStatus } => {
+    const result: { [key: string]: HintStatus } = {};
+
+    for (const hint of job.hints) {
+        result[hint.name] = HintStatus.pass;
+    }
+
+    for (const problem of problems) {
+        // TODO: Update when hint update its severities.
+        if (problem.severity === Severity.error) {
+            result[problem.hintId] = HintStatus.error;
+        } else if (problem.severity === Severity.warning && result[problem.hintId] !== HintStatus.error) {
+            result[problem.hintId] = HintStatus.warning;
+        }
+    }
+
+    return result;
+};
+
 export const run = async (job: IJob) => {
     const queueResults = new Queue('webhint-results', queueConnectionString!);
     const webhintVersion = getWebhintVersion();
+
+    // queued is serialized to a ISO date string, we need to parse it to be a Date.
+    job.queued = new Date(job.queued);
 
     const start = Date.now();
 
@@ -411,9 +438,10 @@ export const run = async (job: IJob) => {
         const webhintStart = Date.now();
         const result = await runWebhint(job);
 
-        appInsightClient.trackMetric({
-            name: 'run-webhint',
-            value: Date.now() - webhintStart
+        appInsightClient.trackEvent({
+            measurements: { 'online-run-duration': Date.now() - webhintStart },
+            name: 'online-run',
+            properties: determineHintStatus(job, result)
         });
 
         parseResult(job, result, configuredHints);
@@ -427,9 +455,9 @@ export const run = async (job: IJob) => {
 
         logger.log(generateLog('Processed Job', job), moduleName);
 
-        appInsightClient.trackMetric({
-            name: 'run-worker',
-            value: Date.now() - start
+        appInsightClient.trackEvent({
+            measurements: { 'online-end-duration': Date.now() - start },
+            name: 'online-end'
         });
     } catch (err) {
         logger.error(generateLog('Error processing Job', job), moduleName, err);
