@@ -759,11 +759,11 @@
             ]
         }
     ],
-    "error": [{
+    "error": {
         "code": "EPIPE",
         "errno": "EPIPE",
         "syscall": "write"
-    }],
+    },
     "started": "2017-08-31T23:52:00.877Z",
     "finished": "2017-08-31T23:52:25.666Z"
 }

@@ -12,3 +12,8 @@ export enum HintStatus {
     pending = 'pending',
     warning = 'warning'
 }
+
+export enum TelemetryStatus {
+    passed = 'passed',
+    failed = 'failed'
+}

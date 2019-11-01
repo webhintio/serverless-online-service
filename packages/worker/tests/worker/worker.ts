@@ -5,7 +5,6 @@ import { EventEmitter2 as EventEmitter } from 'eventemitter2';
 import * as sinon from 'sinon';
 import * as proxyquire from 'proxyquire';
 import { debug, delay, generateLog, HintStatus, JobStatus, logger, IJob } from '@online-service/utils';
-import { Contracts } from 'applicationinsights';
 
 type Queue = {
     sendMessage?: (j: any) => void;
@@ -20,15 +19,6 @@ type ChildProcess = {
     fork: () => EventEmitter;
 }
 
-type AppInsightsClient = {
-    trackEvent: (telemetry: Contracts.EventTelemetry) => void;
-    trackException: (telemetry: Contracts.ExceptionTelemetry) => void;
-}
-
-type AppInsights = {
-    getClient: () => AppInsightsClient;
-}
-
 const ntp = {
     getTime() {
         Promise.resolve({ now: new Date() });
@@ -36,8 +26,6 @@ const ntp = {
 };
 
 type WorkerTestContext = {
-    appInsights: AppInsights;
-    appInsightsClient: AppInsightsClient;
     childProcess: ChildProcess;
     childProcessForkStub: sinon.SinonStub;
     emitter: EventEmitter;
@@ -53,7 +41,6 @@ const test = anyTest as TestInterface<WorkerTestContext>;
 const loadScript = (context: WorkerTestContext) => {
     return proxyquire('../../src/worker/worker', {
         '@online-service/utils': {
-            appinsights: context.appInsights,
             debug,
             generateLog,
             logger,
@@ -67,17 +54,6 @@ const loadScript = (context: WorkerTestContext) => {
 
 test.beforeEach((t) => {
     const sandbox = sinon.createSandbox();
-
-    t.context.appInsightsClient = {
-        trackEvent(telemetry: Contracts.EventTelemetry) { },
-        trackException(telemetry: Contracts.ExceptionTelemetry) { }
-    };
-
-    t.context.appInsights = {
-        getClient() {
-            return t.context.appInsightsClient;
-        }
-    };
 
     t.context.resultsQueue = { sendMessage() { } };
 
@@ -438,112 +414,6 @@ test(`If there is no problem running webhint, it should send to the queue one me
     t.is(contentType.status, HintStatus.pass);
 });
 
-test(`If there is no problems running webhint, it should send the telemetry with the highest severity found`, async (t) => {
-    const sandbox = t.context.sandbox;
-    const job = {
-        config: [{
-            hints: {
-                axe: 'warning',
-                'content-type': 'error',
-                'disown-opener': 'error'
-            }
-        }],
-        error: null,
-        finished: null as any,
-        hints: [
-            {
-                category: 'accessibility',
-                messages: [],
-                name: 'axe',
-                status: HintStatus.pending
-            },
-            {
-                category: 'compatibility',
-                messages: [],
-                name: 'content-type',
-                status: HintStatus.pending
-            },
-            {
-                category: 'security',
-                messages: [],
-                name: 'disown-opener',
-                status: HintStatus.pending
-            },
-            {
-                category: 'performance',
-                messages: [],
-                name: 'http-cache',
-                status: HintStatus.pending
-            }
-        ],
-        id: '0',
-        maxRunTime: 100,
-        partInfo: {
-            part: 1,
-            totalParts: 5
-        },
-        queued: new Date(),
-        started: null as any,
-        status: JobStatus.pending,
-        url: 'http://webhint.io',
-        webhintVersion: '0'
-    } as IJob;
-
-    const appInsightsClientTrackEventSpy = sandbox.spy(t.context.appInsightsClient, 'trackEvent');
-
-    t.context.resultsQueueSendMessageStub = sandbox.stub(t.context.resultsQueue, 'sendMessage')
-        .onFirstCall()
-        .resolves()
-        .onSecondCall()
-        .resolves();
-
-    const worker = loadScript(t.context);
-
-    const promise = worker.run(job);
-
-    // Wait a little bit to ensure that 'runWebhint' was launched
-    await delay(500);
-    await t.context.emitter.emitAsync('message', {
-        messages: [{
-            hintId: 'axe',
-            message: 'Warning 1 axe',
-            severity: 1
-        },
-        {
-            hintId: 'axe',
-            message: 'Warning 2 axe',
-            severity: 1
-        },
-        {
-            hintId: 'content-type',
-            message: 'Error in content-type',
-            severity: 2
-        },
-        {
-            hintId: 'disown-opener',
-            message: 'Warning in disown-opener',
-            severity: 1
-        },
-        {
-            hintId: 'disown-opener',
-            message: 'Error in disown-opener',
-            severity: 2
-        }],
-        ok: true
-    });
-
-    await promise;
-
-    const trackEventArgs = appInsightsClientTrackEventSpy.args[1][0];
-
-    t.deepEqual(trackEventArgs.properties, {
-        axe: 'warning',
-        'content-type': 'error',
-        'disown-opener': 'error',
-        'http-cache': 'pass'
-    });
-});
-
 test(`If there is no problem running webhint, it should send to the queue 2 messages if the total size is bigger than MAX_MESSAGE_SIZE`, async (t) => {
     const sandbox = t.context.sandbox;
     const lipsum = fs.readFileSync(`${__dirname}/fixtures/lipsum.txt`, 'utf-8'); // eslint-disable-line no-sync
@@ -611,7 +481,6 @@ test(`If there is no problem running webhint, it should send to the queue 2 mess
 
     t.is(t.context.resultsQueueSendMessageStub.callCount, 3);
 });
-
 
 test(`If there is no problem running webhint, it should send a "Too many errors" message if the messages are bigger than MAX_MESSAGE_SIZE`, async (t) => {
     const sandbox = t.context.sandbox;

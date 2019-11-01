@@ -11,7 +11,8 @@ import {
     IssueData,
     JobStatus,
     logger,
-    IssueReporter
+    IssueReporter,
+    TelemetryStatus
 } from '@online-service/utils';
 
 const slowReturnMessage = `webhint didn't return the result fast enough`;
@@ -55,6 +56,16 @@ const isJobFinished = (job: IJob) => {
     });
 };
 
+const isHintTimeout = (hint: Hint) => {
+    const message = hint.messages && hint.messages[0] && hint.messages[0].message;
+
+    return message && message.includes(slowReturnMessage);
+};
+
+const isJobTimeout = (job: IJob) => {
+    return job.hints.some(isHintTimeout);
+};
+
 const reportGithubIssues = async (job: IJob) => {
     try {
         const issueReporter = new IssueReporter();
@@ -83,18 +94,13 @@ const reportGithubIssues = async (job: IJob) => {
 
 const reportGithubTimeoutIssues = async (job: IJob) => {
     try {
-        /*
-         * In case of timeout, all the rules will have
-         * the same error.
-         */
         const hint = job.hints[0];
-        const message = hint.messages && hint.messages[0] && hint.messages[0].message;
 
-        if (message && message.includes(slowReturnMessage)) {
+        if (isJobTimeout(job)) {
             const issueReporter = new IssueReporter();
             const issueData: IssueData = {
                 configs: job.config,
-                errorMessage: message,
+                errorMessage: hint.messages[0].message,
                 errorType: 'timeout',
                 log: job.log,
                 scan: moment().format('YYYY-MM-DD'),
@@ -137,6 +143,17 @@ const closeGithubIssues = async (dbJob: IJobModel) => {
     }
 };
 
+const determineHintStatus = (job: IJob): { [key: string]: TelemetryStatus } => {
+    const result: { [key: string]: TelemetryStatus } = {};
+
+    for (const hint of job.hints) {
+        // This only run if the job has finished so any hint will have the status HintStatus.pending.
+        result[hint.name] = hint.status === HintStatus.pass ? TelemetryStatus.passed : TelemetryStatus.failed;
+    }
+
+    return result;
+};
+
 export const run = async (job: IJob): Promise<void> => {
     const id = job.id!;
     let lock: any;
@@ -151,6 +168,14 @@ export const run = async (job: IJob): Promise<void> => {
     let error = false;
 
     try {
+        // Parsing dates comming from service bus.
+        job.queued = new Date(job.queued);
+        job.started = new Date(job.started);
+
+        if (job.finished) {
+            job.finished = new Date(job.finished);
+        }
+
         const dbJob = await database.job.get(id);
 
         if (!dbJob) {
@@ -202,16 +227,35 @@ export const run = async (job: IJob): Promise<void> => {
                 await reportGithubTimeoutIssues(job);
             }
 
+            if (!dbJob.finished || dbJob.finished < job.finished) {
+                dbJob.finished = job.finished;
+            }
+
             if (isJobFinished(dbJob)) {
                 dbJob.status = dbJob.error && dbJob.error.length > 0 ? JobStatus.error : job.status;
 
                 if (dbJob.status === JobStatus.finished) {
                     await closeGithubIssues(dbJob);
-                }
-            }
 
-            if (!dbJob.finished || dbJob.finished < new Date(job.finished)) {
-                dbJob.finished = job.finished;
+                    appInsightClient.trackEvent({
+                        measurements: {
+                            'online-finish-duration': dbJob.finished.getTime() - dbJob.started.getTime(),
+                            'online-start-duration': dbJob.started.getTime() - dbJob.queued.getTime()
+                        },
+                        name: 'online-finish',
+                        properties: determineHintStatus(dbJob)
+                    });
+                } else if (dbJob.status === JobStatus.error) {
+                    if (isJobTimeout(dbJob)) {
+                        appInsightClient.trackEvent({ name: 'online-timeout' });
+                    } else {
+                        appInsightClient.trackEvent({ name: 'online-error' });
+
+                        for (const err of dbJob.error) {
+                            appInsightClient.trackException({ exception: err });
+                        }
+                    }
+                }
             }
         }
 

@@ -5,7 +5,6 @@ import * as path from 'path';
 import { HintConfig, Problem, Severity } from 'hint';
 import { getHintsFromConfiguration, HintsConfigObject } from '@hint/utils';
 import {
-    appinsights,
     debug as d,
     generateLog,
     Hint,
@@ -20,7 +19,6 @@ import {
 
 const { QueueConnection: queueConnectionString } = process.env; // eslint-disable-line no-process-env
 const { getTime } = ntp;
-const appInsightClient = appinsights.getClient();
 const debug = d(__filename);
 const moduleName = 'Worker Service';
 const MAX_MESSAGE_SIZE = 220 * 1024; // size in kB
@@ -265,11 +263,6 @@ const sendStartedMessage = async (queue: Queue, job: IJob) => {
     job.started = await getConsistentTime(job.queued);
     job.status = JobStatus.started;
 
-    appInsightClient.trackEvent({
-        measurements: { 'online-start-duration': job.started.getTime() - job.queued.getTime() },
-        name: 'online-start'
-    });
-
     debug(`Changing job status to ${job.status}`);
     await queue.sendMessage(job);
 
@@ -404,33 +397,9 @@ const runWebhint = (job: IJob): Promise<Problem[]> => {
     });
 };
 
-const determineHintStatus = (job: IJob, problems: Problem[]): { [key: string]: HintStatus } => {
-    const result: { [key: string]: HintStatus } = {};
-
-    for (const hint of job.hints) {
-        result[hint.name] = HintStatus.pass;
-    }
-
-    for (const problem of problems) {
-        // TODO: Update when hint update its severities.
-        if (problem.severity === Severity.error) {
-            result[problem.hintId] = HintStatus.error;
-        } else if (problem.severity === Severity.warning && result[problem.hintId] !== HintStatus.error) {
-            result[problem.hintId] = HintStatus.warning;
-        }
-    }
-
-    return result;
-};
-
 export const run = async (job: IJob) => {
     const queueResults = new Queue('webhint-results', queueConnectionString!);
     const webhintVersion = getWebhintVersion();
-
-    // queued is serialized to a ISO date string, we need to parse it to be a Date.
-    job.queued = new Date(job.queued);
-
-    const start = Date.now();
 
     logger.log(generateLog('Processing Job', job), moduleName);
     const configuredHints = getHintsFromConfiguration(job.config[0]);
@@ -439,33 +408,20 @@ export const run = async (job: IJob) => {
         job.webhintVersion = webhintVersion;
 
         await sendStartedMessage(queueResults, job);
-        const webhintStart = Date.now();
         const result = await runWebhint(job);
-
-        appInsightClient.trackEvent({
-            measurements: { 'online-run-duration': Date.now() - webhintStart },
-            name: 'online-run',
-            properties: determineHintStatus(job, result)
-        });
-
-        parseResult(job, result, configuredHints);
 
         job.finished = await getConsistentTime(job.started);
         job.status = JobStatus.finished;
+
+        parseResult(job, result, configuredHints);
 
         debug(`Sending job result with status: ${job.status}`);
 
         await sendResults(queueResults, job, configuredHints);
 
         logger.log(generateLog('Processed Job', job), moduleName);
-
-        appInsightClient.trackEvent({
-            measurements: { 'online-end-duration': Date.now() - start },
-            name: 'online-end'
-        });
     } catch (err) {
         logger.error(generateLog('Error processing Job', job), moduleName, err);
-        appInsightClient.trackException({ exception: err });
 
         debug(err);
 
