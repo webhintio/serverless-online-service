@@ -6,7 +6,29 @@
             "type": "node",
             "request": "attach",
             "port": 9229,
-            "preLaunchTask": "func: host start"
+            /*
+                Previous to run this, we need to run the functions manually
+                using azure-functions-core-tools (npm install -g azure-functions-core-tools).
+
+                Go to packages/services or packages/worker and run:
+
+                func start --port 9229
+            */
+            "processId": "${command:PickProcess}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Config Manager",
+            "program": "${workspaceFolder}/packages/services/dist/src/config/config-manager-cli.js",
+            "env": {
+                "DatabaseConnection": ""
+            },
+            "args":[],
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ],
+            "console": "integratedTerminal",
         }
     ]
 }

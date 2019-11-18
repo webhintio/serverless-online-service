@@ -1,0 +1,14 @@
+{
+    "disabled": false,
+    "bindings": [
+        {
+            "type": "serviceBusTrigger",
+            "direction": "in",
+            "name": "message",
+            "queueName": "webhint-jobs",
+            "connection": "QueueConnection"
+        }
+    ],
+    "entryPoint": "run",
+    "scriptFile": "../dist/src/functions/azure/workerservice.js"
+}

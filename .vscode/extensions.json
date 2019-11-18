@@ -1,5 +1,11 @@
 {
-  "recommendations": [
-    "ms-azuretools.vscode-azurefunctions"
-  ]
+    "recommendations": [
+        "ms-azuretools.vscode-azurefunctions",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "github.vscode-pull-request-github",
+        "EditorConfig.EditorConfig",
+        "ms-vsliveshare.vsliveshare",
+        "mauve.terraform"
+    ]
 }

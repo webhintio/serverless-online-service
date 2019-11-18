@@ -1,0 +1,14 @@
+{
+    "disabled": false,
+    "bindings": [
+        {
+            "type": "serviceBusTrigger",
+            "direction": "in",
+            "name": "message",
+            "queueName": "webhint-results",
+            "connection": "QueueConnection"
+        }
+    ],
+    "entryPoint": "run",
+    "scriptFile": "../dist/src/functions/azure/syncservice.js"
+}

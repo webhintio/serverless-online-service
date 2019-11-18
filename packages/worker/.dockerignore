@@ -1,0 +1,13 @@
+.git/
+node_modules/
+.vscode/
+.nyc_output/
+coverage/
+.editorconfig
+.eslintrc.json
+.gitignore
+Dockerfile.*
+.gitattributes
+package-lock.json
+yarn.lock
+local.settings.json
