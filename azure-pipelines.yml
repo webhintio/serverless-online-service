@@ -27,27 +27,27 @@ steps:
     yarn test
   displayName: 'Test'
 - script: echo "##vso[task.setvariable variable=dockerTag]$(date '+%Y%m%d%H%M%S')"
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Calculating docker image tag'
 # This script can't be merge with the previous one because it will
 # fail (line 2: dockerTag: command not found)
 - script: echo Docker tag calculated $(dockerTag)
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Display docker image tag generated'
 - script: |
     npm install -g azure-functions-core-tools
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Install Azure functions core tools'
 - script: |
     ./scripts/ci/install-extensions.sh
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Install Azure Function extensions'
 - script: |
     ./scripts/ci/build-services-functions.sh
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: 'Install dependecies for utils and services functions'
 - task: ArchiveFiles@2
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     rootFolderOrFile: '$(Build.SourcesDirectory)/packages/services'
     includeRootFolder: false
@@ -57,13 +57,13 @@ steps:
     verbose: true
   displayName: Create deployment zip file for service functions
 - task: Docker@2
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Login to ACR
   inputs:
     command: login
     containerRegistry: DockerACRConnection
 - task: Docker@2
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Build worker image
   inputs:
     command: build
@@ -72,7 +72,7 @@ steps:
     Dockerfile: $(Build.SourcesDirectory)/packages/worker/Dockerfile
     buildContext: $(Build.SourcesDirectory)
 - task: Docker@2
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Push worker image
   inputs:
     command: push
@@ -80,7 +80,7 @@ steps:
     repository: $(dockerImage)
     tags: $(dockerTag)
 - task: AzureFunctionApp@1
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   inputs:
     azureSubscription: 'webhint-staging'
     appType: 'functionAppLinux'
@@ -90,7 +90,7 @@ steps:
     appSettings: '-APP_INSIGHTS_KEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -DatabaseConnection $(DatabaseConnection) -QueueConnection $(QueueConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)'
   displayName: Deploy service functions
 - task: AzureFunctionAppContainer@1
-  # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Deploy worker function
   inputs:
     azureSubscription: 'webhint-staging'
