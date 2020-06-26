@@ -1,4 +1,4 @@
-import * as Octokit from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
 
 import { IssueData } from '../types/issuedata';
 
@@ -10,6 +10,101 @@ type GithubData = {
     owner: string;
     repo: string;
 }
+
+/*
+ * Octokit/types doesn't define a type for the items in a search and
+ * doesn't export the type IssuesUpdateEndpoint.
+ * These are a copy/paste of what they have in their code.
+ * Any suggestion to do this in a better way?
+ */
+/* eslint-disable camelcase */
+type SearchItem = {
+    url: string;
+    repository_url: string;
+    labels_url: string;
+    comments_url: string;
+    events_url: string;
+    html_url: string;
+    id: number;
+    node_id: string;
+    number: number;
+    title: string;
+    user: {
+        login: string;
+        id: number;
+        node_id: string;
+        avatar_url: string;
+        gravatar_id: string;
+        url: string;
+        html_url: string;
+        followers_url: string;
+        following_url: string;
+        gists_url: string;
+        starred_url: string;
+        subscriptions_url: string;
+        organizations_url: string;
+        repos_url: string;
+        events_url: string;
+        received_events_url: string;
+        type: string;
+    };
+    labels: {
+        id: number;
+        node_id: string;
+        url: string;
+        name: string;
+        color: string;
+    }[];
+    state: string;
+    assignee: string;
+    milestone: string;
+    comments: number;
+    created_at: string;
+    updated_at: string;
+    closed_at: string;
+    pull_request: {
+        html_url: string;
+        diff_url: string;
+        patch_url: string;
+    };
+    body: string;
+    score: number;
+};
+
+type IssuesUpdateEndpoint = {
+    owner: string;
+    repo: string;
+    issue_number: number;
+    /**
+     * The title of the issue.
+     */
+    title?: string;
+    /**
+     * The contents of the issue.
+     */
+    body?: string;
+    /**
+     * Login for the user that this issue should be assigned to. **This field is deprecated.**
+     */
+    assignee?: string;
+    /**
+     * State of the issue. Either `open` or `closed`.
+     */
+    state?: 'open' | 'closed';
+    /**
+     * The `number` of the milestone to associate this issue with or `null` to remove current. _NOTE: Only users with push access can set the milestone for issues. The milestone is silently dropped otherwise._
+     */
+    milestone?: number | null;
+    /**
+     * Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._
+     */
+    labels?: string[];
+    /**
+     * Logins for Users to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this Issue. Send an empty array (`[]`) to clear all assignees from the Issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._
+     */
+    assignees?: string[];
+};
+/* eslint-enable camelcase */
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -48,7 +143,7 @@ export class IssueReporter {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    private addIssueComment(issue: Octokit.SearchIssuesResponseItemsItem, issueData: IssueData) {
+    private addIssueComment(issue: SearchItem, issueData: IssueData) {
         return this.octokit.issues.createComment({
             body: this.getErrorMessage(issueData),
             issue_number: issue.number, // eslint-disable-line camelcase
@@ -58,19 +153,19 @@ export class IssueReporter {
 
     }
 
-    private async closeIssue(issue: Octokit.SearchIssuesResponseItemsItem) {
+    private async closeIssue(issue: SearchItem) {
         await this.editIssue({
             issue_number: issue.number, // eslint-disable-line camelcase
             state: 'closed'
         });
     }
 
-    private editIssue(configs: Partial<Octokit.IssuesUpdateParams>) {
+    private editIssue(configs: Partial<IssuesUpdateEndpoint>) {
         return this.octokit.issues.update((Object.assign(
             {},
             this.GITHUB_DATA,
             configs
-        ) as Octokit.IssuesUpdateParams));
+        ) as IssuesUpdateEndpoint));
     }
 
     private getErrorMessage(issueData: IssueData) {
@@ -162,8 +257,8 @@ ${issueData.log}
         ));
     }
 
-    private async searchIssues(q: string) {
-        const result = await this.octokit.search.issues({ q });
+    private async searchIssues(q: string): Promise<SearchItem[]> {
+        const result = await this.octokit.search.issuesAndPullRequests({ q });
 
         return result.data.items;
     }
@@ -222,7 +317,7 @@ ${issueData.log}
         await this.openIssue(issueData);
     }
 
-    private async updateIssueLabels(issue: Octokit.SearchIssuesResponseItemsItem, labels: string[]) {
+    private async updateIssueLabels(issue: SearchItem, labels: string[]) {
         await this.editIssue({
             issue_number: issue.number, // eslint-disable-line camelcase
             labels
