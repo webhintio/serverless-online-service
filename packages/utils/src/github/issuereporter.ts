@@ -15,7 +15,9 @@ type GithubData = {
  * Octokit/types doesn't define a type for the items in a search and
  * doesn't export the type IssuesUpdateEndpoint.
  * These are a copy/paste of what they have in their code.
- * Any suggestion to do this in a better way?
+ * Here you can find the issues created in the Octokit repo:
+ *     - https://github.com/octokit/types.ts/issues/119
+ *     - https://github.com/octokit/types.ts/issues/120
  */
 /* eslint-disable camelcase */
 type SearchItem = {
