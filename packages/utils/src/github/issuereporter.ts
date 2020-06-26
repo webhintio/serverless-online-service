@@ -1,4 +1,5 @@
 import { Octokit } from '@octokit/rest';
+import * as OctokitTypes from '@octokit/types';
 
 import { IssueData } from '../types/issuedata';
 
@@ -12,100 +13,17 @@ type GithubData = {
 }
 
 /*
- * Octokit/types doesn't define a type for the items in a search and
- * doesn't export the type IssuesUpdateEndpoint.
- * These are a copy/paste of what they have in their code.
- * Here you can find the issues created in the Octokit repo:
+ * Octokit/types doesn't define a name for some of the types.
+ * In these cases, they have a way to get the type indicating
+ * the endpoint and what type you want ('parameters', 'response', 'request')
+ * There are a couple of issues open to tack if they export the types in an easy way:
  *     - https://github.com/octokit/types.ts/issues/119
  *     - https://github.com/octokit/types.ts/issues/120
  */
 /* eslint-disable camelcase */
-type SearchItem = {
-    url: string;
-    repository_url: string;
-    labels_url: string;
-    comments_url: string;
-    events_url: string;
-    html_url: string;
-    id: number;
-    node_id: string;
-    number: number;
-    title: string;
-    user: {
-        login: string;
-        id: number;
-        node_id: string;
-        avatar_url: string;
-        gravatar_id: string;
-        url: string;
-        html_url: string;
-        followers_url: string;
-        following_url: string;
-        gists_url: string;
-        starred_url: string;
-        subscriptions_url: string;
-        organizations_url: string;
-        repos_url: string;
-        events_url: string;
-        received_events_url: string;
-        type: string;
-    };
-    labels: {
-        id: number;
-        node_id: string;
-        url: string;
-        name: string;
-        color: string;
-    }[];
-    state: string;
-    assignee: string;
-    milestone: string;
-    comments: number;
-    created_at: string;
-    updated_at: string;
-    closed_at: string;
-    pull_request: {
-        html_url: string;
-        diff_url: string;
-        patch_url: string;
-    };
-    body: string;
-    score: number;
-};
+type SearchItem = OctokitTypes.Endpoints['GET /search/issues']['response']['data']['items'][0];
 
-type IssuesUpdateEndpoint = {
-    owner: string;
-    repo: string;
-    issue_number: number;
-    /**
-     * The title of the issue.
-     */
-    title?: string;
-    /**
-     * The contents of the issue.
-     */
-    body?: string;
-    /**
-     * Login for the user that this issue should be assigned to. **This field is deprecated.**
-     */
-    assignee?: string;
-    /**
-     * State of the issue. Either `open` or `closed`.
-     */
-    state?: 'open' | 'closed';
-    /**
-     * The `number` of the milestone to associate this issue with or `null` to remove current. _NOTE: Only users with push access can set the milestone for issues. The milestone is silently dropped otherwise._
-     */
-    milestone?: number | null;
-    /**
-     * Labels to associate with this issue. Pass one or more Labels to _replace_ the set of Labels on this Issue. Send an empty array (`[]`) to clear all Labels from the Issue. _NOTE: Only users with push access can set labels for issues. Labels are silently dropped otherwise._
-     */
-    labels?: string[];
-    /**
-     * Logins for Users to assign to this issue. Pass one or more user logins to _replace_ the set of assignees on this Issue. Send an empty array (`[]`) to clear all assignees from the Issue. _NOTE: Only users with push access can set assignees for new issues. Assignees are silently dropped otherwise._
-     */
-    assignees?: string[];
-};
+type IssuesUpdateEndpoint = OctokitTypes.Endpoints['PATCH /repos/:owner/:repo/issues/:issue_number']['parameters'];
 /* eslint-enable camelcase */
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
