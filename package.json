@@ -10,7 +10,7 @@
     "builtin-modules": "^3.1.0",
     "copyfiles": "^2.1.1",
     "eslint": "^6.6.0",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-markdown": "^1.0.2",
     "eventemitter2": "^5.0.1",
     "husky": "^3.0.9",
