@@ -1,4 +1,5 @@
-import * as Octokit from '@octokit/rest';
+import { Octokit } from '@octokit/rest';
+import * as OctokitTypes from '@octokit/types';
 
 import { IssueData } from '../types/issuedata';
 
@@ -10,6 +11,20 @@ type GithubData = {
     owner: string;
     repo: string;
 }
+
+/*
+ * Octokit/types doesn't define a name for some of the types.
+ * In these cases, they have a way to get the type indicating
+ * the endpoint and what type you want ('parameters', 'response', 'request')
+ * There are a couple of issues open to tack if they export the types in an easy way:
+ *     - https://github.com/octokit/types.ts/issues/119
+ *     - https://github.com/octokit/types.ts/issues/120
+ */
+/* eslint-disable camelcase */
+type SearchItem = OctokitTypes.Endpoints['GET /search/issues']['response']['data']['items'][0];
+
+type IssuesUpdateEndpoint = OctokitTypes.Endpoints['PATCH /repos/:owner/:repo/issues/:issue_number']['parameters'];
+/* eslint-enable camelcase */
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -48,7 +63,7 @@ export class IssueReporter {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    private addIssueComment(issue: Octokit.SearchIssuesResponseItemsItem, issueData: IssueData) {
+    private addIssueComment(issue: SearchItem, issueData: IssueData) {
         return this.octokit.issues.createComment({
             body: this.getErrorMessage(issueData),
             issue_number: issue.number, // eslint-disable-line camelcase
@@ -58,19 +73,19 @@ export class IssueReporter {
 
     }
 
-    private async closeIssue(issue: Octokit.SearchIssuesResponseItemsItem) {
+    private async closeIssue(issue: SearchItem) {
         await this.editIssue({
             issue_number: issue.number, // eslint-disable-line camelcase
             state: 'closed'
         });
     }
 
-    private editIssue(configs: Partial<Octokit.IssuesUpdateParams>) {
+    private editIssue(configs: Partial<IssuesUpdateEndpoint>) {
         return this.octokit.issues.update((Object.assign(
             {},
             this.GITHUB_DATA,
             configs
-        ) as Octokit.IssuesUpdateParams));
+        ) as IssuesUpdateEndpoint));
     }
 
     private getErrorMessage(issueData: IssueData) {
@@ -162,8 +177,8 @@ ${issueData.log}
         ));
     }
 
-    private async searchIssues(q: string) {
-        const result = await this.octokit.search.issues({ q });
+    private async searchIssues(q: string): Promise<SearchItem[]> {
+        const result = await this.octokit.search.issuesAndPullRequests({ q });
 
         return result.data.items;
     }
@@ -222,7 +237,7 @@ ${issueData.log}
         await this.openIssue(issueData);
     }
 
-    private async updateIssueLabels(issue: Octokit.SearchIssuesResponseItemsItem, labels: string[]) {
+    private async updateIssueLabels(issue: SearchItem, labels: string[]) {
         await this.editIssue({
             issue_number: issue.number, // eslint-disable-line camelcase
             labels
