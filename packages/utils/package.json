@@ -20,7 +20,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@hint/utils": "^6.1.0",
+    "@hint/utils": "^7.0.4",
     "@octokit/types": "^5.0.1",
     "@types/azure": "^0.9.20",
     "@types/azure-sb": "^0.0.37",
