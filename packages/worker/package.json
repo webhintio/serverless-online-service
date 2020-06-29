@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@azure/functions": "^1.2.2",
-    "@hint/configuration-all": "^1.0.13",
+    "@hint/configuration-all": "^2.0.6",
     "@hint/utils": "^7.0.4",
     "@online-service/utils": "file:../utils",
     "lodash": "^4.17.15",
