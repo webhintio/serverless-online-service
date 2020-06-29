@@ -1899,10 +1899,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@types/azure-sb@^0.0.36":
-  version "0.0.36"
-  resolved "https://registry.yarnpkg.com/@types/azure-sb/-/azure-sb-0.0.36.tgz#6e95dc86df553ff75a1d904297ed8c0a9b720abc"
-  integrity sha512-/o7cez+DMuZZKEKcesn2IszNJV9DTiFtM58llOba0h+GmVWojNTZ40Yb2GPwDPLsetv6/hLqV5Ft1QUGUGkQTQ==
+"@types/azure-sb@^0.0.37":
+  version "0.0.37"
+  resolved "https://registry.yarnpkg.com/@types/azure-sb/-/azure-sb-0.0.37.tgz#b0ebfbb2a249ef571dac03622072a279697fa2b4"
+  integrity sha512-5BrnwUlRAuU2IV2FSvEzaqAoaO/nLS9CJQiQzeDboIX3jD7ED7l4wAHsjxcIZ7xe7nIW5yX7yZFKz8e1fcwaTg==
   dependencies:
     "@types/node" "*"
 
@@ -1997,15 +1997,15 @@
     "@types/mongodb" "*"
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^12.11.7", "@types/node@^12.12.3":
-  version "12.12.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.3.tgz#ebfe83507ac506bc3486314a8aa395be66af8d23"
-  integrity sha512-opgSsy+cEF9N8MgaVPnWVtdJ3o4mV2aMHvDq7thkQUFt0EuOHJon4rQpJfhjmNHB+ikl0Cd6WhWIErOyQ+f7tw==
-
-"@types/node@>= 8":
+"@types/node@*", "@types/node@>= 8":
   version "14.0.14"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.14.tgz#24a0b5959f16ac141aeb0c5b3cd7a15b7c64cbce"
   integrity sha512-syUgf67ZQpaJj01/tRTknkMNoBBLWJOBODF0Zm4NrXmiSuxjymFrxnTu1QVYRubhVkRcZLYZG8STTwJRdVm/WQ==
+
+"@types/node@^12.11.7", "@types/node@^12.12.3":
+  version "12.12.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.3.tgz#ebfe83507ac506bc3486314a8aa395be66af8d23"
+  integrity sha512-opgSsy+cEF9N8MgaVPnWVtdJ3o4mV2aMHvDq7thkQUFt0EuOHJon4rQpJfhjmNHB+ikl0Cd6WhWIErOyQ+f7tw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
