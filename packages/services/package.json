@@ -23,7 +23,7 @@
     "@types/request": "^2.48.3",
     "@types/sinon": "^7.5.0",
     "@types/text-table": "^0.2.1",
-    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^2.6.0",
     "ava": "^2.4.0",
     "copyfiles": "^2.1.1",

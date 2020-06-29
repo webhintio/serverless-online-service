@@ -4,7 +4,7 @@
     "@types/node": "^12.11.7",
     "@types/shelljs": "^0.8.5",
     "@types/sinon": "^7.5.0",
-    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^2.6.0",
     "ava": "^2.4.0",
     "builtin-modules": "^3.1.0",
