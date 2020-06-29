@@ -32,7 +32,7 @@
     "@types/sinon": "^9.0.4",
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.6.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "ava": "^3.9.0",
     "copyfiles": "^2.1.1",
     "eslint": "^6.6.0",
