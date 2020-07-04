@@ -40,7 +40,7 @@
     "rimraf": "^3.0.2",
     "sinon": "^9.0.2",
     "text-table": "^0.2.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.6"
   },
   "main": "./dist/src/index.js",
   "name": "@online-service/services",
