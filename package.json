@@ -9,7 +9,7 @@
     "ava": "^3.9.0",
     "builtin-modules": "^3.1.0",
     "copyfiles": "^2.3.0",
-    "eslint": "^7.3.1",
+    "eslint": "^7.4.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-markdown": "^1.0.2",
     "eventemitter2": "^5.0.1",
