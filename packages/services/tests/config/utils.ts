@@ -75,9 +75,11 @@ test('validateServiceConfig should fail if configurations has repeated hints', (
 
     const misc = loadScript(t.context);
 
-    t.throws(() => {
+    const error = t.throws(() => {
         misc.validateServiceConfig([{}, {}]);
-    }, 'Hint hint1 repeated');
+    });
+
+    t.is(error.message, 'Hint hint1 repeated');
     t.true(validateConfigStub.calledTwice);
     t.true(normalizehintsStub.calledTwice);
 });

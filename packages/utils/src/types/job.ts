@@ -1,5 +1,5 @@
-import { Category } from '@hint/utils/dist/src/types/category';
-import { Problem } from '@hint/utils/dist/src/types/problems';
+import { Category } from '@hint/utils-types/dist/src/category';
+import { Problem } from '@hint/utils-types/dist/src/problems';
 import { UserConfig } from '@hint/utils';
 
 import { JobStatus, HintStatus } from '../enums/status';
