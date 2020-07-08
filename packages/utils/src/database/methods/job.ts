@@ -1,4 +1,4 @@
-import * as uuid from 'uuid/v4';
+import * as uuid from 'uuid';
 
 import { UserConfig } from '@hint/utils';
 
@@ -72,7 +72,7 @@ export const add = async (url: string, status: JobStatus, hints: Hint[], config:
     const job = new Job({
         config,
         hints,
-        id: uuid(),
+        id: uuid.v4(),
         maxRunTime: jobRunTime,
         queued,
         status,

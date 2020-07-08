@@ -4,11 +4,11 @@ import * as sinon from 'sinon';
 import * as proxyquire from 'proxyquire';
 
 type OctokitSearch = {
-    issues: () => Promise<any>;
+    issuesAndPullRequests: () => Promise<any>;
 };
 
 type IssueReporterContext = {
-    Octokit: () => void;
+    Octokit: { Octokit: () => void };
     sandbox: sinon.SinonSandbox;
 }
 
@@ -31,21 +31,21 @@ test.beforeEach((t) => {
         update() { }
     };
     Octokit.prototype.search = {
-        issues(): Promise<any> {
+        issuesAndPullRequests(): Promise<any> {
             return null as any;
         }
     };
 
-    t.context.Octokit = Octokit;
+    t.context.Octokit = { Octokit };
 });
 
 test('If no error and no issue, nothing happens', async (t) => {
     const sandbox = t.context.sandbox;
     const Octokit = t.context.Octokit;
 
-    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issues'>(Octokit.prototype.search, 'issues').resolves({ data: { items: [] } });
-    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.prototype.issues, 'update');
-    const octokitIssuesCreateSpy = sandbox.spy(Octokit.prototype.issues, 'create');
+    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issuesAndPullRequests'>(Octokit.Octokit.prototype.search, 'issuesAndPullRequests').resolves({ data: { items: [] } });
+    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.Octokit.prototype.issues, 'update');
+    const octokitIssuesCreateSpy = sandbox.spy(Octokit.Octokit.prototype.issues, 'create');
     const IssueReporter = loadScript(t.context);
     const issueReporter = new IssueReporter();
 
@@ -62,9 +62,9 @@ test('If no error but issue exists, it should close the issue', async (t) => {
     const sandbox = t.context.sandbox;
     const Octokit = t.context.Octokit;
 
-    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issues'>(Octokit.prototype.search, 'issues').resolves({ data: { items: [{ number: 1 }] } });
-    const octokitIssuesUpdateStub = sandbox.stub(Octokit.prototype.issues, 'update').resolves();
-    const octokitIssuesCreateSpy = sandbox.spy(Octokit.prototype.issues, 'create');
+    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issuesAndPullRequests'>(Octokit.Octokit.prototype.search, 'issuesAndPullRequests').resolves({ data: { items: [{ number: 1 }] } });
+    const octokitIssuesUpdateStub = sandbox.stub(Octokit.Octokit.prototype.issues, 'update').resolves();
+    const octokitIssuesCreateSpy = sandbox.spy(Octokit.Octokit.prototype.issues, 'create');
     const IssueReporter = loadScript(t.context);
     const issueReporter = new IssueReporter();
 
@@ -85,9 +85,9 @@ test('If no error but issue exists, it should close the issue', async (t) => {
 test(`If there is an error and issue doesn't exists yet, it should create issue`, async (t) => {
     const sandbox = t.context.sandbox;
     const Octokit = t.context.Octokit;
-    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issues'>(Octokit.prototype.search, 'issues').resolves({ data: { items: [] } });
-    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.prototype.issues, 'update');
-    const octokitIssuesCreateStub = sandbox.stub(Octokit.prototype.issues, 'create').resolves();
+    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issuesAndPullRequests'>(Octokit.Octokit.prototype.search, 'issuesAndPullRequests').resolves({ data: { items: [] } });
+    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.Octokit.prototype.issues, 'update');
+    const octokitIssuesCreateStub = sandbox.stub(Octokit.Octokit.prototype.issues, 'create').resolves();
     const IssueReporter = loadScript(t.context);
     const issueReporter = new IssueReporter();
     const errorMessage = 'Error running webhint';
@@ -118,7 +118,7 @@ test(`If there is an error and issue doesn't exists yet, it should create issue`
 test(`If there is an error and issue exists, it should create a comment`, async (t) => {
     const sandbox = t.context.sandbox;
     const Octokit = t.context.Octokit;
-    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issues'>(Octokit.prototype.search, 'issues').resolves({
+    const octokitSearchIssuesStub = sandbox.stub<OctokitSearch, 'issuesAndPullRequests'>(Octokit.Octokit.prototype.search, 'issuesAndPullRequests').resolves({
         data: {
             items: [{
                 labels: [{ name: 'error:timeout' }],
@@ -126,9 +126,9 @@ test(`If there is an error and issue exists, it should create a comment`, async 
             }]
         }
     });
-    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.prototype.issues, 'update');
-    const octokitIssuesCreateSpy = sandbox.spy(Octokit.prototype.issues, 'create');
-    const octokitIssuesCreateCommentStub = sandbox.stub(Octokit.prototype.issues, 'createComment').resolves();
+    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.Octokit.prototype.issues, 'update');
+    const octokitIssuesCreateSpy = sandbox.spy(Octokit.Octokit.prototype.issues, 'create');
+    const octokitIssuesCreateCommentStub = sandbox.stub(Octokit.Octokit.prototype.issues, 'createComment').resolves();
     const IssueReporter = loadScript(t.context);
     const issueReporter = new IssueReporter();
     const errorMessage = 'Error running webhint';
@@ -171,7 +171,7 @@ test(`If there is an error and issue exists, it should create a comment`, async 
 test(`If there is an error and the issue exists but the error label is different, it should create a new issue`, async (t) => {
     const sandbox = t.context.sandbox;
     const Octokit = t.context.Octokit;
-    const octokitSearchIssues = sandbox.stub<OctokitSearch, 'issues'>(Octokit.prototype.search, 'issues').resolves({
+    const octokitSearchIssues = sandbox.stub<OctokitSearch, 'issuesAndPullRequests'>(Octokit.Octokit.prototype.search, 'issuesAndPullRequests').resolves({
         data: {
             items: [{
                 labels: [{ name: 'error:crash' }],
@@ -179,9 +179,9 @@ test(`If there is an error and the issue exists but the error label is different
             }]
         }
     });
-    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.prototype.issues, 'update');
-    const octokitIssuesCreateSpy = sandbox.stub(Octokit.prototype.issues, 'create').resolves();
-    const octokitIssuesCreateCommentStub = sandbox.spy(Octokit.prototype.issues, 'createComment');
+    const octokitIssuesUpdateSpy = sandbox.spy(Octokit.Octokit.prototype.issues, 'update');
+    const octokitIssuesCreateSpy = sandbox.stub(Octokit.Octokit.prototype.issues, 'create').resolves();
+    const octokitIssuesCreateCommentStub = sandbox.spy(Octokit.Octokit.prototype.issues, 'createComment');
     const IssueReporter = loadScript(t.context);
     const issueReporter = new IssueReporter();
     const errorMessage = 'Error running webhint';

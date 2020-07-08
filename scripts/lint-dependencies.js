@@ -19,6 +19,7 @@ const typeDependencies = new Set([
 
 const ignoredDependencies = new Set([
     '@hint/configuration-all',
+    '@hint/utils-dom',
     '@types/azure',
     '@types/node',
     '@types/request',

@@ -5,7 +5,7 @@ import anyTest, { TestInterface, ExecutionContext } from 'ava';
 import * as sinon from 'sinon';
 import * as proxyquire from 'proxyquire';
 import * as moment from 'moment';
-import { UserConfig } from 'hint';
+import { UserConfig } from '@hint/utils/dist/src/config/types';
 import { HintStatus, IJob, IServiceConfig, JobStatus, logger, readFileAsync } from '@online-service/utils';
 
 process.env.QueueConnection = 'connectionString'; // eslint-disable-line no-process-env

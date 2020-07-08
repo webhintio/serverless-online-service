@@ -2,8 +2,8 @@ import * as _ from 'lodash';
 import { fork, ChildProcess } from 'child_process';
 import * as path from 'path';
 
-import { HintConfig, Problem, Severity } from 'hint';
-import { getHintsFromConfiguration, HintsConfigObject } from '@hint/utils';
+import { Problem, Severity } from '@hint/utils-types';
+import { getHintsFromConfiguration, HintConfig, HintsConfigObject } from '@hint/utils';
 import {
     debug as d,
     generateLog,
