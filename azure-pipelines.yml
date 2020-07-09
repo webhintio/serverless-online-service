@@ -99,6 +99,6 @@ steps:
           appSettings: "-APP_INSIGHTS_KEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -QueueConnection $(QueueConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION)"
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/services'
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/services'
         ArtifactName: 'services'
-        publishLocation: 'Services'
+        publishLocation: 'Container'
