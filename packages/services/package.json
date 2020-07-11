@@ -10,7 +10,7 @@
     "@azure/functions": "^1.2.2",
     "@online-service/utils": "file:../utils",
     "applicationinsights": "^1.5.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.27.0"
   },
   "devDependencies": {
