@@ -33,7 +33,7 @@
     "@types/request": "^2.48.5",
     "@types/sinon": "^9.0.4",
     "@types/uuid": "^8.0.0",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/eslint-plugin": "^3.6.1",
     "@typescript-eslint/parser": "^2.34.0",
     "ava": "^3.9.0",
     "copyfiles": "^2.3.0",
