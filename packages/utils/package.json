@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@destinationstransfers/ntp": "^2.0.0",
-    "@octokit/rest": "^18.0.0",
+    "@octokit/rest": "^18.0.1",
     "applicationinsights": "^1.5.0",
     "azure-sb": "^0.11.1",
     "debug": "^4.1.1",
