@@ -90,6 +90,7 @@ steps:
           imageName: $(DOCKER_REPOSITORY)/$(dockerImage):$(Build.BuildId)
           appSettings: "-APP_INSIGHTS_KEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -QueueConnection $(QueueConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION)"
     - task: PublishBuildArtifacts@1
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)/services'
         ArtifactName: 'services'
