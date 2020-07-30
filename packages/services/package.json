@@ -54,7 +54,7 @@
     "clean": "rimraf dist",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint --ext ts --ignore-pattern dist .",
-    "test": "rimraf node_modules && npm install && npm run lint && npm run build && nyc ava",
+    "test": "npm run lint && npm run build && nyc ava",
     "watch:ts": "npm run build:ts -- --watch"
   },
   "version": "0.16.0"
