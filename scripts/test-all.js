@@ -109,9 +109,16 @@ const main = async () => {
 
     console.log(chalk.green.bold(`Testing all packages`));
 
-    await testAllPackages(references);
+    try {
+        await testAllPackages(references);
 
-    console.log(chalk.green.bold(`Test time: ${formatDuration(Date.now() - start)}`));
+        console.log(chalk.green.bold(`Test time: ${formatDuration(Date.now() - start)}`));
+    } catch (err) {
+        console.error(err.message);
+        // Unhandled exceptions in promises do not change the exit code for now
+        process.exit(1); //eslint-disable-line
+    }
+
 };
 
 main();
