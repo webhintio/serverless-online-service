@@ -22,8 +22,10 @@ steps:
     - script: |
           cd packages/utils
           npm install --ignore-engines
-          npm run build
-      displayName: "Build utils first"
+          yarn build
+          echo "Removing node_modules to avoid issues building the whole project"
+          rm -rf node_modules
+      displayName: "Build utils"
     - script: |
           yarn --ignore-engines
           yarn test
