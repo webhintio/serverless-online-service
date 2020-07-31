@@ -20,12 +20,14 @@ steps:
           versionSpec: "12.x"
       displayName: "Install Node.js"
     - script: |
-          yarn --ignore-engines
-          yarn build
-      displayName: "yarn and yarn build"
+          cd packages/utils
+          npm install --ignore-engines
+          npm run build
+      displayName: "Build utils first"
     - script: |
+          yarn --ignore-engines
           yarn test
-      displayName: "Test"
+      displayName: "yarn and yarn test"
     - script: |
           npm install -g azure-functions-core-tools
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
