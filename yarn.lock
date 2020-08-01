@@ -304,7 +304,7 @@
     "@hint/parser-webpack-config" "^2.1.20"
     vscode-webhint "^1.5.7"
 
-"@hint/configuration-development@^8.0.5", "@hint/configuration-development@^8.0.6":
+"@hint/configuration-development@^8.0.6":
   version "8.0.6"
   resolved "https://registry.yarnpkg.com/@hint/configuration-development/-/configuration-development-8.0.6.tgz#a9bfbf5f1041027bf119eea95a491ee93aa256ef"
   integrity sha512-pKsfs/qS8Cw+6B8OQB6nLiiSqIZk/WUStRoLCNA+JNKY3lG/oUB12PAFjO9RZnQfL0FePkGGJ9j6ST3urFhG7g==
@@ -357,7 +357,7 @@
     "@hint/hint-manifest-is-valid" "^3.3.6"
     "@hint/parser-manifest" "^2.2.19"
 
-"@hint/configuration-web-recommended@^8.0.5", "@hint/configuration-web-recommended@^8.0.6":
+"@hint/configuration-web-recommended@^8.0.6":
   version "8.0.6"
   resolved "https://registry.yarnpkg.com/@hint/configuration-web-recommended/-/configuration-web-recommended-8.0.6.tgz#92817b4c20d5193f966d370352b254f8a86c9078"
   integrity sha512-si31u/bIYpDncNeF0ch45JDmV3ewu/gZcU5NprcjVQ6MaOn2yCP1aM/4YJPg4MiUtuWPfJXyqF56WzShV4jX8A==
@@ -1177,7 +1177,7 @@
     parse5 "^6.0.0"
     parse5-htmlparser2-tree-adapter "^6.0.0"
 
-"@hint/utils-fs@^1.0.3", "@hint/utils-fs@^1.0.4":
+"@hint/utils-fs@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@hint/utils-fs/-/utils-fs-1.0.4.tgz#ca17a03e6f82b9d951129adb6870036dd313e537"
   integrity sha512-bx06ZITwLt7fYDqHFM+8tRhp2ETWE32Ta7Dsq+E+v8B8vIXqJVpVkykEnVdqlpmF+QIiEhHPKXOAPCteUCgPeQ==
@@ -1192,18 +1192,6 @@
   dependencies:
     "@hint/utils-types" "^1.0.1"
 
-"@hint/utils-json@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@hint/utils-json/-/utils-json-1.0.5.tgz#bd3dca7966d8dd37a51f947cbf1f35354616a92b"
-  integrity sha512-0fs3LxONzR9aJJzdhnCH7lf5YIGBSEtjyLWg9ljWM3UV6CduCaCYW9m7BTo6dD9QD7/KHyK/2Z2hTxv2f5C+Yg==
-  dependencies:
-    "@hint/utils-fs" "^1.0.3"
-    "@hint/utils-network" "^1.0.4"
-    "@hint/utils-types" "^1.0.1"
-    ajv "^6.12.2"
-    jsonc-parser "^2.2.1"
-    lodash "^4.17.15"
-
 "@hint/utils-json@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@hint/utils-json/-/utils-json-1.0.6.tgz#c2587cf60333949bbdab4debe7d5b7aefe97a6a1"
@@ -1215,21 +1203,6 @@
     ajv "^6.12.3"
     jsonc-parser "^2.2.1"
     lodash "^4.17.19"
-
-"@hint/utils-network@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@hint/utils-network/-/utils-network-1.0.4.tgz#602bbd94e2179a13b9f404686d55964897f7ecab"
-  integrity sha512-vgjHa5zfZ18VsQDArEA1e7bKRagkDfNDAJxYBLOS+pQYWbM32Rc6kdQSF9Q+56KVggCk+QyUH7uVUZ3KzkssLQ==
-  dependencies:
-    "@hint/utils" "^7.0.4"
-    "@hint/utils-debug" "^1.0.1"
-    "@hint/utils-fs" "^1.0.3"
-    "@hint/utils-string" "^1.0.3"
-    "@hint/utils-types" "^1.0.1"
-    content-type "^1.0.4"
-    file-url "^3.0.0"
-    lodash "^4.17.15"
-    request "^2.88.2"
 
 "@hint/utils-network@^1.0.5":
   version "1.0.5"
@@ -1246,7 +1219,7 @@
     lodash "^4.17.19"
     request "^2.88.2"
 
-"@hint/utils-string@^1.0.3", "@hint/utils-string@^1.0.4":
+"@hint/utils-string@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@hint/utils-string/-/utils-string-1.0.4.tgz#9d54682e6a1026263fde15c6775427389cec5c75"
   integrity sha512-bCtH2Vrdcul6aiWu2htAb5uD2LxdQEN35Cbk6/MxsRSAo9stQYqNBCaLXmUMeE6HZGunMqXa4MnTfHEFKXR2TA==
@@ -1256,7 +1229,7 @@
   resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.0.1.tgz#6c1d3c401f22d06bb444536d49cc4df4e0358ca7"
   integrity sha512-vYYKnvZ9FSJiWZABLdyRWIm4EAXTVn9oq57zsfIB0ghtkbHyViwvMiP/2vo9qfVMuz4oITRdJkCRF97a6KQN1Q==
 
-"@hint/utils@^7.0.4", "@hint/utils@^7.0.5":
+"@hint/utils@^7.0.5":
   version "7.0.5"
   resolved "https://registry.yarnpkg.com/@hint/utils/-/utils-7.0.5.tgz#dd00a0181edb914217075c58c0747006efab1a8e"
   integrity sha512-D6vIQi/W/S9Z56ajdWxM2pLVY/DrSc4uAkfeYkXqA3qTp59+EMUNhsQh4f4ULmiggqB0VVzijGD/fPqYV5GoSQ==
@@ -1831,7 +1804,7 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.2, ajv@^6.5.5:
+ajv@^6.10.0, ajv@^6.10.2, ajv@^6.5.5:
   version "6.12.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.2.tgz#c629c5eced17baf314437918d2da88c99d5958cd"
   integrity sha512-k+V+hzjm5q/Mr8ef/1Y9goCmlsK4I6Sm74teeyGvFk1XrOsbsKLjEdrvny42CZ+a8sXbk8KWpY/bDwS+FLL2UQ==
@@ -4001,7 +3974,7 @@ globby@^10.0.1:
     merge2 "^1.2.3"
     slash "^3.0.0"
 
-globby@^11.0.0, globby@^11.0.1:
+globby@^11.0.1:
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.0.1.tgz#9a2bf107a068f3ffeabc49ad702c79ede8cfd357"
   integrity sha512-iH9RmgwCmUJHi2z5o2l3eTtGBtXek1OYlHrbcxOYugyHLmAsZrPj43OtHThd62Buh/Vv6VyCBD2bdyWcGNQqoQ==
@@ -4100,32 +4073,32 @@ hasha@^5.0.0:
     is-stream "^2.0.0"
     type-fest "^0.8.0"
 
-hint@^6.0.6:
-  version "6.0.6"
-  resolved "https://registry.yarnpkg.com/hint/-/hint-6.0.6.tgz#3ecfe03acc06bcadb0624f73d5526259d3dba2c5"
-  integrity sha512-GVpqXxBmAmLO/WNPEW2E0yod5+90gl2lpkWvRib8fpoYzcdQEhbBAbF56cas7K0JqFyRok2F0h6/0ojkHYNI8Q==
+hint@^6.0.7:
+  version "6.0.7"
+  resolved "https://registry.yarnpkg.com/hint/-/hint-6.0.7.tgz#04708069e7c15a36a95d219e694e0e92e5e1e181"
+  integrity sha512-XEWkQqhZPD3kxByg4cmF71yWjdfPhwByHJWLQUZHk9p3BDsoIXKFb/z1Edqe+Y00VvdpqBztzPJ/RXDg4uSmJw==
   dependencies:
-    "@hint/utils" "^7.0.4"
+    "@hint/utils" "^7.0.5"
     "@hint/utils-debug" "^1.0.1"
-    "@hint/utils-fs" "^1.0.3"
-    "@hint/utils-json" "^1.0.5"
-    "@hint/utils-network" "^1.0.4"
-    "@hint/utils-string" "^1.0.3"
+    "@hint/utils-fs" "^1.0.4"
+    "@hint/utils-json" "^1.0.6"
+    "@hint/utils-network" "^1.0.5"
+    "@hint/utils-string" "^1.0.4"
     "@hint/utils-types" "^1.0.1"
     boxen "^4.1.0"
     browserslist "^4.11.1"
-    chalk "^3.0.0"
+    chalk "^4.0.0"
     eventemitter2 "^6.0.0"
-    globby "^11.0.0"
+    globby "^11.0.1"
     is-ci "^2.0.0"
-    lodash "^4.17.15"
+    lodash "^4.17.19"
     optionator "^0.9.1"
     ora "^4.0.3"
     os-locale "^5.0.0"
     update-notifier "^4.0.0"
   optionalDependencies:
-    "@hint/configuration-development" "^8.0.5"
-    "@hint/configuration-web-recommended" "^8.0.5"
+    "@hint/configuration-development" "^8.0.6"
+    "@hint/configuration-web-recommended" "^8.0.6"
 
 hosted-git-info@^2.1.4:
   version "2.8.5"
