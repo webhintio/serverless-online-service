@@ -1428,7 +1428,7 @@
   dependencies:
     "@destinationstransfers/ntp" "^2.0.0"
     "@octokit/rest" "^18.0.0"
-    applicationinsights "^1.8.2"
+    applicationinsights "^1.8.3"
     azure-sb "^0.11.1"
     debug "^4.1.1"
     mongodb-lock "^1.0.1"
@@ -1922,10 +1922,10 @@ append-transform@^2.0.0:
   dependencies:
     default-require-extensions "^3.0.0"
 
-applicationinsights@^1.8.2:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/applicationinsights/-/applicationinsights-1.8.2.tgz#d1ac5bbc6172ec91ef213903e40683dab9325492"
-  integrity sha512-m0G9oBBnKG39mzM++heTjMPbl09Fx3mInOKbmTchsVxMhNeCZ8BSfBS/HwS4CcL7MXhmH4Td1QYVGWo/he+sHw==
+applicationinsights@^1.8.2, applicationinsights@^1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/applicationinsights/-/applicationinsights-1.8.3.tgz#657ee0747007836f946ba49341cac3f28a2ed784"
+  integrity sha512-/a74eSG6WmZQuqJaCypTl4F1njCna7HJFWeuQPGmsQKux0hIpKoJ/wJKN4u8QgryexdpqH3SMZYLDu+yfe48xQ==
   dependencies:
     cls-hooked "^4.2.2"
     continuation-local-storage "^3.2.1"
