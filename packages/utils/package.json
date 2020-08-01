@@ -20,7 +20,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "@hint/utils": "^7.0.4",
+    "@hint/utils": "^7.0.5",
     "@hint/utils-dom": "^2.1.1",
     "@hint/utils-types": "^1.0.1",
     "@octokit/types": "^5.0.1",
