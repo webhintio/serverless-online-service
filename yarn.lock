@@ -1164,19 +1164,6 @@
   dependencies:
     debug "4.1.1"
 
-"@hint/utils-dom@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@hint/utils-dom/-/utils-dom-2.1.1.tgz#6b43c003216d38337d95561ea0a6751e4cf56fb8"
-  integrity sha512-ZfhflVLHrviFnAYl6kSonuiFdkZWzjA4gWM6apzGWaxzs+OZh+2JlbV2js1Z7igEZVjQ3qTNL7ptSxwflKo0jw==
-  dependencies:
-    "@hint/utils-debug" "^1.0.1"
-    "@hint/utils-types" "^1.0.1"
-    "@types/parse5" "^5.0.3"
-    css-select "^2.1.0"
-    eventemitter2 "^6.0.0"
-    parse5 "^6.0.0"
-    parse5-htmlparser2-tree-adapter "^6.0.0"
-
 "@hint/utils-dom@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@hint/utils-dom/-/utils-dom-2.1.2.tgz#8e3cb50a57f181711d90050d41cf243d6bb78aef"
