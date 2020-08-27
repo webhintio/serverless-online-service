@@ -33,8 +33,8 @@
     "@types/request": "^2.48.5",
     "@types/sinon": "^9.0.5",
     "@types/uuid": "^8.3.0",
-    "@typescript-eslint/eslint-plugin": "^3.7.1",
-    "@typescript-eslint/parser": "^2.34.0",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
     "ava": "^3.11.1",
     "copyfiles": "^2.3.0",
     "eslint": "^7.7.0",
@@ -46,7 +46,7 @@
     "proxyquire": "^2.1.3",
     "rimraf": "^3.0.2",
     "sinon": "^9.0.3",
-    "typescript": "^3.9.7"
+    "typescript": "^4.0.2"
   },
   "main": "./dist/src/index.js",
   "name": "@online-service/utils",
