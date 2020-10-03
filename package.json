@@ -6,7 +6,7 @@
     "@types/sinon": "^9.0.6",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.3.0",
-    "ava": "^3.11.1",
+    "ava": "^3.13.0",
     "builtin-modules": "^3.1.0",
     "copyfiles": "^2.3.0",
     "eslint": "^7.9.0",
