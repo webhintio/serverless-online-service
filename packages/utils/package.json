@@ -17,7 +17,7 @@
     "strip-bom": "^4.0.0",
     "strip-json-comments": "^3.1.1",
     "tri": "^1.0.2",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@hint/utils": "^7.0.5",
