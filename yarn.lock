@@ -1172,25 +1172,25 @@
   resolved "https://registry.yarnpkg.com/@hint/utils-css/-/utils-css-1.0.5.tgz#6778c2d47e48066c4a360047a5831d3173445c6a"
   integrity sha512-E4fALimZX7PZzxZSMcgzzkpZRJAGapIKQc75mdNznyt57USyvjFqoKnAfiq4PeMAnnwTJ8ulI7htbm9ygr3Vtw==
 
-"@hint/utils-debug@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@hint/utils-debug/-/utils-debug-1.0.2.tgz#5d7c36c0f74e4e70905a9afb61835d685c73f8d9"
-  integrity sha512-gkPa0I7WX9CxnHHFUdQlNAIWlsE4IKLuAxy5IvUoLByob+JvOKG4asaYVZSuDJ3eP4QE00028VMkMOPkXMAwzQ==
+"@hint/utils-debug@^1.0.2", "@hint/utils-debug@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@hint/utils-debug/-/utils-debug-1.0.3.tgz#6ffc07ff979212dd0fd7d90cc39be7724b813926"
+  integrity sha512-e8NWf5C1HUqaLlyc1mw1gE3J8NrFVYwudApZMQ74b0BjcHoyLeybaB4ayW1hS7z1mtdn5ENmRkifJu/RglMQmA==
   dependencies:
     debug "4.1.1"
 
-"@hint/utils-dom@^2.1.2", "@hint/utils-dom@^2.1.3":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@hint/utils-dom/-/utils-dom-2.1.3.tgz#37c02b01e80262687fc12dd1ed5761b5272c7d10"
-  integrity sha512-sqwsc51zwYSyt5f5K5lXc+x75P/f/la3ytTp46JUIXyn4rqresO3slm82VuoyjHjNP7dNZdvwrKcaRLkntjxyQ==
+"@hint/utils-dom@^2.1.3", "@hint/utils-dom@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@hint/utils-dom/-/utils-dom-2.1.4.tgz#f296b344a1bc89c2234f175202a86f2f976621ab"
+  integrity sha512-ayOEyhtLMOysJY4VX3zZjxNtDgeyZa70m5OJn23f36PDbdl/8ztpAlpyQC1X5FhZRkBrkeb1vxBzlKTNFmxH+A==
   dependencies:
-    "@hint/utils-debug" "^1.0.2"
-    "@hint/utils-types" "^1.1.0"
+    "@hint/utils-debug" "^1.0.3"
+    "@hint/utils-types" "^1.1.1"
     "@types/parse5" "^5.0.3"
     css-select "^2.1.0"
     eventemitter2 "^6.4.3"
     parse5 "^6.0.1"
-    parse5-htmlparser2-tree-adapter "^6.0.0"
+    parse5-htmlparser2-tree-adapter "^6.0.1"
 
 "@hint/utils-fs@^1.0.5":
   version "1.0.5"
@@ -1239,10 +1239,10 @@
   resolved "https://registry.yarnpkg.com/@hint/utils-string/-/utils-string-1.0.5.tgz#01019163533ace81a3d2c95120706e4e8e72a843"
   integrity sha512-Jm3HuhXxhs0X6NlcEn8EkP03VH/EK2yPb5NRmld+np4qLJZRwnJY+p6Q4JS5w2bz8GxnXSyvqZxGAnn+e3N14Q==
 
-"@hint/utils-types@^1.0.1", "@hint/utils-types@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.1.0.tgz#e48013aaff33c179ee87f9d52f45597fca58c1fe"
-  integrity sha512-qydUMGZ9Q1nDbVWXyRF76LMgZhbVUB2ngoIlqZ2hdHvKxixiX+XVLXynE+g8gfd5AbfDTdcH3VZ6y1Heh7BQ6g==
+"@hint/utils-types@^1.0.1", "@hint/utils-types@^1.1.0", "@hint/utils-types@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.1.1.tgz#9c9316be51492b6bd062c88372545b841a83f749"
+  integrity sha512-tmWxWvOgQmaxRLYg02AAD2Mv3Mpojj1uOCY4J8xoHvslUty+HcPGQezIK1xuRvcHY9c2Mz+1Juayx6YKGtRrVg==
 
 "@hint/utils@^7.0.5", "@hint/utils@^7.0.6":
   version "7.0.6"
@@ -6015,7 +6015,7 @@ parse-ms@^2.1.0:
   resolved "https://registry.yarnpkg.com/parse-ms/-/parse-ms-2.1.0.tgz#348565a753d4391fa524029956b172cb7753097d"
   integrity sha512-kHt7kzLoS9VBZfUsiKjv43mr91ea+U05EyKkEtqp7vNbHxmaVuEqN7XxeEVnGrMtYOAxGrDElSi96K7EgO1zCA==
 
-parse5-htmlparser2-tree-adapter@^6.0.0:
+parse5-htmlparser2-tree-adapter@^6.0.0, parse5-htmlparser2-tree-adapter@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/parse5-htmlparser2-tree-adapter/-/parse5-htmlparser2-tree-adapter-6.0.1.tgz#2cdf9ad823321140370d4dbf5d3e92c7c8ddc6e6"
   integrity sha512-qPuWvbLgvDGilKc5BoicRovlT4MtYT6JfJyBOMDsKoiT+GiuP5qyrPCnR9HcPECIJJmZh5jRndyNThnhhb/vlA==
