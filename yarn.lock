@@ -1239,10 +1239,10 @@
   resolved "https://registry.yarnpkg.com/@hint/utils-string/-/utils-string-1.0.5.tgz#01019163533ace81a3d2c95120706e4e8e72a843"
   integrity sha512-Jm3HuhXxhs0X6NlcEn8EkP03VH/EK2yPb5NRmld+np4qLJZRwnJY+p6Q4JS5w2bz8GxnXSyvqZxGAnn+e3N14Q==
 
-"@hint/utils-types@^1.0.1", "@hint/utils-types@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.1.0.tgz#e48013aaff33c179ee87f9d52f45597fca58c1fe"
-  integrity sha512-qydUMGZ9Q1nDbVWXyRF76LMgZhbVUB2ngoIlqZ2hdHvKxixiX+XVLXynE+g8gfd5AbfDTdcH3VZ6y1Heh7BQ6g==
+"@hint/utils-types@^1.1.0", "@hint/utils-types@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.1.1.tgz#9c9316be51492b6bd062c88372545b841a83f749"
+  integrity sha512-tmWxWvOgQmaxRLYg02AAD2Mv3Mpojj1uOCY4J8xoHvslUty+HcPGQezIK1xuRvcHY9c2Mz+1Juayx6YKGtRrVg==
 
 "@hint/utils@^7.0.5", "@hint/utils@^7.0.6":
   version "7.0.6"
