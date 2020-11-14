@@ -1192,13 +1192,13 @@
     parse5 "^6.0.1"
     parse5-htmlparser2-tree-adapter "^6.0.1"
 
-"@hint/utils-fs@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@hint/utils-fs/-/utils-fs-1.0.5.tgz#856af78906d57a9b400e1821c81f69c0638d866a"
-  integrity sha512-WjrhF+ZIMFtYTR/Bj2bd0CEq3gS1q8hDMJdftHWLBMs2M1OOp4IsNRB4yH2Kyza+HUX1Un2M5weHaUhsQUBoAA==
+"@hint/utils-fs@^1.0.5", "@hint/utils-fs@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@hint/utils-fs/-/utils-fs-1.0.6.tgz#e91bd8df2216f8289a777a6a2506243ff342431c"
+  integrity sha512-N13cqpWmIQse6XFHUHF3n00ja53Q49TqnAv9Tbye5L7yX8w9b+QoZ+ONrAgiyE40/C8kstFmBuqXWVmrh1qwUg==
   dependencies:
     strip-bom "^4.0.0"
-    strip-json-comments "^3.1.0"
+    strip-json-comments "^3.1.1"
 
 "@hint/utils-i18n@^1.0.5":
   version "1.0.5"
@@ -1234,35 +1234,35 @@
     lodash "^4.17.19"
     request "^2.88.2"
 
-"@hint/utils-string@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@hint/utils-string/-/utils-string-1.0.5.tgz#01019163533ace81a3d2c95120706e4e8e72a843"
-  integrity sha512-Jm3HuhXxhs0X6NlcEn8EkP03VH/EK2yPb5NRmld+np4qLJZRwnJY+p6Q4JS5w2bz8GxnXSyvqZxGAnn+e3N14Q==
+"@hint/utils-string@^1.0.5", "@hint/utils-string@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@hint/utils-string/-/utils-string-1.0.6.tgz#947c9a838759c341db2923ff91d1552692bd9f1e"
+  integrity sha512-CykHFquHdRsSMGvMkfFymIVaygBSPxfD28abEwb5w5I+aOXyKH9UfQhnIICXWLi0061iCyxEsWKvsdrfGCxaCw==
 
 "@hint/utils-types@^1.0.1", "@hint/utils-types@^1.1.0", "@hint/utils-types@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.1.1.tgz#9c9316be51492b6bd062c88372545b841a83f749"
   integrity sha512-tmWxWvOgQmaxRLYg02AAD2Mv3Mpojj1uOCY4J8xoHvslUty+HcPGQezIK1xuRvcHY9c2Mz+1Juayx6YKGtRrVg==
 
-"@hint/utils@^7.0.5", "@hint/utils@^7.0.6":
-  version "7.0.6"
-  resolved "https://registry.yarnpkg.com/@hint/utils/-/utils-7.0.6.tgz#1a3ecfa326e16b944fde58d21eeb38c108a731a1"
-  integrity sha512-Su9w8p9gp/AwRWmlbgr8j9G5Wbfnfm5bR6+oDWZGKCKcwHjXPWcInIXJBk5qPhXrec6S2cEUbWtW/rRHIB1Dcw==
+"@hint/utils@^7.0.6", "@hint/utils@^7.0.7":
+  version "7.0.7"
+  resolved "https://registry.yarnpkg.com/@hint/utils/-/utils-7.0.7.tgz#d880e6627f170b87cae065cffb2a85eb51794def"
+  integrity sha512-1TE/P4RdwKuVAkL+RSkEFqdrGTgk3EYZS3wLNPDdVNYyy6pnXopAcQEXQY9RSTSGVMl6tmeuUpK52bMOxXeeJg==
   dependencies:
-    "@hint/utils-debug" "^1.0.2"
-    "@hint/utils-fs" "^1.0.5"
-    "@hint/utils-string" "^1.0.5"
-    applicationinsights "^1.8.2"
+    "@hint/utils-debug" "^1.0.3"
+    "@hint/utils-fs" "^1.0.6"
+    "@hint/utils-string" "^1.0.6"
+    applicationinsights "^1.8.8"
     chalk "^4.0.0"
     configstore "^5.0.1"
     content-type "^1.0.4"
     eventemitter2 "^6.4.3"
-    file-type "^14.6.2"
+    file-type "^15.0.1"
     globby "^11.0.1"
     is-svg "^4.2.1"
     is-wsl "^2.2.0"
-    lodash "^4.17.19"
-    npm-registry-fetch "^8.1.1"
+    lodash "^4.17.20"
+    npm-registry-fetch "^8.1.5"
     semver "^7.3.2"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
@@ -1961,7 +1961,7 @@ append-transform@^2.0.0:
   dependencies:
     default-require-extensions "^3.0.0"
 
-applicationinsights@^1.8.2, applicationinsights@^1.8.8:
+applicationinsights@^1.8.8:
   version "1.8.8"
   resolved "https://registry.yarnpkg.com/applicationinsights/-/applicationinsights-1.8.8.tgz#fc514af3edf1fe5f7ac3619abf03f3ae46183ac0"
   integrity sha512-B43D4t/taGP5quGviVSdFWqarhIlzyGSi5mfngjbXpR2Ed3VrikJGIr1i5UtGzvwWqEbfIF6i298GvjFaB8RFA==
@@ -3696,10 +3696,10 @@ file-entry-cache@^5.0.1:
   dependencies:
     flat-cache "^2.0.1"
 
-file-type@^14.6.2:
-  version "14.7.1"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-14.7.1.tgz#f748732b3e70478bff530e1cf0ec2fe33608b1bb"
-  integrity sha512-sXAMgFk67fQLcetXustxfKX+PZgHIUFn96Xld9uH8aXPdX3xOp0/jg9OdouVTvQrf7mrn+wAa4jN/y9fUOOiRA==
+file-type@^15.0.1:
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-15.0.1.tgz#54175484953d48b970c095ba8737d4e0c3a9b407"
+  integrity sha512-0LieQlSA3bWUdErNrxzxfI4rhsvNAVPBO06R8pTc1hp9SE6nhqlVyvhcaXoMmtXkBTPnQenbMPLW9X76hH76oQ==
   dependencies:
     readable-web-to-node-stream "^2.0.0"
     strtok3 "^6.0.3"
@@ -5616,10 +5616,10 @@ npm-packlist@^1.1.6:
     npm-bundled "^1.0.1"
     npm-normalize-package-bin "^1.0.1"
 
-npm-registry-fetch@^8.1.1:
-  version "8.1.4"
-  resolved "https://registry.yarnpkg.com/npm-registry-fetch/-/npm-registry-fetch-8.1.4.tgz#438cc8f042f6c5309e9a91ad5ccb80d7f6ed47de"
-  integrity sha512-UaLGFQP7VCuyBsb7S5P5od3av/Zy9JW6K5gbMigjZCYnEpIkWWRiLQTKVpxM4QocfPcsjm+xtyrDNm4jdqwNEg==
+npm-registry-fetch@^8.1.5:
+  version "8.1.5"
+  resolved "https://registry.yarnpkg.com/npm-registry-fetch/-/npm-registry-fetch-8.1.5.tgz#33270c6722030c2d158a970d1327dcd9a149b5c5"
+  integrity sha512-yZPNoJK9clx1jhSXU54kU6Aj1SV2p7mXUs1W/6OjQvek3wb1RrjDCrt4iY1+VX9eBQvvSGEpzNmYkRUaTL8rqg==
   dependencies:
     "@npmcli/ci-detect" "^1.0.0"
     lru-cache "^6.0.0"
