@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@hint/utils": "^7.0.5",
-    "@hint/utils-dom": "^2.1.2",
+    "@hint/utils-dom": "^2.1.4",
     "@hint/utils-types": "^1.0.1",
     "@octokit/types": "^5.5.0",
     "@types/azure": "^0.9.20",
