@@ -54,10 +54,16 @@ steps:
       displayName: Create deployment zip file for service functions
     - task: Docker@2
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-      displayName: Login to ACR
+      displayName: Login to ACR (Production)
       inputs:
           command: login
           containerRegistry: DockerACRConnectionNew
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: Login to ACR (Staging)
+      inputs:
+          command: login
+          containerRegistry: DockerACRConnection
     - task: Docker@2
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       displayName: Build worker image
@@ -69,18 +75,9 @@ steps:
           buildContext: $(Build.SourcesDirectory)
     - task: Docker@2
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-      displayName: Push worker image to production
+      displayName: Push worker image
       inputs:
           command: push
-          containerRegistry: DockerACRConnectionNew
-          repository: $(dockerImage)
-          tags: $(Build.BuildId)
-    - task: Docker@2
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-      displayName: Push worker image to staging
-      inputs:
-          command: push
-          containerRegistry: DockerACRConnection
           repository: $(dockerImage)
           tags: $(Build.BuildId)
     - task: AzureFunctionApp@1
