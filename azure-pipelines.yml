@@ -63,10 +63,10 @@ steps:
       displayName: Login to ACR (Staging)
       inputs:
           command: login
-          containerRegistry: DockerACRConnection
+          containerRegistry: DockerACRConnectionStaging
     - task: Docker@2
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-      displayName: Build worker image
+      displayName: Build and push worker image
       inputs:
           command: buildAndPush
           repository: $(dockerImage)
