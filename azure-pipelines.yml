@@ -68,18 +68,11 @@ steps:
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       displayName: Build worker image
       inputs:
-          command: build
+          command: buildAndPush
           repository: $(dockerImage)
           tags: $(Build.BuildId)
           Dockerfile: $(Build.SourcesDirectory)/packages/worker/Dockerfile
           buildContext: $(Build.SourcesDirectory)
-    - task: Docker@2
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-      displayName: Push worker image
-      inputs:
-          command: push
-          repository: $(dockerImage)
-          tags: $(Build.BuildId)
     - task: AzureFunctionApp@1
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
       inputs:
