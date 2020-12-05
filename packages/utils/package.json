@@ -13,7 +13,7 @@
     "azure-sb": "^0.11.1",
     "debug": "^4.3.1",
     "mongodb-lock": "^1.0.1",
-    "mongoose": "^5.10.17",
+    "mongoose": "^5.11.4",
     "strip-bom": "^4.0.0",
     "strip-json-comments": "^3.1.1",
     "tri": "^1.0.2",
