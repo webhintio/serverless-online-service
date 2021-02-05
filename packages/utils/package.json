@@ -20,9 +20,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@hint/utils": "^7.0.7",
-    "@hint/utils-dom": "^2.1.4",
-    "@hint/utils-types": "^1.1.1",
+    "@hint/utils": "^7.0.8",
+    "@hint/utils-dom": "^2.1.5",
+    "@hint/utils-types": "^1.1.2",
     "@octokit/types": "^5.5.0",
     "@types/azure": "^0.9.20",
     "@types/azure-sb": "^0.0.38",
