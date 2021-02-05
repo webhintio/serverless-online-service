@@ -7,7 +7,7 @@
     "timeout": "1m"
   },
   "dependencies": {
-    "@azure/functions": "^1.2.2",
+    "@azure/functions": "^1.2.3",
     "@hint/configuration-all": "^2.0.10",
     "@hint/utils": "^7.0.8",
     "@online-service/utils": "file:../utils",
