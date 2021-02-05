@@ -1,5 +1,5 @@
 import { Octokit } from '@octokit/rest';
-import * as OctokitTypes from '@octokit/types';
+import * as OctokitTypes from '@octokit/openapi-types';
 
 import { IssueData } from '../types/issuedata';
 
@@ -20,11 +20,11 @@ type GithubData = {
  *     - https://github.com/octokit/types.ts/issues/119
  *     - https://github.com/octokit/types.ts/issues/120
  */
-/* eslint-disable camelcase */
-type SearchItem = OctokitTypes.Endpoints['GET /search/issues']['response']['data']['items'][0];
 
-type IssuesUpdateEndpoint = OctokitTypes.Endpoints['PATCH /repos/:owner/:repo/issues/:issue_number']['parameters'];
-/* eslint-enable camelcase */
+type SearchItem = OctokitTypes.components['schemas']['issue-search-result-item'];
+
+type IssuesUpdateEndpoint = OctokitTypes.operations['issues/update']['parameters']['path'] & OctokitTypes.operations['issues/update']['requestBody']['content']['application/json'];
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -219,7 +219,7 @@ ${issueData.log}
         for (const issue of issues) {
 
             const issueLabels = issue.labels.map((label) => {
-                return label.name;
+                return label.name || '';
             }) || [];
 
             if (issueLabels.includes(this.getErrorTypeLabel(issueData.errorType))) {

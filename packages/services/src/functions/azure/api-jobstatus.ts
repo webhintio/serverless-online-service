@@ -13,7 +13,7 @@ export const run: AzureFunction = async (context: Context, req: HttpRequest): Pr
     }
 
     try {
-        const job = await getJobStatus(req.query.id);
+        const job = await getJobStatus(req.query.id!);
 
         context.res = {
             body: job,
