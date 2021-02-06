@@ -9,7 +9,7 @@
   "dependencies": {
     "@azure/functions": "^1.2.3",
     "@hint/configuration-all": "^2.0.10",
-    "@hint/utils": "^7.0.8",
+    "@hint/utils": "^7.0.9",
     "@online-service/utils": "file:../utils",
     "lodash": "^4.17.20",
     "hint": "^6.1.2"

@@ -1220,10 +1220,10 @@
     parse5 "^6.0.1"
     parse5-htmlparser2-tree-adapter "^6.0.1"
 
-"@hint/utils-fs@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@hint/utils-fs/-/utils-fs-1.0.7.tgz#9da47fc066f7df7ec8712e83a26896ee385f5490"
-  integrity sha512-7qo3LKJU6y20O+cab1zWRwS7Apxar38d1z2PcO1NDxgMRF4X+onb/fvuwZC3U2agNTklXFUr/lcN0oeM28coZw==
+"@hint/utils-fs@^1.0.7", "@hint/utils-fs@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@hint/utils-fs/-/utils-fs-1.0.8.tgz#2b848ec9966033fa6da79efdc173a9e85da6997c"
+  integrity sha512-h34bgzmOv2WRxQL7bGqNMcjsYYcufHap86DWow2/NVI/Eq91PaygaUYu7iwj5WqQnGbTtuhz1seek9DN2h0b7w==
   dependencies:
     strip-bom "^4.0.0"
     strip-json-comments "^3.1.1"
@@ -1272,13 +1272,13 @@
   resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.1.2.tgz#27569077d9aefbe243d4da39dfd2baf41959862d"
   integrity sha512-JKcwkblZvOuGlcg5hMwjhMqI7wlkcU+g3e1jVpONMIIvSPEMW8+y7FcOiJ6DQv2ssBYhV3OmsYrq3nOwgdRkNg==
 
-"@hint/utils@^7.0.8":
-  version "7.0.8"
-  resolved "https://registry.yarnpkg.com/@hint/utils/-/utils-7.0.8.tgz#6e1078e37f6bb7110cb325cc017bbd2c7bfaa8d3"
-  integrity sha512-SkT3HDw4qqOR2bv3wr1gapiNYmOM0973IYPmrGmOuq2uWrjepYULZ4hhN8sZbuombk18OlSRSRwLEYjZh1SNwA==
+"@hint/utils@^7.0.8", "@hint/utils@^7.0.9":
+  version "7.0.9"
+  resolved "https://registry.yarnpkg.com/@hint/utils/-/utils-7.0.9.tgz#4c5cb02320aa90eddfcc53b820ffd501bad7f313"
+  integrity sha512-mbqRE0BhUsLmoy3be+kOLplA7XZFKZHQETWMMwvpmoOYJSAUSyB2YC7dbcAVzO+FolNUDc/QRw5ZCKq1QWfL2Q==
   dependencies:
     "@hint/utils-debug" "^1.0.4"
-    "@hint/utils-fs" "^1.0.7"
+    "@hint/utils-fs" "^1.0.8"
     "@hint/utils-string" "^1.0.7"
     applicationinsights "^1.8.9"
     chalk "^4.0.0"
