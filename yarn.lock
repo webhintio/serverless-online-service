@@ -1272,7 +1272,7 @@
   resolved "https://registry.yarnpkg.com/@hint/utils-types/-/utils-types-1.1.2.tgz#27569077d9aefbe243d4da39dfd2baf41959862d"
   integrity sha512-JKcwkblZvOuGlcg5hMwjhMqI7wlkcU+g3e1jVpONMIIvSPEMW8+y7FcOiJ6DQv2ssBYhV3OmsYrq3nOwgdRkNg==
 
-"@hint/utils@^7.0.8", "@hint/utils@^7.0.9":
+"@hint/utils@^7.0.9":
   version "7.0.9"
   resolved "https://registry.yarnpkg.com/@hint/utils/-/utils-7.0.9.tgz#4c5cb02320aa90eddfcc53b820ffd501bad7f313"
   integrity sha512-mbqRE0BhUsLmoy3be+kOLplA7XZFKZHQETWMMwvpmoOYJSAUSyB2YC7dbcAVzO+FolNUDc/QRw5ZCKq1QWfL2Q==
