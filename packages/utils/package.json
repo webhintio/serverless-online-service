@@ -23,7 +23,7 @@
     "@hint/utils": "^7.0.9",
     "@hint/utils-dom": "^2.1.5",
     "@hint/utils-types": "^1.1.2",
-    "@octokit/openapi-types": "^6.1.1",
+    "@octokit/openapi-types": "^7.0.0",
     "@types/azure": "^0.9.20",
     "@types/azure-sb": "^0.0.38",
     "@types/debug": "^4.1.5",
