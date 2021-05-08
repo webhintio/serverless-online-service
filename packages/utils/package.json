@@ -27,7 +27,7 @@
     "@types/azure": "^0.9.20",
     "@types/azure-sb": "^0.0.38",
     "@types/debug": "^4.1.5",
-    "@types/node": "^15.0.1",
+    "@types/node": "^15.0.2",
     "@types/proxyquire": "^1.3.28",
     "@types/request": "^2.48.5",
     "@types/sinon": "^10.0.0",
