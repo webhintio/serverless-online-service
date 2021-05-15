@@ -9,7 +9,7 @@
   "dependencies": {
     "@azure/functions": "^1.2.3",
     "@online-service/utils": "file:../utils",
-    "applicationinsights": "^1.8.10",
+    "applicationinsights": "^2.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1"
   },
