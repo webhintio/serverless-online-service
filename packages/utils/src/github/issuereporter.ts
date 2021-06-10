@@ -47,17 +47,17 @@ export class IssueReporter {
             repo: this.GITHUB_REPO
         };
         this.octokit = new Octokit({
+            auth: {
+                token: this.GITHUB_API_TOKEN as string,
+                tokenType: 'oauth',
+                type: 'token'
+            },
             baseUrl: 'https://api.github.com',
             headers: {
                 accept: 'application/vnd.github.v3+json',
                 'user-agent': 'webhint'
             },
             timeout: 0
-        });
-
-        this.octokit.authenticate({
-            token: this.GITHUB_API_TOKEN as string,
-            type: 'oauth'
         });
     }
 
