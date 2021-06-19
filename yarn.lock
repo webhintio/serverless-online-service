@@ -1572,7 +1572,7 @@
   dependencies:
     "@destinationstransfers/ntp" "^2.0.0"
     "@octokit/rest" "^18.5.6"
-    applicationinsights "^2.1.1"
+    applicationinsights "^2.1.2"
     azure-sb "^0.11.2"
     debug "^4.3.1"
     mongodb-lock "^1.0.1"
@@ -2172,10 +2172,10 @@ append-transform@^2.0.0:
   dependencies:
     default-require-extensions "^3.0.0"
 
-applicationinsights@^2.0.0, applicationinsights@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/applicationinsights/-/applicationinsights-2.1.1.tgz#603c1e6575e62c20b0a5d9dc3fceca5e9c826b7b"
-  integrity sha512-XxcLIapDxiu46vnQ4AQsp7HcTHxaoV79EeubJnNqli07HwNaRnc/PCaIkzHwAfEV4Q2nNK7k41tS4C2Y1k4zpQ==
+applicationinsights@^2.0.0, applicationinsights@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/applicationinsights/-/applicationinsights-2.1.2.tgz#be134a7c9aafbdc7a687a45735ab440b15c4cea7"
+  integrity sha512-dH1A7f321eNq5aCUG0bpkBGs5fSAW/4sPnVREdog/ST46akpxEeS2vTBMcOfF/5OfDcLSEIsFdth5/0wEklA/Q==
   dependencies:
     "@azure/core-http" "^1.2.5"
     "@opentelemetry/api" "^0.18.1"
