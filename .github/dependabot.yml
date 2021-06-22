@@ -1,0 +1,36 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: saturday
+    time: "04:00"
+    timezone: America/Los_Angeles
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: sinon
+    versions:
+    - 10.0.1
+  - dependency-name: "@hint/utils"
+    versions:
+    - 7.0.9
+  - dependency-name: "@azure/functions"
+    versions:
+    - 1.2.3
+  - dependency-name: "@octokit/types"
+    versions:
+    - 6.5.0
+    - 6.6.0
+    - 6.8.2
+  - dependency-name: "@octokit/rest"
+    versions:
+    - 18.0.14
+    - 18.0.15
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.14.1
+  - dependency-name: mongoose
+    versions:
+    - 5.11.13
+    - 5.11.14
