@@ -1,0 +1,99 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+    - main
+pr:
+    - main
+
+pool:
+    vmImage: "Ubuntu-20.04"
+
+variables:
+    dockerImage: workerimage
+
+steps:
+    - task: NodeTool@0
+      inputs:
+          versionSpec: "12.x"
+      displayName: "Install Node.js"
+    - script: |
+          cd packages/utils
+          npm install --ignore-engines
+          yarn build
+          echo "Removing node_modules to avoid issues building the whole project"
+          rm -rf node_modules
+      displayName: "Build utils"
+    - script: |
+          yarn --ignore-engines
+          yarn test
+      displayName: "yarn and yarn test"
+    - script: |
+          npm install -g azure-functions-core-tools
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: "Install Azure functions core tools"
+    - script: |
+          ./scripts/ci/install-extensions.sh
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: "Install Azure Function extensions"
+    - script: |
+          ./scripts/ci/build-services-functions.sh
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: "Install dependecies for utils and services functions"
+    - task: ArchiveFiles@2
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      inputs:
+          rootFolderOrFile: "$(Build.SourcesDirectory)/packages/services"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/services/$(Build.BuildId).zip"
+          replaceExistingArchive: true
+          verbose: true
+      displayName: Create deployment zip file for service functions
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: Login to ACR (Production)
+      inputs:
+          command: login
+          containerRegistry: DockerACRConnectionNew
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: Login to ACR (Staging)
+      inputs:
+          command: login
+          containerRegistry: DockerACRConnectionStaging
+    - task: Docker@2
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: Build and push worker image
+      inputs:
+          command: buildAndPush
+          repository: $(dockerImage)
+          tags: $(Build.BuildId)
+          Dockerfile: $(Build.SourcesDirectory)/packages/worker/Dockerfile
+          buildContext: $(Build.SourcesDirectory)
+    - task: AzureFunctionApp@1
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      inputs:
+          azureSubscription: "webhint-staging"
+          appType: "functionAppLinux"
+          appName: "service-functions-staging"
+          package: "$(Build.ArtifactStagingDirectory)/services/$(Build.BuildId).zip"
+          runtimeStack: "DOCKER|microsoft/azure-functions-node8:2.0"
+          appSettings: "-APP_INSIGHTS_KEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -DatabaseConnection $(DatabaseConnection) -QueueConnection $(QueueConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_ENABLE_SYNC_UPDATE_SITE $(WEBSITE_ENABLE_SYNC_UPDATE_SITE) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION) -WEBSITES_ENABLE_APP_SERVICE_STORAGE $(WEBSITES_ENABLE_APP_SERVICE_STORAGE) -WEBSITE_RUN_FROM_PACKAGE $(WEBSITE_RUN_FROM_PACKAGE)"
+      displayName: Deploy service functions
+    - task: AzureFunctionAppContainer@1
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      displayName: Deploy worker function
+      inputs:
+          azureSubscription: "webhint-staging"
+          appName: worker-functions-staging
+          imageName: $(DOCKER_REPOSITORY)/$(dockerImage):$(Build.BuildId)
+          appSettings: "-APP_INSIGHTS_KEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -APPINSIGHTS_INSTRUMENTATIONKEY $(APPINSIGHTS_INSTRUMENTATIONKEY) -AzureWebJobsStorage $(AzureWebJobsStorage) -QueueConnection $(QueueConnection) -FUNCTIONS_EXTENSION_VERSION $(FUNCTIONS_EXTENSION_VERSION) -FUNCTIONS_WORKER_RUNTIME $(FUNCTIONS_WORKER_RUNTIME) -WEBSITE_NODE_DEFAULT_VERSION $(WEBSITE_NODE_DEFAULT_VERSION)"
+    - task: PublishBuildArtifacts@1
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)/services'
+        ArtifactName: 'services'
+        publishLocation: 'Container'
